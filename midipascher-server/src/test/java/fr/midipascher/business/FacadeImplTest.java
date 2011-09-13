@@ -3,6 +3,11 @@
  */
 package fr.midipascher.business;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -252,16 +257,24 @@ public class FacadeImplTest {
     }
 
     @Test
-    public void updateFoodSpecialtyShouldInvokePersistence() {
+    public void updateFoodSpecialtyShouldSetPropertiesThenInvokePersistence() {
 
         // Given
         final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+
+        final FoodSpecialty persistedInstance = Mockito.mock(FoodSpecialty.class);
+
+        when(baseDao.get(eq(FoodSpecialty.class), anyLong())).thenReturn(persistedInstance);
 
         // When
         underTest.updateFoodSpecialty(foodSpecialty);
 
         // Then
-        Mockito.verify(baseDao).persist(foodSpecialty);
+        Mockito.verify(persistedInstance).setActive(foodSpecialty.isActive());
+
+        Mockito.verify(persistedInstance).setCode(foodSpecialty.getCode());
+
+        Mockito.verify(persistedInstance).setLabel(foodSpecialty.getLabel());
 
     }
 
@@ -276,25 +289,97 @@ public class FacadeImplTest {
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void updateFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+
+        // Given
+        final FoodSpecialty foodSpecialty = new FoodSpecialty();
+
+        // When
+        underTest.updateFoodSpecialty(foodSpecialty);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void updateFoodSpecialtyShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
+
+        // Given
+        final FoodSpecialty foodSpecialty = new FoodSpecialty();
+
+        foodSpecialty.setId(4L);
+
+        when(baseDao.get(eq(FoodSpecialty.class), anyLong())).thenReturn(null);
+
+        // When
+        underTest.updateFoodSpecialty(foodSpecialty);
+
+    }
+
     @Test
-    public void updateRestaurantShouldInvokePersistence() {
+    public void updateRestaurantShouldSetPropertiesThenInvokePersistence() {
 
         // Given
         final Restaurant restaurant = Mockito.mock(Restaurant.class);
+
+        final Restaurant persistedInstance = Mockito.mock(Restaurant.class);
+
+        when(baseDao.get(eq(Restaurant.class), any(Long.class))).thenReturn(persistedInstance);
 
         // When
         underTest.updateRestaurant(restaurant);
 
         // Then
-        Mockito.verify(baseDao).persist(restaurant);
+        Mockito.verify(persistedInstance).setAddress(restaurant.getAddress());
+
+        Mockito.verify(persistedInstance).setDescription(restaurant.getDescription());
+
+        Mockito.verify(persistedInstance).setEmail(restaurant.getEmail());
+
+        Mockito.verify(persistedInstance).setKosher(restaurant.isKosher());
+
+        Mockito.verify(persistedInstance).setHalal(restaurant.isHalal());
+
+        Mockito.verify(persistedInstance).setMainOffer(restaurant.getMainOffer());
+
+        Mockito.verify(persistedInstance).setName(restaurant.getName());
+
+        Mockito.verify(persistedInstance).setPhoneNumber(restaurant.getPhoneNumber());
+
+        Mockito.verify(persistedInstance).setSpecialties(restaurant.getSpecialties());
 
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
+    public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() {
 
         // Given
         final Restaurant restaurant = null;
+
+        // When
+        underTest.updateRestaurant(restaurant);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+
+        // Given
+        final Restaurant restaurant = new Restaurant();
+
+        // When
+        underTest.updateRestaurant(restaurant);
+
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void updateRestaurantShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
+
+        // Given
+        final Restaurant restaurant = new Restaurant();
+
+        restaurant.setId(3L);
+
+        when(baseDao.get(eq(Restaurant.class), any(Long.class))).thenReturn(null);
 
         // When
         underTest.updateRestaurant(restaurant);

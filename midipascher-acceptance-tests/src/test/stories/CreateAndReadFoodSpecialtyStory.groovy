@@ -17,6 +17,7 @@ scenario "A valid user should be able to create a restaurant" , {
 	def ResponseEntity<String> responseEntity
 	def ctx = new ClassPathXmlApplicationContext("classpath:stories-context.xml")
 	def RestTemplate restTemplate = ctx.getBean("restTemplate")
+    def foodSpecialty
 	
 	given "I am a valid service user", {
 	}
@@ -41,10 +42,10 @@ scenario "A valid user should be able to create a restaurant" , {
 		responseEntity = restTemplate.postForEntity("http://localhost:9080/midipascher-webapp/foodspecialty",
 				new HttpEntity<FoodSpecialty>(foodSpecialty, headers), String.class)
 
-        Assert.assertNotNull(responseEntity)
 	}
 	
 	then "the response status code should be 201", {
+        Assert.assertNotNull(responseEntity)
 		Assert.assertEquals(responseEntity.getStatusCode().value, 201)
 	}
 	
@@ -55,6 +56,8 @@ scenario "A valid user should be able to create a restaurant" , {
         Assert.assertNotNull(responseEntity)
         Assert.assertEquals(responseEntity.getStatusCode().value, 200)
         Assert.assertNotNull(responseEntity.body)
+        Assert.assertEquals(foodSpecialty.code, responseEntity.body.code)
+        Assert.assertEquals(foodSpecialty.label, responseEntity.body.label)
 	} 
 
 }

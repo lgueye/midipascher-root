@@ -60,6 +60,7 @@ public class FacadeImpl implements Facade {
      * @see fr.midipascher.domain.business.Facade#createRestaurant(fr.midipascher.domain.Restaurant)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Long createRestaurant(final Restaurant restaurant) {
 
         Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
@@ -74,6 +75,7 @@ public class FacadeImpl implements Facade {
      * @see fr.midipascher.domain.business.Facade#deleteFoodSpecialty(java.lang.Long)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteFoodSpecialty(final Long foodSpecialtyId) {
 
         Preconditions.checkArgument(foodSpecialtyId != null,
@@ -87,6 +89,7 @@ public class FacadeImpl implements Facade {
      * @see fr.midipascher.domain.business.Facade#deleteRestaurant(java.lang.Long)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteRestaurant(final Long restaurantId) {
 
         Preconditions.checkArgument(restaurantId != null,
@@ -149,12 +152,25 @@ public class FacadeImpl implements Facade {
      * @see fr.midipascher.domain.business.Facade#updateFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateFoodSpecialty(final FoodSpecialty foodSpecialty) {
 
         Preconditions.checkArgument(foodSpecialty != null,
             "Illegal call to updateFoodSpecialty, foodSpecialty is required");
 
-        baseDao.persist(foodSpecialty);
+        Preconditions.checkArgument(foodSpecialty.getId() != null,
+            "Illegal call to updateFoodSpecialty, foodSpecialty.id is required");
+
+        final FoodSpecialty persistedInstance = baseDao.get(FoodSpecialty.class, foodSpecialty.getId());
+
+        Preconditions.checkState(persistedInstance != null,
+            "Illegal call to updateFoodSpecialty, provided id should have corresponding foodSpecialty in store");
+
+        persistedInstance.setActive(foodSpecialty.isActive());
+
+        persistedInstance.setCode(foodSpecialty.getCode());
+
+        persistedInstance.setLabel(foodSpecialty.getLabel());
 
     }
 
@@ -162,11 +178,36 @@ public class FacadeImpl implements Facade {
      * @see fr.midipascher.domain.business.Facade#updateRestaurant(fr.midipascher.domain.Restaurant)
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void updateRestaurant(final Restaurant restaurant) {
 
         Preconditions.checkArgument(restaurant != null, "Illegal call to updateRestaurant, restaurant is required");
 
-        baseDao.persist(restaurant);
+        Preconditions.checkArgument(restaurant.getId() != null,
+            "Illegal call to updateRestaurant, restaurant.id is required");
+
+        final Restaurant persistedInstance = baseDao.get(Restaurant.class, restaurant.getId());
+
+        Preconditions.checkState(persistedInstance != null,
+            "Illegal call to updateRestaurant, provided id should have corresponding restaurant in the store");
+
+        persistedInstance.setAddress(restaurant.getAddress());
+
+        persistedInstance.setDescription(restaurant.getDescription());
+
+        persistedInstance.setEmail(restaurant.getEmail());
+
+        persistedInstance.setHalal(restaurant.isHalal());
+
+        persistedInstance.setKosher(restaurant.isKosher());
+
+        persistedInstance.setMainOffer(restaurant.getMainOffer());
+
+        persistedInstance.setName(restaurant.getName());
+
+        persistedInstance.setPhoneNumber(restaurant.getPhoneNumber());
+
+        persistedInstance.setSpecialties(restaurant.getSpecialties());
 
     }
 

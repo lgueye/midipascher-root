@@ -68,4 +68,19 @@ public class FoodSpecialtyController {
     public List<FoodSpecialty> list() {
         return facade.listFoodSpecialties();
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public HttpEntity<String> update(@RequestBody final FoodSpecialty foodSpecialty, final HttpServletRequest request)
+            throws Throwable {
+
+        facade.updateFoodSpecialty(foodSpecialty);
+
+        final HttpHeaders headers = new HttpHeaders();
+
+        final ResponseEntity<String> responseEntity = new ResponseEntity<String>(headers, HttpStatus.OK);
+
+        return responseEntity;
+
+    }
+
 }

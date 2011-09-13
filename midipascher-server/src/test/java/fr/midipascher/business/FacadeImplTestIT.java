@@ -49,4 +49,32 @@ public class FacadeImplTestIT {
         Assert.assertEquals(id, foodSpecialty.getId());
 
     }
+
+    @Test
+    public void updateEntityShouldPersistProperties() throws Throwable {
+        // Given
+        FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        foodSpecialty.setId(null);
+        // When
+        final Long id = facade.createFoodSpecialty(foodSpecialty);
+        // Then
+        Assert.assertNotNull(id);
+        Assert.assertEquals(id, foodSpecialty.getId());
+        final String newCode = "New Code";
+        final String newLabel = "Brand New Code";
+
+        // Given
+        foodSpecialty.setCode(newCode);
+        foodSpecialty.setLabel(newLabel);
+
+        // When
+        facade.updateFoodSpecialty(foodSpecialty);
+
+        foodSpecialty = facade.readFoodSpecialty(id);
+
+        // Then
+        Assert.assertEquals(newCode, foodSpecialty.getCode());
+        Assert.assertEquals(newLabel, foodSpecialty.getLabel());
+
+    }
 }
