@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,55 +31,61 @@ import fr.midipascher.domain.business.Facade;
 @RequestMapping(value = "/foodspecialty")
 public class FoodSpecialtyController {
 
-    @Autowired
-    private Facade facade;
+	@Autowired
+	private Facade	facade;
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public HttpEntity<String> create(@RequestBody final FoodSpecialty foodSpecialty, final HttpServletRequest request)
-            throws Throwable {
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public HttpEntity<String> create(@RequestBody final FoodSpecialty foodSpecialty, final HttpServletRequest request)
+			throws Throwable {
 
-        final Long id = facade.createFoodSpecialty(foodSpecialty);
+		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
 
-        final HttpHeaders headers = new HttpHeaders();
+		final HttpHeaders headers = new HttpHeaders();
 
-        final String location = request.getRequestURL().append("/").append(id).toString();
+		final String location = request.getRequestURL().append("/").append(id).toString();
 
-        headers.setLocation(URI.create(location));
+		headers.setLocation(URI.create(location));
 
-        headers.setContentType(MediaType.TEXT_PLAIN);
+		final ResponseEntity<String> responseEntity = new ResponseEntity<String>(headers, HttpStatus.CREATED);
 
-        final ResponseEntity<String> responseEntity = new ResponseEntity<String>(headers, HttpStatus.CREATED);
+		return responseEntity;
 
-        return responseEntity;
+	}
 
-    }
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseBody
+	public FoodSpecialty get(@PathVariable("id") final Long foodSpecialtyId) {
+		return this.facade.readFoodSpecialty(foodSpecialtyId);
+	}
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
-    @ResponseBody
-    public FoodSpecialty get(@PathVariable("id") final Long foodSpecialtyId) {
-        return facade.readFoodSpecialty(foodSpecialtyId);
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public List<FoodSpecialty> list() {
+		return this.facade.listFoodSpecialties();
+	}
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public List<FoodSpecialty> list() {
-        return facade.listFoodSpecialties();
-    }
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public HttpEntity<String> update(@RequestBody final FoodSpecialty foodSpecialty) throws Throwable {
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public HttpEntity<String> update(@RequestBody final FoodSpecialty foodSpecialty, final HttpServletRequest request)
-            throws Throwable {
+		this.facade.updateFoodSpecialty(foodSpecialty);
 
-        facade.updateFoodSpecialty(foodSpecialty);
+		final ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.OK);
 
-        final HttpHeaders headers = new HttpHeaders();
+		return responseEntity;
 
-        final ResponseEntity<String> responseEntity = new ResponseEntity<String>(headers, HttpStatus.OK);
+	}
 
-        return responseEntity;
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ResponseStatus(value = HttpStatus.OK)
+	public HttpEntity<String> delete(@PathVariable("id") final Long foodSpecialtyId) {
 
-    }
+		this.facade.deleteFoodSpecialty(foodSpecialtyId);
 
+		final ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.OK);
+
+		return responseEntity;
+
+	}
 }

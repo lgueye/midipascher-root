@@ -7,7 +7,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,56 +24,71 @@ import fr.midipascher.test.TestUtils;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:META-INF/midipascher-domain.xml",
-        "classpath:META-INF/midipascher-server.xml", "classpath:META-INF/midipascher-server-test.xml" })
+		"classpath:META-INF/midipascher-server.xml", "classpath:META-INF/midipascher-server-test.xml" })
 public class FacadeImplTestIT {
 
-    @Autowired
-    private Facade facade;
+	@Autowired
+	private Facade	facade;
 
-    @Test
-    public void createEntityShouldPersistAndSetId() throws Throwable {
-        // Given
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-        // ensure id nullity
-        foodSpecialty.setId(null);
-        LoggerFactory.getLogger(FacadeImplTestIT.class).warn(
-            "************************************** BEFORE CREATE FOOD SPECIALTY ******************************* ");
-        // When
-        final Long id = facade.createFoodSpecialty(foodSpecialty);
+	@Test
+	public void createEntityShouldPersistAndSetId() throws Throwable {
+		// Given
+		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		// ensure id nullity
+		foodSpecialty.setId(null);
+		// When
+		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
 
-        LoggerFactory.getLogger(FacadeImplTestIT.class).warn(
-            "************************************** AFTER CREATE FOOD SPECIALTY ******************************* ");
-        // Then
-        Assert.assertNotNull(id);
-        Assert.assertEquals(id, foodSpecialty.getId());
+		// Then
+		Assert.assertNotNull(id);
+		Assert.assertEquals(id, foodSpecialty.getId());
 
-    }
+	}
 
-    @Test
-    public void updateEntityShouldPersistProperties() throws Throwable {
-        // Given
-        FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-        foodSpecialty.setId(null);
-        // When
-        final Long id = facade.createFoodSpecialty(foodSpecialty);
-        // Then
-        Assert.assertNotNull(id);
-        Assert.assertEquals(id, foodSpecialty.getId());
-        final String newCode = "New Code";
-        final String newLabel = "Brand New Code";
+	@Test
+	public void updateEntityShouldPersistProperties() throws Throwable {
+		// Given
+		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		foodSpecialty.setId(null);
+		// When
+		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+		// Then
+		Assert.assertNotNull(id);
+		Assert.assertEquals(id, foodSpecialty.getId());
+		final String newCode = "New Code";
+		final String newLabel = "Brand New Code";
 
-        // Given
-        foodSpecialty.setCode(newCode);
-        foodSpecialty.setLabel(newLabel);
+		// Given
+		foodSpecialty.setCode(newCode);
+		foodSpecialty.setLabel(newLabel);
 
-        // When
-        facade.updateFoodSpecialty(foodSpecialty);
+		// When
+		this.facade.updateFoodSpecialty(foodSpecialty);
 
-        foodSpecialty = facade.readFoodSpecialty(id);
+		foodSpecialty = this.facade.readFoodSpecialty(id);
 
-        // Then
-        Assert.assertEquals(newCode, foodSpecialty.getCode());
-        Assert.assertEquals(newLabel, foodSpecialty.getLabel());
+		// Then
+		Assert.assertEquals(newCode, foodSpecialty.getCode());
+		Assert.assertEquals(newLabel, foodSpecialty.getLabel());
 
-    }
+	}
+
+	@Test
+	public void deleteEntityShouldSucceed() throws Throwable {
+		// Given
+		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		foodSpecialty.setId(null);
+		// When
+		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+		// Then
+		Assert.assertNotNull(id);
+		Assert.assertEquals(id, foodSpecialty.getId());
+
+		// When
+		this.facade.deleteFoodSpecialty(foodSpecialty.getId());
+
+		// Then
+		Assert.assertNull(this.facade.readFoodSpecialty(id));
+	}
+
 }

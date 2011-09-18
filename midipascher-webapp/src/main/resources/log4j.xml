@@ -15,7 +15,7 @@
 		<level value="debug" />
 	</logger>
 	
-	<!-- 3rdparty Loggers -->
+	<!-- 3rdparty Loggers
 	<logger name="org.springframework.transaction">
 		<level value="debug" />
 	</logger>
@@ -26,7 +26,7 @@
 	<logger name="org.springframework.orm.jpa.JpaTransactionManager">
 		<level value="debug" />
 	</logger>
-	
+	 -->
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
