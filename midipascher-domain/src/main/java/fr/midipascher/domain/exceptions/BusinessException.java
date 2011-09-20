@@ -26,7 +26,6 @@ public class BusinessException extends RuntimeException {
 	private String				messageCode;
 	private Object[]			messageArgs;
 	private String				defaultMessage;
-	private Locale				locale;
 	private Throwable			cause;
 
 	public BusinessException(final String message) {
@@ -48,36 +47,11 @@ public class BusinessException extends RuntimeException {
 	 * @param messageCode
 	 * @param messageArgs
 	 * @param defaultMessage
-	 * @param locale
-	 */
-	public BusinessException(final String messageCode, final Object[] messageArgs, final String defaultMessage,
-			final Locale locale) {
-		this(messageCode, messageArgs, defaultMessage);
-		setLocale(locale);
-	}
-
-	/**
-	 * @param messageCode
-	 * @param messageArgs
-	 * @param defaultMessage
 	 * @param cause
 	 */
 	public BusinessException(final String messageCode, final Object[] messageArgs, final String defaultMessage,
 			final Throwable cause) {
 		this(messageCode, messageArgs, defaultMessage);
-		setCause(cause);
-	}
-
-	/**
-	 * @param messageCode
-	 * @param messageArgs
-	 * @param defaultMessage
-	 * @param cause
-	 * @param locale
-	 */
-	public BusinessException(final String messageCode, final Object[] messageArgs, final String defaultMessage,
-			final Throwable cause, final Locale locale) {
-		this(messageCode, messageArgs, defaultMessage, locale);
 		setCause(cause);
 	}
 
@@ -97,21 +71,13 @@ public class BusinessException extends RuntimeException {
 	}
 
 	/**
-	 * @return the locale
-	 */
-	public Locale getLocale() {
-		return this.locale;
-	}
-
-	/**
 	 * @see java.lang.Throwable#getMessage()
 	 */
-	@Override
-	public String getMessage() {
+	public String getMessage(String preferredLanguage) {
 
 		if (StringUtils.isEmpty(getMessageCode())) return getDefaultMessage();
 
-		final Locale locale = getLocale() == null ? Locale.getDefault() : getLocale();
+		Locale locale = (StringUtils.isEmpty(preferredLanguage)) ? Locale.ENGLISH : new Locale(preferredLanguage);
 
 		ResourceBundle bundle = null;
 
@@ -175,14 +141,6 @@ public class BusinessException extends RuntimeException {
 	 */
 	private void setDefaultMessage(final String defaultMessage) {
 		this.defaultMessage = defaultMessage;
-	}
-
-	/**
-	 * @param locale
-	 *            the locale to set
-	 */
-	private void setLocale(final Locale locale) {
-		this.locale = locale;
 	}
 
 	/**
