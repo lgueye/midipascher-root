@@ -5,14 +5,18 @@ package fr.midipascher.webmvc;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.domain.exceptions.LocalizedException;
 import fr.midipascher.domain.exceptions.NotFoundException;
 
 /**
  * @author louis.gueye@gmail.com
  */
+@Component
 public class ExceptionResolver {
 
 	public ResponseError resolve(Throwable th, HttpServletRequest request) {
@@ -26,6 +30,7 @@ public class ExceptionResolver {
 	 * @return
 	 */
 	int resolveHttpStatus(Throwable th) {
+		if (th == null) return HttpStatus.OK.value();
 		if (th instanceof IllegalArgumentException) return HttpStatus.BAD_REQUEST.value();
 		if (th instanceof IllegalStateException) return HttpStatus.INTERNAL_SERVER_ERROR.value();
 		if (th instanceof NotFoundException) return HttpStatus.NOT_FOUND.value();
@@ -39,8 +44,15 @@ public class ExceptionResolver {
 	 * @return
 	 */
 	String resolveMesage(HttpServletRequest request, Throwable th) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+
+		if (th == null && request == null) return StringUtils.EMPTY;
+		if (th == null) return StringUtils.EMPTY;
+		if (request == null) return th.getMessage();
+		if (!(th instanceof LocalizedException)) return th.getMessage();
+
+		String preferredLanguage = request.getHeader("Accept-Language");
+		return ((LocalizedException) th).getMessage(preferredLanguage);
+
 	}
 
 }

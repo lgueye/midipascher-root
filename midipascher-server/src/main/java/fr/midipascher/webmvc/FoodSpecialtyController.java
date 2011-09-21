@@ -29,7 +29,7 @@ import fr.midipascher.domain.business.Facade;
  */
 @Controller
 @RequestMapping(value = "/foodspecialty")
-public class FoodSpecialtyController {
+public class FoodSpecialtyController extends AbstractController {
 
 	@Autowired
 	private Facade	facade;

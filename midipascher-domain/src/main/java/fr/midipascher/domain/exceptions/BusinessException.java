@@ -18,7 +18,7 @@ import fr.midipascher.domain.Constants;
 /**
  * @author louis.gueye@gmail.com
  */
-public class BusinessException extends RuntimeException {
+public class BusinessException extends RuntimeException implements LocalizedException {
 
 	private static final long	serialVersionUID	= 1L;
 	private static final Logger	LOG					= LoggerFactory.getLogger(BusinessException.class);
@@ -71,8 +71,9 @@ public class BusinessException extends RuntimeException {
 	}
 
 	/**
-	 * @see java.lang.Throwable#getMessage()
+	 * @see fr.midipascher.domain.exceptions.LocalizedException#getMessage(java.lang.String)
 	 */
+	@Override
 	public String getMessage(String preferredLanguage) {
 
 		if (StringUtils.isEmpty(getMessageCode())) return getDefaultMessage();
