@@ -1,4 +1,4 @@
-This project is a website aimed for user who don't want to sped too much money at lunch time.
+This project is a website aimed for user who don't want to spend too much money at lunch time.
 
 Midipascher.fr allows you to find restaurants whose menus fit in your "ticket restaurant".
 
@@ -6,10 +6,12 @@ Midipascher.fr allows you to answer that familiar question : 'what will we have 
 
 The website is written in java, aimed to run on a servlet container.
 
-It allows a restaurant owner to register its restaurant, update restaurant information, unregister restaurant
-It allow an admin to create/update/delete restaurant
-It allows an admin to create/update/delete reference data
-It allows a customer to find a restaurant based on geo informations.
-It allows a customer to save searches.
+It allows a restaurant manager to register its restaurant, update restaurant informations, unregister restaurant
+It allows a site admin to create/update/delete restaurant
+It allows a site admin to create/update/delete reference data
+It allows any visitor to find a restaurant based on geo informations.
+It allows any visitor to save its searches.
+It allows any visitor to be informed with registering pricing
+
 
 Have fun on midipascher.fr
