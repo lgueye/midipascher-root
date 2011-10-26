@@ -11,25 +11,7 @@
 	<artifactId>midipascher-acceptance-tests</artifactId>
 	<name>midipascher-acceptance-tests</name>
 	<url>http://maven.apache.org</url>
-<!-- 	
-	<repositories>
-		<repository>
-			<id>cukes</id>
-			<url>http://cukes.info/maven</url>
-		</repository>
-	</repositories>
- -->
 	<dependencies>
-<!-- 	
-		<dependency>
-			<groupId>cuke4duke</groupId>
-			<artifactId>cuke4duke</artifactId>
-		</dependency>
- -->		
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -54,57 +36,43 @@
 			<groupId>fr.midipascher</groupId>
 			<artifactId>midipascher-tests-fixtures</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-spring</artifactId>
+		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<profiles>
 		<profile>
 			<id>integration-tests</id>
-<!-- 			
-			<pluginRepositories>
-				<pluginRepository>
-					<id>cukes</id>
-					<url>http://cukes.info/maven</url>
-				</pluginRepository>
-			</pluginRepositories>
-			<repositories>
-				<repository>
-					<id>cukes</id>
-					<url>http://cukes.info/maven</url>
-				</repository>
-			</repositories>
- -->			
- <!-- 
-			<dependencies>
-				<dependency>
-					<groupId>org.jruby</groupId>
-					<artifactId>jruby-complete</artifactId>
-					<version>${jruby.version}</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
- -->			
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<skipTests>false</skipTests>
-						</configuration>
-					</plugin>
-					<plugin>
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
+						<dependencies>
+							<!-- If not added, jetty complains about spring namespace schemas 
+								location that are not found -->
+							<dependency>
+								<groupId>org.springframework</groupId>
+								<artifactId>spring-context</artifactId>
+								<version>${spring.version}</version>
+							</dependency>
+							<dependency>
+								<groupId>org.springframework</groupId>
+								<artifactId>spring-webmvc</artifactId>
+								<version>${spring.version}</version>
+							</dependency>
+							<dependency>
+								<groupId>org.springframework</groupId>
+								<artifactId>spring-tx</artifactId>
+								<version>${spring.version}</version>
+							</dependency>
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>${h2.version}</version>
+							</dependency>
+						</dependencies>
 						<configuration>
 							<contextPath>${webapp.module.context}</contextPath>
 							<connectors>
@@ -119,16 +87,93 @@
 							<webApp>${project.build.directory}/../../midipascher-webapp/target/midipascher-webapp.war</webApp>
 							<tmpDirectory>${java.io.tmpdir}</tmpDirectory>
 						</configuration>
+						<executions>
+							<execution>
+								<id>start-jetty</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>deploy-war</goal>
+								</goals>
+								<configuration>
+									<daemon>true</daemon>
+								</configuration>
+							</execution>
+							<execution>
+								<id>stop-jetty</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
-					<!-- <plugin> <groupId>cuke4duke</groupId> <artifactId>cuke4duke-maven-plugin</artifactId> 
-						</plugin> -->
 					<plugin>
-						<groupId>org.easyb</groupId>
-						<artifactId>maven-easyb-plugin</artifactId>
+						<groupId>org.jbehave</groupId>
+						<artifactId>jbehave-maven-plugin</artifactId>
+						<dependencies>
+							<dependency>
+								<groupId>log4j</groupId>
+								<artifactId>log4j</artifactId>
+								<version>${log4j.version}</version>
+								<exclusions>
+									<exclusion>
+										<groupId>com.sun.jdmk</groupId>
+										<artifactId>jmxtools</artifactId>
+									</exclusion>
+									<exclusion>
+										<groupId>com.sun.jmx</groupId>
+										<artifactId>jmxri</artifactId>
+									</exclusion>
+									<exclusion>
+										<groupId>javax.jms</groupId>
+										<artifactId>jms</artifactId>
+									</exclusion>
+								</exclusions>
+							</dependency>
+							<dependency>
+								<groupId>org.springframework</groupId>
+								<artifactId>spring-context</artifactId>
+								<version>${spring.version}</version>
+							</dependency>
+							<dependency>
+								<groupId>org.springframework</groupId>
+								<artifactId>spring-test</artifactId>
+								<version>${spring.version}</version>
+							</dependency>
+							<dependency>
+								<groupId>org.jbehave</groupId>
+								<artifactId>jbehave-spring</artifactId>
+								<version>${jbehave.version}</version>
+								<exclusions>
+									<exclusion>
+										<groupId>org.springframework</groupId>
+										<artifactId>spring-context</artifactId>
+									</exclusion>
+									<exclusion>
+										<groupId>org.springframework</groupId>
+										<artifactId>spring-test</artifactId>
+									</exclusion>
+								</exclusions>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<id>run-stories-with-annotated-embedder</id>
+								<phase>integration-test</phase>
+								<configuration>
+									<scope>test</scope>
+									<includes>
+										<include>**/StoriesRunner.java</include>
+									</includes>
+								</configuration>
+								<goals>
+									<goal>run-stories-with-annotated-embedder</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
 	</profiles>
-
 </project>

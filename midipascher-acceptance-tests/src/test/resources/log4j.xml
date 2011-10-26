@@ -26,6 +26,22 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
+	
+	<logger name="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<level value="debug" />
+	</logger>
+	
+<!-- Uncomment if you wish to inspect requests header and/or body	
+	<logger name="httpclient.wire.header">
+		<level value="debug" />
+	</logger>
+	<logger name="httpclient.wire.content">
+		<level value="debug" />
+	</logger>
+ -->
+	<logger name="org.jbehave">
+		<level value="debug" />
+	</logger>
 
 	<!-- Root Logger -->
 	<root>

@@ -19,6 +19,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>midipascher-webapp</finalName>
+		<finalName>${project.artifactId}</finalName>
 	</build>
 </project>

@@ -14,45 +14,34 @@
 
 	<context:component-scan base-package="fr.midipascher" />
 
-	<mvc:annotation-driven />
-
 	<bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
 
-	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-		<property name="classesToBeBound">
-			<list>
-				<value>fr.midipascher.domain.Restaurant</value>
-				<value>fr.midipascher.domain.FoodSpecialty</value>
-			</list>
-		</property>
-	</bean>
-
 	<bean
-		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<property name="order" value="1" />
-		<property name="mediaTypes">
-			<map>
-				<entry key="xml" value="application/xml" />
-				<entry key="json" value="application/json" />
-			</map>
-		</property>
-		<property name="defaultViews">
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
 			<list>
-				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+				<bean
+					class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
 					<property name="marshaller" ref="jaxbMarshaller" />
+					<property name="unmarshaller" ref="jaxbMarshaller" />
 				</bean>
 				<bean
-					class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+					class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter" />
+				<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter" />
 			</list>
 		</property>
 	</bean>
-
-	<bean
-		class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-		<property name="marshaller" ref="jaxbMarshaller" />
-		<property name="unmarshaller" ref="jaxbMarshaller" />
-	</bean>
-	<bean
-		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+	
+	<bean id="jaxbMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"/>
 
 </beans>

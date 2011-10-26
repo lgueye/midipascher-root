@@ -57,12 +57,9 @@
 				<prop key="javax.persistence.validation.group.pre-persist">fr.midipascher.domain.validation.Create</prop>
 				<prop key="javax.persistence.validation.group.pre-update">fr.midipascher.domain.validation.Update</prop>
 				<prop key="javax.persistence.validation.group.pre-remove">fr.midipascher.domain.validation.Delete</prop>
-				<prop key="hibernate.ejb.event.pre-insert">org.hibernate.cfg.beanvalidation.BeanValidationEventListener
-				</prop>
-				<prop key="hibernate.ejb.event.pre-update">org.hibernate.cfg.beanvalidation.BeanValidationEventListener
-				</prop>
-				<prop key="hibernate.ejb.event.pre-delete">org.hibernate.cfg.beanvalidation.BeanValidationEventListener
-				</prop>
+				<prop key="hibernate.ejb.event.pre-insert">org.hibernate.cfg.beanvalidation.BeanValidationEventListener</prop>
+				<prop key="hibernate.ejb.event.pre-update">org.hibernate.cfg.beanvalidation.BeanValidationEventListener</prop>
+				<prop key="hibernate.ejb.event.pre-delete">org.hibernate.cfg.beanvalidation.BeanValidationEventListener</prop>
 			</props>
 		</property>
 	</bean>
