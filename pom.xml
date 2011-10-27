@@ -55,11 +55,12 @@
 		<h2.version>1.3.159</h2.version>
 		<dbunit.version>2.4.8</dbunit.version>
 		<jetty.version>6.1.26</jetty.version>
-		<webapp.module.context>midipascher-webapp</webapp.module.context>
 		<groovy.version>1.8.3</groovy.version>
 		<jbehave.version>3.5.1</jbehave.version>
+		<commons-dbcp.version>1.4</commons-dbcp.version>
 
 		<!-- BUILD -->
+		<webapp.module.context>midipascher-webapp</webapp.module.context>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.6</java.version>
@@ -80,22 +81,6 @@
 		<dependencies>
 
 			<!-- MAIN APP -->
-			<dependency>
-				<groupId>fr.midipascher</groupId>
-				<artifactId>midipascher-domain</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>fr.midipascher</groupId>
-				<artifactId>midipascher-server</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>fr.midipascher</groupId>
-				<artifactId>midipascher-tests-fixtures</artifactId>
-				<version>${project.version}</version>
-				<scope>test</scope>
-			</dependency>
 			<dependency>
 				<groupId>fr.midipascher</groupId>
 				<artifactId>midipascher-webapp</artifactId>
@@ -275,12 +260,6 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty</artifactId>
-				<version>${jetty.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.jbehave</groupId>
 				<artifactId>jbehave-spring</artifactId>
 				<version>${jbehave.version}</version>
@@ -427,6 +406,194 @@
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>maven-jetty-plugin</artifactId>
 					<version>${jetty.version}</version>
+					<dependencies>
+						<!-- If not added, jetty complains about spring namespace schemas location 
+							that are not found -->
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-context</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-webmvc</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-tx</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+							<version>${h2.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>commons-dbcp</groupId>
+							<artifactId>commons-dbcp</artifactId>
+							<version>${commons-dbcp.version}</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<contextPath>${webapp.module.context}</contextPath>
+						<connectors>
+							<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+								<port>9080</port>
+								<maxIdleTime>60000</maxIdleTime>
+							</connector>
+						</connectors>
+						<scanIntervalSeconds>10</scanIntervalSeconds>
+						<stopKey>foo</stopKey>
+						<stopPort>9180</stopPort>
+						<tmpDirectory>${java.io.tmpdir}</tmpDirectory>
+						<jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
+					</configuration>
+					<executions>
+						<execution>
+							<id>start-jetty</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<daemon>true</daemon>
+							</configuration>
+						</execution>
+						<execution>
+							<id>stop-jetty</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>tomcat-maven-plugin</artifactId>
+					<version>1.1</version>
+					<dependencies>
+						<!-- If not added, jetty complains about spring namespace schemas location 
+							that are not found -->
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-context</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-webmvc</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-tx</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>com.h2database</groupId>
+							<artifactId>h2</artifactId>
+							<version>${h2.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>commons-dbcp</groupId>
+							<artifactId>commons-dbcp</artifactId>
+							<version>${commons-dbcp.version}</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<path>${webapp.module.context}</path>
+						<contextFile>src/test/resources/context.xml</contextFile>
+						<fork>true</fork>
+						<port>9080</port>
+					</configuration>
+					<executions>
+						<execution>
+							<id>start-tomcat</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>run-war-only</goal>
+							</goals>
+							<configuration>
+								<daemon>true</daemon>
+							</configuration>
+						</execution>
+						<execution>
+							<id>stop-tomcat</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>shutdown</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.jbehave</groupId>
+					<artifactId>jbehave-maven-plugin</artifactId>
+					<version>${jbehave.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>log4j</groupId>
+							<artifactId>log4j</artifactId>
+							<version>${log4j.version}</version>
+							<exclusions>
+								<exclusion>
+									<groupId>com.sun.jdmk</groupId>
+									<artifactId>jmxtools</artifactId>
+								</exclusion>
+								<exclusion>
+									<groupId>com.sun.jmx</groupId>
+									<artifactId>jmxri</artifactId>
+								</exclusion>
+								<exclusion>
+									<groupId>javax.jms</groupId>
+									<artifactId>jms</artifactId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-context</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-test</artifactId>
+							<version>${spring.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.jbehave</groupId>
+							<artifactId>jbehave-spring</artifactId>
+							<version>${jbehave.version}</version>
+							<exclusions>
+								<exclusion>
+									<groupId>org.springframework</groupId>
+									<artifactId>spring-context</artifactId>
+								</exclusion>
+								<exclusion>
+									<groupId>org.springframework</groupId>
+									<artifactId>spring-test</artifactId>
+								</exclusion>
+							</exclusions>
+						</dependency>
+					</dependencies>
+					<executions>
+						<execution>
+							<id>run-stories-with-annotated-embedder</id>
+							<phase>integration-test</phase>
+							<configuration>
+								<scope>test</scope>
+								<includes>
+									<include>**/StoriesRunner.java</include>
+								</includes>
+							</configuration>
+							<goals>
+								<goal>run-stories-with-annotated-embedder</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<!-- run "mvn hibernate3:hbm2ddl" to generate a schema -->
@@ -474,12 +641,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>org.jbehave</groupId>
-					<artifactId>jbehave-maven-plugin</artifactId>
-					<version>${jbehave.version}</version>
-				</plugin>
-
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -490,10 +651,6 @@
 		</plugins>
 	</build>
 	<modules>
-		<module>midipascher-domain</module>
-		<module>midipascher-tests-fixtures</module>
-		<module>midipascher-server</module>
 		<module>midipascher-webapp</module>
-		<module>midipascher-acceptance-tests</module>
 	</modules>
 </project>
