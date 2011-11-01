@@ -6,6 +6,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
 	<context:component-scan base-package="fr.midipascher.stories.steps" />
 
+	<context:property-placeholder
+		location="classpath:stories-context.properties" />
+
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
 		<constructor-arg ref="httpClientFactory" />
 		<property name="messageConverters">
@@ -47,5 +50,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	</bean>
 
 	<bean id="jaxbMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"/>
+
+	<bean id="endPoint" name="endPoint" class="java.lang.String">
+		<constructor-arg value="${endPoint}" />
+	</bean>
 
 </beans>

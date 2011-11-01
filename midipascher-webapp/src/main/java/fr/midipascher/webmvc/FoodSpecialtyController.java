@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,12 +34,16 @@ import fr.midipascher.domain.business.Facade;
 public class FoodSpecialtyController extends AbstractController {
 
 	@Autowired
-	private Facade	facade;
+	private Facade				facade;
+
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(FoodSpecialtyController.class);
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public HttpEntity<String> create(@RequestBody final FoodSpecialty foodSpecialty, final HttpServletRequest request)
 			throws Throwable {
+
+		System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< creating food specialty");
 
 		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
 

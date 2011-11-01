@@ -439,7 +439,7 @@
 						<contextPath>${webapp.module.context}</contextPath>
 						<connectors>
 							<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-								<port>9080</port>
+								<port>${container.port}</port>
 								<maxIdleTime>60000</maxIdleTime>
 							</connector>
 						</connectors>
@@ -447,14 +447,13 @@
 						<stopKey>foo</stopKey>
 						<stopPort>9180</stopPort>
 						<tmpDirectory>${java.io.tmpdir}</tmpDirectory>
-						<jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
 					</configuration>
 					<executions>
 						<execution>
 							<id>start-jetty</id>
 							<phase>pre-integration-test</phase>
 							<goals>
-								<goal>run</goal>
+								<goal>deploy-war</goal>
 							</goals>
 							<configuration>
 								<daemon>true</daemon>
@@ -469,66 +468,22 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>tomcat-maven-plugin</artifactId>
-					<version>1.1</version>
-					<dependencies>
-						<!-- If not added, jetty complains about spring namespace schemas location 
-							that are not found -->
-						<dependency>
-							<groupId>org.springframework</groupId>
-							<artifactId>spring-context</artifactId>
-							<version>${spring.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.springframework</groupId>
-							<artifactId>spring-webmvc</artifactId>
-							<version>${spring.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>org.springframework</groupId>
-							<artifactId>spring-tx</artifactId>
-							<version>${spring.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>com.h2database</groupId>
-							<artifactId>h2</artifactId>
-							<version>${h2.version}</version>
-						</dependency>
-						<dependency>
-							<groupId>commons-dbcp</groupId>
-							<artifactId>commons-dbcp</artifactId>
-							<version>${commons-dbcp.version}</version>
-						</dependency>
-					</dependencies>
-					<configuration>
-						<path>${webapp.module.context}</path>
-						<contextFile>src/test/resources/context.xml</contextFile>
-						<fork>true</fork>
-						<port>9080</port>
-					</configuration>
-					<executions>
-						<execution>
-							<id>start-tomcat</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<goal>run-war-only</goal>
-							</goals>
-							<configuration>
-								<daemon>true</daemon>
-							</configuration>
-						</execution>
-						<execution>
-							<id>stop-tomcat</id>
-							<phase>post-integration-test</phase>
-							<goals>
-								<goal>shutdown</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				
+				<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>tomcat-maven-plugin</artifactId> 
+					<version>1.1</version> <dependencies> <dependency> <groupId>org.springframework</groupId> 
+					<artifactId>spring-context</artifactId> <version>${spring.version}</version> 
+					</dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-webmvc</artifactId> 
+					<version>${spring.version}</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
+					<artifactId>spring-tx</artifactId> <version>${spring.version}</version> </dependency> 
+					<dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
+					<version>${h2.version}</version> </dependency> <dependency> <groupId>commons-dbcp</groupId> 
+					<artifactId>commons-dbcp</artifactId> <version>${commons-dbcp.version}</version> 
+					</dependency> </dependencies> <configuration> <path>${webapp.module.context}</path> 
+					<contextFile>src/test/resources/context.xml</contextFile> <fork>true</fork> 
+					<port>9080</port> </configuration> <executions> <execution> <id>start-tomcat</id> 
+					<phase>pre-integration-test</phase> <goals> <goal>run-war-only</goal> </goals> 
+					<configuration> <daemon>true</daemon> </configuration> </execution> <execution> 
+					<id>stop-tomcat</id> <phase>post-integration-test</phase> <goals> <goal>shutdown</goal> 
+					</goals> </execution> </executions> </plugin> -->
 				<plugin>
 					<groupId>org.jbehave</groupId>
 					<artifactId>jbehave-maven-plugin</artifactId>
@@ -653,4 +608,73 @@
 	<modules>
 		<module>midipascher-webapp</module>
 	</modules>
+	<profiles>
+		<profile>
+			<id>embedded</id>
+			<properties>
+				<!-- log properties -->
+				<log.file.path>${project.build.directory}/midipascher</log.file.path>
+				<fr.midipascher.log.level>debug</fr.midipascher.log.level>
+
+				<!-- persistence properties -->
+				<javax.persistence.jdbc.driver>org.h2.Driver</javax.persistence.jdbc.driver>
+				<javax.persistence.jdbc.url>jdbc:h2:mem:midipascher-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=true</javax.persistence.jdbc.url>
+				<javax.persistence.jdbc.user>sa</javax.persistence.jdbc.user>
+				<javax.persistence.jdbc.password></javax.persistence.jdbc.password>
+				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
+				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+				<hibernate.show_sql>true</hibernate.show_sql>
+
+				<!-- container properties -->
+				<container.host>localhost</container.host>
+				<container.port>9080</container.port>
+			</properties>
+		</profile>
+		<profile>
+			<id>integration</id>
+			<properties>
+				<!-- log properties -->
+				<log.file.path>/var/log/midipascher/midipascher</log.file.path>
+				<fr.midipascher.log.level>info</fr.midipascher.log.level>
+
+				<!-- persistence properties -->
+				<javax.persistence.jdbc.driver>com.mysql.jdbc.Driver</javax.persistence.jdbc.driver>
+				<javax.persistence.jdbc.url>jdbc:mysql://localhost:3306/midipascher?useUnicode=true&amp;characterEncoding=UTF8</javax.persistence.jdbc.url>
+				<javax.persistence.jdbc.user>root</javax.persistence.jdbc.user>
+				<javax.persistence.jdbc.password>mysql-k1m0n3kh</javax.persistence.jdbc.password>
+				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
+				<hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+
+				<!-- container properties -->
+				<container.host>diveintojee.org</container.host>
+				<container.port>80</container.port>
+				<container.user>tomcat</container.user>
+				<container.password>tc-*m1d1pascher@0</container.password>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<properties>
+				<!-- log properties -->
+				<log.file.path>/var/log/midipascher/midipascher</log.file.path>
+				<fr.midipascher.log.level>info</fr.midipascher.log.level>
+
+				<!-- persistence properties -->
+				<javax.persistence.jdbc.driver>com.mysql.jdbc.Driver</javax.persistence.jdbc.driver>
+				<javax.persistence.jdbc.url>jdbc:mysql://localhost:3306/midipascher?useUnicode=true&amp;characterEncoding=UTF8</javax.persistence.jdbc.url>
+				<javax.persistence.jdbc.user>root</javax.persistence.jdbc.user>
+				<javax.persistence.jdbc.password>mysql-*m1d1pascher@0</javax.persistence.jdbc.password>
+				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
+				<hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
+				<hibernate.show_sql>false</hibernate.show_sql>
+
+				<!-- container properties -->
+				<container.host>midipascher.fr</container.host>
+				<container.port>80</container.port>
+				<container.user>tomcat</container.user>
+				<container.password>tc-*m1d1pascher@0</container.password>
+			</properties>
+		</profile>
+	</profiles>
 </project>

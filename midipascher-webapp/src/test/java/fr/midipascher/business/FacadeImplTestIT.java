@@ -23,7 +23,7 @@ import fr.midipascher.test.TestUtils;
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:META-INF/midipascher-server-test.xml" })
+@ContextConfiguration(locations = { "classpath:midipascher-server.xml" })
 public class FacadeImplTestIT {
 
 	@Autowired

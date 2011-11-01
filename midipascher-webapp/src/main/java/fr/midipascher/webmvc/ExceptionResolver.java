@@ -6,6 +6,8 @@ package fr.midipascher.webmvc;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +21,14 @@ import fr.midipascher.domain.exceptions.NotFoundException;
 @Component
 public class ExceptionResolver {
 
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(ExceptionResolver.class);
+
 	public ResponseError resolve(Throwable th, HttpServletRequest request) {
 		String message = resolveMesage(request, th);
 		int httpStatus = resolveHttpStatus(th);
-		return new ResponseError(message, httpStatus);
+		ResponseError responseError = new ResponseError(message, httpStatus);
+		ExceptionResolver.LOGGER.debug("Resolved response error = " + responseError);
+		return responseError;
 	}
 
 	/**

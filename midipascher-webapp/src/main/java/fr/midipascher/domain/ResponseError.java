@@ -6,7 +6,7 @@ package fr.midipascher.domain;
 /**
  * @author louis.gueye@gmail.com
  */
-public class ResponseError {
+public class ResponseError extends AbstractObject {
 
 	private String	message;
 	private int		httpStatus;

@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(SpringAnnotatedEmbedderRunner.class)
 @Configure
-@UsingEmbedder(embedder = Embedder.class, generateViewAfterStories = true, ignoreFailureInStories = false, ignoreFailureInView = false, threads = 2)
+@UsingEmbedder(embedder = Embedder.class, generateViewAfterStories = true, ignoreFailureInStories = false, ignoreFailureInView = false, threads = 1)
 @UsingSpring(resources = { "jbehave-context.xml", "stories-context.xml" })
 public class StoriesRunner extends InjectableEmbedder {
 

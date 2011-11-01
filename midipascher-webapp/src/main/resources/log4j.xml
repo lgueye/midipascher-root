@@ -3,34 +3,40 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<!-- Appenders -->
-	<appender name="console" class="org.apache.log4j.ConsoleAppender">
-		<param name="Target" value="System.out" />
+	<appender name="ROLL" class="org.apache.log4j.RollingFileAppender">
+		<param name="file" value="${log.file.path}.log" />
+		<param name="MaxFileSize" value="100KB" />
+		<param name="append" value="true" />
+		<param name="encoding" value="UTF-8" />
+		<!-- Keep one backup file -->
+		<param name="MaxBackupIndex" value="1" />
+		<rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
+			<!-- The file to roll to, this is a fairly intelligent parameter, if the 
+				file ends in .gz, it gzips it, based on the date stamp it rolls at that time, 
+				default is yyyy-MM-dd, (rolls at midnight) See: http://logging.apache.org/log4j/companions/extras/apidocs/org/apache/log4j/rolling/TimeBasedRollingPolicy.html -->
+			<param name="FileNamePattern" value="${log.file.path}.%d.log.gz" />
+		</rollingPolicy>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+			<param name="ConversionPattern" value="%p %t %c - %m%n" />
 		</layout>
 	</appender>
-	
 	<!-- Application Loggers -->
 	<logger name="fr.midipascher">
-		<level value="debug" />
+		<level value="${fr.midipascher.log.level}" />
 	</logger>
-	
-	<!-- 3rdparty Loggers
-	<logger name="org.springframework.transaction">
-		<level value="debug" />
+	<logger name="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<level value="${fr.midipascher.log.level}" />
 	</logger>
-	<logger name="org.hibernate.persister.entity">
-		<level value="debug" />
+	<logger name="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+		<level value="${fr.midipascher.log.level}" />
 	</logger>
-	
-	<logger name="org.springframework.orm.jpa.JpaTransactionManager">
-		<level value="debug" />
+	<logger name="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<level value="${fr.midipascher.log.level}" />
 	</logger>
-	 -->
 	<!-- Root Logger -->
 	<root>
 		<priority value="warn" />
-		<appender-ref ref="console" />
+		<appender-ref ref="ROLL" />
 	</root>
-	
+
 </log4j:configuration>

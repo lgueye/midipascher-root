@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -24,9 +26,14 @@ public abstract class AbstractController {
 	@ExceptionHandler
 	protected HttpEntity<String> handleThrowable(HttpServletRequest request, Throwable exception) {
 
+		exception.printStackTrace();
+
 		ResponseError response = this.exceptionResolver.resolve(exception, request);
 
-		final ResponseEntity<String> responseEntity = new ResponseEntity<String>(response.getMessage(),
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.TEXT_PLAIN);
+
+		final ResponseEntity<String> responseEntity = new ResponseEntity<String>(response.getMessage(), headers,
 				HttpStatus.valueOf(response.getHttpStatus()));
 
 		return responseEntity;
