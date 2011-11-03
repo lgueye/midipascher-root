@@ -45,14 +45,15 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	</bean>
 
 	<bean id="httpClientParams" class="org.apache.commons.httpclient.params.HttpClientParams">
+		<property name="authenticationPreemptive" value="true"/>
 		<property name="connectionManagerClass"
 			value="org.apache.commons.httpclient.MultiThreadedHttpConnectionManager" />
 	</bean>
 
 	<bean id="jaxbMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"/>
 
-	<bean id="endPoint" name="endPoint" class="java.lang.String">
-		<constructor-arg value="${endPoint}" />
+	<bean id="baseEndPoint" name="baseEndPoint" class="java.lang.String">
+		<constructor-arg value="${baseEndPoint}" />
 	</bean>
 
 </beans>

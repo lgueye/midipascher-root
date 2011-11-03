@@ -43,6 +43,9 @@
 		<!-- CONTAINER -->
 		<spring.version>3.0.6.RELEASE</spring.version>
 
+		<!-- SECURITY -->
+		<spring.security.version>3.0.7.RELEASE</spring.security.version>
+
 		<!-- WEB, REST, MVC -->
 		<jackson-mapper-asl.version>1.8.5</jackson-mapper-asl.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
@@ -275,6 +278,33 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!-- SECURITY -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${spring.security.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-aop</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-web</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${spring.security.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -314,6 +344,18 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
 		</dependency>
 	</dependencies>
 

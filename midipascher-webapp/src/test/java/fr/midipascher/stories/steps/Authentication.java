@@ -34,8 +34,8 @@ public class Authentication {
 
 	private final HttpHeaders			headers	= new HttpHeaders();
 	@Autowired
-	@Qualifier("endPoint")
-	private String						endPoint;
+	@Qualifier("baseEndPoint")
+	private String						baseEndPoint;
 	private URI							uri;
 	private FoodSpecialty				body;
 	private UsernamePasswordCredentials	credentials;
@@ -63,7 +63,8 @@ public class Authentication {
 	public void sendRequest() {
 		((CommonsClientHttpRequestFactory) this.restTemplate.getRequestFactory()).getHttpClient().getState()
 				.setCredentials(new AuthScope("localhost", 9080, AuthScope.ANY_REALM), this.credentials);
-		this.uri = URI.create(this.endPoint);
+		String endPoint = this.baseEndPoint + "/foodspecialty";
+		this.uri = URI.create(endPoint);
 		final HttpEntity<FoodSpecialty> requestEntity = new HttpEntity<FoodSpecialty>(this.body, this.headers);
 		try {
 			this.restTemplate.exchange(this.uri, HttpMethod.POST, requestEntity, String.class);
@@ -83,13 +84,14 @@ public class Authentication {
 
 	@Then("the response code should be $statusCode")
 	public void expectStatusCode(int statusCode) {
-		if (this.responseException != null) {
-			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< " + this.responseException.getMessage());
-			System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< "
-					+ this.responseException.getMostSpecificCause());
-			this.responseException.printStackTrace();
-		}
-		Assert.assertEquals(statusCode, this.responseException.getStatusCode());
+		// if (this.responseException != null) {
+		// System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< " +
+		// this.responseException.getMessage());
+		// System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< "
+		// + this.responseException.getMostSpecificCause());
+		// this.responseException.printStackTrace();
+		// }
+		Assert.assertEquals(statusCode, this.responseException.getStatusCode().value());
 
 	}
 }

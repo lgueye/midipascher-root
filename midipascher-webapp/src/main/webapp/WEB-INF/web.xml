@@ -10,31 +10,41 @@
 		<param-value>WEB-INF/classes/log4j.xml</param-value>
 	</context-param>
 
+	<!-- - Location of the XML file that defines the root application context 
+		- Applied by ContextLoaderListener. -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>WEB-INF/midipascher-servlet.xml</param-value>
+	</context-param>
+
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>
 
-	<servlet>
-		<servlet-name>midipascher</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+	<!-- 
+		- Loads the root application context of this web app at startup. 
+		- The application context is then available via 
+		- WebApplicationContextUtils.getWebApplicationContext(servletContext). 
+	-->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 
-	<servlet-mapping>
-		<servlet-name>midipascher</servlet-name>
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-	
-	<!-- JNDI 
-	<resource-ref>
-		<description>midipascher.fr datasource</description>
-		<res-ref-name>jdbc/midipascher</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
-	-->
+
+	<!-- JNDI <resource-ref> <description>midipascher.fr datasource</description> 
+		<res-ref-name>jdbc/midipascher</res-ref-name> <res-type>javax.sql.DataSource</res-type> 
+		<res-auth>Container</res-auth> </resource-ref> -->
 </web-app>
