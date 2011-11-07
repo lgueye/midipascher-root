@@ -8,7 +8,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
 	<context:property-placeholder
 		location="classpath:stories-context.properties" />
-
+<!-- 
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
 		<constructor-arg ref="httpClientFactory" />
 		<property name="messageConverters">
@@ -51,7 +51,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	</bean>
 
 	<bean id="jaxbMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller"/>
-
+ -->
 	<bean id="baseEndPoint" name="baseEndPoint" class="java.lang.String">
 		<constructor-arg value="${baseEndPoint}" />
 	</bean>

@@ -25,7 +25,7 @@
 	<properties>
 
 		<!-- LOGGING -->
-		<commons-logging.version>1.1.1</commons-logging.version>
+		<commons-logging.version>99.0-does-not-exist</commons-logging.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<log4j.version>1.2.16</log4j.version>
 
@@ -72,8 +72,8 @@
 		<maven-resources-plugin.version>2.5</maven-resources-plugin.version>
 		<maven-site-plugin.version>3.0</maven-site-plugin.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
-		<maven-failsafe-plugin.version>2.9</maven-failsafe-plugin.version>
-		<maven-surefire-plugin.version>2.9</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>2.10</maven-failsafe-plugin.version>
+		<maven-surefire-plugin.version>2.10</maven-surefire-plugin.version>
 		<maven-jar-plugin.version>2.3.2</maven-jar-plugin.version>
 		<maven-source-plugin.version>2.1.2</maven-source-plugin.version>
 		<hibernate3-maven-plugin.version>2.2</hibernate3-maven-plugin.version>
@@ -280,8 +280,39 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-json</artifactId>
+				<version>${jersey.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.codehaus.jackson</groupId>
+						<artifactId>jackson-jaxrs</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.codehaus.jackson</groupId>
+						<artifactId>jackson-xc</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-apache-client4</artifactId>
+				<version>${jersey.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
+				<version>${jackson-mapper-asl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-jaxrs</artifactId>
+				<version>${jackson-mapper-asl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-xc</artifactId>
 				<version>${jackson-mapper-asl.version}</version>
 			</dependency>
 			<dependency>
@@ -651,6 +682,17 @@
 								</exclusion>
 							</exclusions>
 						</dependency>
+						<dependency>
+							<groupId>com.sun.jersey.contribs</groupId>
+							<artifactId>jersey-apache-client4</artifactId>
+							<version>${jersey.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>com.sun.jersey</groupId>
+							<artifactId>jersey-json</artifactId>
+							<version>${jersey.version}</version>
+						</dependency>
+
 					</dependencies>
 					<executions>
 						<execution>
