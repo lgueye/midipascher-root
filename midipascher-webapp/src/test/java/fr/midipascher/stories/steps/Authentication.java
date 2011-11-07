@@ -37,13 +37,12 @@ public class Authentication {
 
     @Autowired
     @Qualifier("baseEndPoint")
-    private String baseEndPoint;
-    private URI uri;
-    private FoodSpecialty body;
+    String baseEndPoint;
+    URI uri;
+    FoodSpecialty body;
     String requestContentType;
     ClientConfig cc;
     Client jerseyClient;
-
     ClientResponse response;
 
     public Authentication() {
