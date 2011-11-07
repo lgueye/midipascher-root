@@ -1,10 +1,11 @@
 /**
  * 
  */
-package fr.midipascher.webmvc;
+package fr.midipascher.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,19 +25,24 @@ public abstract class AbstractController {
 	private ExceptionResolver	exceptionResolver;
 
 	@ExceptionHandler
-	protected HttpEntity<String> handleThrowable(HttpServletRequest request, Throwable exception) {
-
-		exception.printStackTrace();
+	protected HttpEntity<ResponseError> handleThrowable(HttpServletRequest request, Throwable exception) {
 
 		ResponseError response = this.exceptionResolver.resolve(exception, request);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.TEXT_PLAIN);
+		System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Resolved "
+				+ response);
 
-		final ResponseEntity<String> responseEntity = new ResponseEntity<String>(response.getMessage(), headers,
+		HttpHeaders headers = new HttpHeaders();
+
+		String accept = request.getHeader("Accept");
+
+		if (StringUtils.isEmpty(accept)) headers.setContentType(MediaType.APPLICATION_JSON);
+		else
+			headers.setContentType(MediaType.valueOf(accept));
+
+		final ResponseEntity<ResponseError> responseEntity = new ResponseEntity<ResponseError>(response, headers,
 				HttpStatus.valueOf(response.getHttpStatus()));
 
 		return responseEntity;
 	}
-
 }

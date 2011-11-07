@@ -15,16 +15,17 @@ And I provide a valid create food specialty request body
 When I send a create food specialty request
 Then I should get an unsuccessfull response
 And the response code should be 401
+And the error message should be <message>
 
 Examples:
-|uid|request-contenttype|
-||application/json|
-|unknown-user|application/json|
-||application/xml|
-|unknown-user|application/xml|
-
+|uid|request-contenttype|message|
+||application/json|False (uid,password,privilege) combination|
+|unknown-user|application/json|False (uid,password,privilege) combination|
+||application/xml|False (uid,password,privilege) combination|
+|unknown-user|application/xml|False (uid,password,privilege) combination|
 
 Scenario: create food specialty with wrong password should fail
 Scenario: create food specialty with disabled uid should fail
 Scenario: create food specialty with expired uid should fail
+Scenario: create food specialty with insufficient privileges should fail
 Scenario: search restaurant with no uid should succeed

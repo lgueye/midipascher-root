@@ -21,24 +21,34 @@
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>
 
-	<!-- 
-		- Loads the root application context of this web app at startup. 
-		- The application context is then available via 
-		- WebApplicationContextUtils.getWebApplicationContext(servletContext). 
-	-->
+	<!-- - Loads the root application context of this web app at startup. - 
+		The application context is then available via - WebApplicationContextUtils.getWebApplicationContext(servletContext). -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-
-	<filter>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+<!-- 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
-
-	<filter-mapping>
+ -->
+    <servlet>  
+        <servlet-name>jerseyspring</servlet-name>  
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>  
+        <load-on-startup>1</load-on-startup>  
+    </servlet>  
+    <servlet-mapping>  
+        <servlet-name>jerseyspring</servlet-name>  
+        <url-pattern>/*</url-pattern>  
+    </servlet-mapping>
+    
+<!-- 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+ -->
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

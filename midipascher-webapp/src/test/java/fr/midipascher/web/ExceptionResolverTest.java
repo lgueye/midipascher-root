@@ -1,22 +1,28 @@
 /**
  * 
  */
-package fr.midipascher.webmvc;
+package fr.midipascher.web;
+
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.exceptions.NotFoundException;
+import fr.midipascher.web.ExceptionResolver;
 
 /**
  * @author louis.gueye@gmail.com
@@ -24,19 +30,15 @@ import fr.midipascher.domain.exceptions.NotFoundException;
 @RunWith(MockitoJUnitRunner.class)
 public class ExceptionResolverTest {
 
-	private ExceptionResolver	underTest;
+	@Mock
+	MessageSource					messageSource;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		this.underTest = new ExceptionResolver();
-	}
+	@InjectMocks
+	private final ExceptionResolver	underTest	= new ExceptionResolver();
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -48,7 +50,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -60,7 +62,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -72,7 +74,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -84,7 +86,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -97,7 +99,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -110,7 +112,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -124,7 +126,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -138,7 +140,7 @@ public class ExceptionResolverTest {
 
 	/**
 	 * Test method for
-	 * {@link fr.midipascher.webmvc.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
 	 * .
 	 */
 	@Test
@@ -151,4 +153,30 @@ public class ExceptionResolverTest {
 		Mockito.verify(th).getMessage(preferredLanguage);
 	}
 
+	/**
+	 * Test method for
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * .
+	 */
+	@Test
+	public final void resolveHttpStatusShouldMapTo401WithAuthenticationException() {
+		Throwable th = new BadCredentialsException(null);
+		int httpStatus = this.underTest.resolveHttpStatus(th);
+		Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), httpStatus);
+	}
+
+	/**
+	 * Test method for
+	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
+	 * .
+	 */
+	@Test
+	public final void resolveMessageShouldInvokei18ntranslatorWithAuthenticationException() {
+		Throwable th = new BadCredentialsException(null);
+		String preferredLanguage = "en";
+		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+		Mockito.when(request.getHeader("Accept-Language")).thenReturn(preferredLanguage);
+		this.underTest.resolveMesage(request, th);
+		Mockito.verify(this.messageSource).getMessage("401", null, new Locale(preferredLanguage));
+	}
 }

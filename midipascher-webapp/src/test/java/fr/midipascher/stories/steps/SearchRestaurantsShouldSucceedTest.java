@@ -22,9 +22,9 @@ public class SearchRestaurantsShouldSucceedTest {
 
     @Test
     public void extractCityShouldMatch() {
-        final String location = " a , b c";
+        final String location = " a , b restClient";
         final String extract = underTest.extractCity(location);
-        Assert.assertEquals("c", extract);
+        Assert.assertEquals("restClient", extract);
     }
 
     @Test
@@ -43,21 +43,21 @@ public class SearchRestaurantsShouldSucceedTest {
 
     @Test
     public void extractCityShouldNotMatch2() {
-        final String location = " a , b:c";
+        final String location = " a , b:restClient";
         final String extract = underTest.extractCity(location);
         Assert.assertEquals(StringUtils.EMPTY, extract);
     }
 
     @Test
     public void extractCityShouldNotMatch3() {
-        final String location = " a , b c d e";
+        final String location = " a , b restClient d e";
         final String extract = underTest.extractCity(location);
         Assert.assertEquals(StringUtils.EMPTY, extract);
     }
 
     @Test
     public void extractPostalCodeShouldMatch() {
-        final String location = " a , b c";
+        final String location = " a , b restClient";
         final String extract = underTest.extractPostalCode(location);
         Assert.assertEquals("b", extract);
     }
@@ -78,14 +78,14 @@ public class SearchRestaurantsShouldSucceedTest {
 
     @Test
     public void extractPostalCodeShouldNotMatch2() {
-        final String location = " a , b:c";
+        final String location = " a , b:restClient";
         final String extract = underTest.extractPostalCode(location);
         Assert.assertEquals(StringUtils.EMPTY, extract);
     }
 
     @Test
     public void extractPostalCodeShouldNotMatch3() {
-        final String location = " a , b c d e";
+        final String location = " a , b restClient d e";
         final String extract = underTest.extractPostalCode(location);
         Assert.assertEquals(StringUtils.EMPTY, extract);
     }
@@ -127,7 +127,7 @@ public class SearchRestaurantsShouldSucceedTest {
 
     @Test
     public void extractStreetAddressShouldNotMatch4() {
-        final String location = " a , b, c";
+        final String location = " a , b, restClient";
         final String extract = underTest.extractStreetAddress(location);
         Assert.assertEquals(StringUtils.EMPTY, extract);
     }

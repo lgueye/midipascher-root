@@ -1,14 +1,19 @@
 /**
  * 
  */
-package fr.midipascher.webmvc;
+package fr.midipascher.web;
+
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import fr.midipascher.domain.ResponseError;
@@ -22,6 +27,9 @@ import fr.midipascher.domain.exceptions.NotFoundException;
 public class ExceptionResolver {
 
 	private static final Logger	LOGGER	= LoggerFactory.getLogger(ExceptionResolver.class);
+
+	@Autowired
+	private MessageSource		messageSource;
 
 	public ResponseError resolve(Throwable th, HttpServletRequest request) {
 		String message = resolveMesage(request, th);
@@ -37,6 +45,7 @@ public class ExceptionResolver {
 	 */
 	int resolveHttpStatus(Throwable th) {
 		if (th == null) return HttpStatus.OK.value();
+		if (th instanceof AuthenticationException) return HttpStatus.UNAUTHORIZED.value();
 		if (th instanceof IllegalArgumentException) return HttpStatus.BAD_REQUEST.value();
 		if (th instanceof IllegalStateException) return HttpStatus.INTERNAL_SERVER_ERROR.value();
 		if (th instanceof NotFoundException) return HttpStatus.NOT_FOUND.value();
@@ -54,9 +63,11 @@ public class ExceptionResolver {
 		if (th == null && request == null) return StringUtils.EMPTY;
 		if (th == null) return StringUtils.EMPTY;
 		if (request == null) return th.getMessage();
-		if (!(th instanceof LocalizedException)) return th.getMessage();
 
 		String preferredLanguage = request.getHeader("Accept-Language");
+		if (th instanceof AuthenticationException) return this.messageSource.getMessage("401", null, new Locale(
+				preferredLanguage));
+		if (!(th instanceof LocalizedException)) return th.getMessage();
 		return ((LocalizedException) th).getMessage(preferredLanguage);
 
 	}

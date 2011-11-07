@@ -26,13 +26,13 @@
 
 		<!-- LOGGING -->
 		<commons-logging.version>1.1.1</commons-logging.version>
-		<slf4j.version>1.6.2</slf4j.version>
+		<slf4j.version>1.6.4</slf4j.version>
 		<log4j.version>1.2.16</log4j.version>
 
 		<!-- COMMONS -->
 		<commons-lang.version>3.0.1</commons-lang.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
-		<guava.version>r09</guava.version>
+		<guava.version>10.0.1</guava.version>
 
 		<!-- PERSISTENCE -->
 		<hibernate-entitymanager.version>3.6.5.Final</hibernate-entitymanager.version>
@@ -47,19 +47,20 @@
 		<spring.security.version>3.0.7.RELEASE</spring.security.version>
 
 		<!-- WEB, REST, MVC -->
-		<jackson-mapper-asl.version>1.8.5</jackson-mapper-asl.version>
+		<jersey.version>1.10</jersey.version>
+		<jackson-mapper-asl.version>1.9.2</jackson-mapper-asl.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<servlet-api.version>2.5</servlet-api.version>
-		<xstream.version>1.4.1</xstream.version>
+		<xstream.version>1.4.2</xstream.version>
 
 		<!-- TEST -->
-		<junit.version>4.9</junit.version>
-		<mockito.version>1.8.5</mockito.version>
-		<h2.version>1.3.159</h2.version>
+		<junit.version>4.10</junit.version>
+		<mockito.version>1.9.0-rc1</mockito.version>
+		<h2.version>1.3.161</h2.version>
 		<dbunit.version>2.4.8</dbunit.version>
 		<jetty.version>6.1.26</jetty.version>
 		<groovy.version>1.8.3</groovy.version>
-		<jbehave.version>3.5.1</jbehave.version>
+		<jbehave.version>3.5.2</jbehave.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 
 		<!-- BUILD -->
@@ -178,6 +179,21 @@
 			<!-- CONTAINER -->
 			<dependency>
 				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
 				<artifactId>spring-context-support</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
@@ -198,11 +214,71 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
+				<artifactId>spring-web</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
 
 			<!-- WEB, REST, MVC -->
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>${jersey.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>ant</groupId>
+						<artifactId>ant</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>asm</groupId>
+						<artifactId>asm</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.mail</groupId>
+						<artifactId>mail</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>servlet-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>javax.persistence</groupId>
+						<artifactId>persistence-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.glassfish</groupId>
+						<artifactId>javax.ejb</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.jboss.weld</groupId>
+						<artifactId>weld-osgi-bundle</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.osgi</groupId>
+						<artifactId>osgi_R4_core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>junit</groupId>
+						<artifactId>junit</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey.contribs</groupId>
+				<artifactId>jersey-spring</artifactId>
+				<version>${jersey.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-aop</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-client</artifactId>
+				<version>${jersey.version}</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
