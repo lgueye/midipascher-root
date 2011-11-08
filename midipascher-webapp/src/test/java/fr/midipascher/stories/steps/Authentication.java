@@ -61,12 +61,12 @@ public class Authentication {
     }
 
     @Then("the error message should be <message>")
-    public void expectMessage(final String message) {
-        Assert.assertEquals(message, response.getEntity(String.class));
+    public void expectMessage(@Named("message") final String message) {
+        Assert.assertEquals(message, response.getEntity(String.class).trim());
     }
 
     @Then("the response code should be $statusCode")
-    public void expectStatusCode(final int statusCode) {
+    public void expectStatusCode(@Named("statusCode") final int statusCode) {
         Assert.assertEquals(statusCode, response.getStatus());
     }
 

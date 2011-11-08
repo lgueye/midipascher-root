@@ -19,10 +19,10 @@ And the error message should be <message>
 
 Examples:
 |uid|request-contenttype|message|
-||application/json|False (uid,password,privilege) combination|
-|unknown-user|application/json|False (uid,password,privilege) combination|
-||application/xml|False (uid,password,privilege) combination|
-|unknown-user|application/xml|False (uid,password,privilege) combination|
+||application/json|bad credentials provided|
+|unknown-user|application/json|bad credentials provided|
+||application/xml|bad credentials provided|
+|unknown-user|application/xml|bad credentials provided|
 
 Scenario: create food specialty with wrong password should fail
 Scenario: create food specialty with disabled uid should fail
