@@ -35,63 +35,65 @@ import fr.midipascher.test.TestUtils;
 @Component
 public class Authentication {
 
-    @Autowired
-    @Qualifier("baseEndPoint")
-    String baseEndPoint;
-    URI uri;
-    FoodSpecialty body;
-    String requestContentType;
-    ClientConfig cc;
-    Client jerseyClient;
-    ClientResponse response;
+	@Autowired
+	@Qualifier("baseEndPoint")
+	String			baseEndPoint;
+	URI				uri;
+	FoodSpecialty	body;
+	String			requestContentType;
+	ClientConfig	cc;
+	Client			jerseyClient;
+	ClientResponse	response;
 
-    public Authentication() {
+	public Authentication() {
 
-        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-        jerseyClient = ApacheHttpClient4.create(config);
-        jerseyClient.addFilter(new LoggingFilter());
-        config.getClasses().add(JacksonJsonProvider.class);
-        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		this.jerseyClient = ApacheHttpClient4.create(config);
+		this.jerseyClient.addFilter(new LoggingFilter());
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
-    }
+	}
 
-    @Given("I authenticate with <uid> uid and $password password")
-    public void authenticate(@Named("uid") final String uid, @Named("password") final String password) {
-        jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
-    }
+	@Given("I authenticate with <uid> uid and $password password")
+	public void authenticate(@Named("uid") final String uid, @Named("password") final String password) {
+		this.jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+	}
 
-    @Then("the error message should be <message>")
-    public void expectMessage(@Named("message") final String message) {
-        Assert.assertEquals(message, response.getEntity(String.class).trim());
-    }
+	@Given("I send <request-contenttype>")
+	public void provideRequestContentType(@Named("request-contenttype") final String requestContentType) {
+		this.requestContentType = requestContentType;
+	}
 
-    @Then("the response code should be $statusCode")
-    public void expectStatusCode(@Named("statusCode") final int statusCode) {
-        Assert.assertEquals(statusCode, response.getStatus());
-    }
+	@Given("I provide a valid create food specialty request body")
+	public void provideValidRequestBody() {
+		this.body = TestUtils.validFoodSpecialty();
+	}
 
-    @Given("I send <request-contenttype>")
-    public void provideRequestContentType(@Named("request-contenttype") final String requestContentType) {
-        this.requestContentType = requestContentType;
-    }
+	@When("I send a create food specialty request")
+	public void sendRequest() {
+		this.uri = URI.create(this.baseEndPoint + "/foodspecialty");
+		final WebResource webResource = this.jerseyClient.resource(this.uri);
+		this.response = webResource.header("Content-Type", this.requestContentType).post(ClientResponse.class,
+				this.body);
+	}
 
-    @Given("I provide a valid create food specialty request body")
-    public void provideValidRequestBody() {
-        body = TestUtils.validFoodSpecialty();
-    }
+	@Then("I should get an unsuccessfull response")
+	public void responseShouldBeUnsuccessfull() {
+		Assert.assertNotNull(this.response);
+		Assert.assertNotNull(this.response.getStatus());
+		final int statusCodeFirstDigit = Integer.valueOf(String.valueOf(this.response.getStatus()).substring(0, 1));
+		Assert.assertTrue(statusCodeFirstDigit != 2 && statusCodeFirstDigit != 3);
+	}
 
-    @Then("I should get an unsuccessfull response")
-    public void responseShouldBeUnsuccessfull() {
-        Assert.assertNotNull(response);
-        Assert.assertNotNull(response.getStatus());
-        final int statusCodeFirstDigit = Integer.valueOf(String.valueOf(response.getStatus()).substring(0, 1));
-        Assert.assertTrue(statusCodeFirstDigit != 2 && statusCodeFirstDigit != 3);
-    }
+	@Then("the error message should be <message>")
+	public void expectMessage(@Named("message") final String message) {
+		Assert.assertEquals(message, this.response.getEntity(String.class).trim());
+	}
 
-    @When("I send a create food specialty request")
-    public void sendRequest() {
-        uri = URI.create(baseEndPoint + "/foodspecialty");
-        final WebResource webResource = jerseyClient.resource(uri);
-        response = webResource.header("Content-Type", requestContentType).post(ClientResponse.class, body);
-    }
+	@Then("the response code should be $statusCode")
+	public void expectStatusCode(@Named("statusCode") final int statusCode) {
+		Assert.assertEquals(statusCode, this.response.getStatus());
+	}
+
 }
