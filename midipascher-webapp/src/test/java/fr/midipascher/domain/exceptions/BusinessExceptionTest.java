@@ -27,7 +27,7 @@ public class BusinessExceptionTest {
 		final String messageCode = "test.code";
 		final Object[] messageArgs = new Object[] { "sdfsdf", 5L };
 		final String defaultMessage = "default message";
-		final String preferredLanguage = Locale.ENGLISH.getLanguage();
+		final String preferredLanguage = Locale.ITALIAN.getLanguage();
 		final Throwable cause = new Throwable("bla bla");
 		BusinessException e = null;
 

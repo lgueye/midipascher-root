@@ -41,6 +41,7 @@ public class Authentication {
 	URI				uri;
 	FoodSpecialty	body;
 	String			requestContentType;
+	String			language;
 	ClientConfig	cc;
 	Client			jerseyClient;
 	ClientResponse	response;
@@ -60,9 +61,14 @@ public class Authentication {
 		this.jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
 	}
 
-	@Given("I send <request-contenttype>")
-	public void provideRequestContentType(@Named("request-contenttype") final String requestContentType) {
+	@Given("I send <requestContentType>")
+	public void provideRequestContentType(@Named("requestContentType") final String requestContentType) {
 		this.requestContentType = requestContentType;
+	}
+
+	@Given("I accept <language> language")
+	public void provideresponseAcceptLanguage(@Named("language") final String language) {
+		this.language = language;
 	}
 
 	@Given("I provide a valid create food specialty request body")
@@ -74,8 +80,8 @@ public class Authentication {
 	public void sendRequest() {
 		this.uri = URI.create(this.baseEndPoint + "/foodspecialty");
 		final WebResource webResource = this.jerseyClient.resource(this.uri);
-		this.response = webResource.header("Content-Type", this.requestContentType).post(ClientResponse.class,
-				this.body);
+		this.response = webResource.acceptLanguage(new String[] { this.language })
+				.header("Content-Type", this.requestContentType).post(ClientResponse.class, this.body);
 	}
 
 	@Then("I should get an unsuccessfull response")
