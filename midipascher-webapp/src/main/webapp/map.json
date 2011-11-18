@@ -1,0 +1,22 @@
+{
+    "places": [
+        {
+            "title": "Castillo San Felipe del Morro - San Juan",
+            "description": "Fort San Felipe del Morro —or El Castillo San Felipe del Morro in Spanish— is a sixteenth-century citadel which lies on the northwestern-most point of the islet of San Juan, Puerto Rico. Named in honor of King Philip II of Spain, the fort, also referred to as \"El Morro\" or \"promontory\", was designed to guard the entrance to San Juan bay, and defend the city of San Juan from seaborne enemies. <a href=\"http://en.wikipedia.org/wiki/Fort_San_Felipe_del_Morro\">More Info</a>",
+            "lat": 18.470186,
+            "lng": -66.122096
+        },
+        {
+            "title": "Playa de Jobos - Isabela",
+            "description": "Beautiful beach, great for surfing and soaking up the sun.",
+            "lat": 18.51379572782087,
+            "lng": -67.07676887512207
+        },
+        {
+            "title": "Radiotelescopio de Arecibo - Arecibo",
+            "description": "The Arecibo Observatory is a very sensitive radio telescope located approximately 9 miles (14 km) south-southwest from the city of Arecibo in Puerto Rico. It is operated by Cornell University under cooperative agreement with the National Science Foundation. The observatory works as the National Astronomy and Ionosphere Center (NAIC) although both names are officially used to refer to it. NAIC more properly refers to the organization that runs both the observatory and associated offices at Cornell University. <a href=\"http://en.wikipedia.org/wiki/Arecibo_Observatory\">More Info</a>",
+            "lat": 18.344179271158357,
+            "lng": -66.75267219543457
+        }
+    ]
+}

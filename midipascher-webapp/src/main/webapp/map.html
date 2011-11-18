@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jQuery + Google Maps API v3 Demo</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+	var map;
+	var arrMarkers = [];
+	var arrInfoWindows = [];
+	
+	function mapInit(){
+		var centerCoord = new google.maps.LatLng(18.23, -66.39); // Puerto Rico
+		var mapOptions = {
+			zoom: 9,
+			center: centerCoord,
+			mapTypeId: google.maps.MapTypeId.TERRAIN
+		};
+		map = new google.maps.Map(document.getElementById("map"), mapOptions);
+		
+		$.getJSON("map.json", {}, function(data){
+			$.each(data.places, function(i, item){
+				$("#markers").append('<li><a href="#" rel="' + i + '">' + item.title + '</a></li>');
+				var marker = new google.maps.Marker({
+					position: new google.maps.LatLng(item.lat, item.lng),
+					map: map,
+					title: item.title
+				});
+				arrMarkers[i] = marker;
+				var infowindow = new google.maps.InfoWindow({
+					content: "<h3>"+ item.title +"</h3><p>"+ item.description +"</p>"
+				});
+				arrInfoWindows[i] = infowindow;
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.open(map, marker);
+				});
+			});
+		});
+	}
+	$(function(){
+		// initialize map (create markers, infowindows and list)
+		mapInit();
+		
+		// "live" bind click event
+		$("#markers a").live("click", function(){
+			var i = $(this).attr("rel");
+			// this next line closes all open infowindows before opening the selected one
+			//for(x=0; x < arrInfoWindows.length; x++){ arrInfoWindows[x].close(); }
+			arrInfoWindows[i].open(map, arrMarkers[i]);
+		});
+	});
+</script>
+<style type="text/css" media="screen">
+	img { border: 0; }
+	#map{
+		width: 800px;
+		height: 500px; 
+	}
+	#content {
+		position: fixed;
+		top: 10px;
+		left: 800px;
+		margin: 30px;
+	}
+</style>
+</head>
+<body>
+<div id="container">
+	<div id="header"><a href="../"><img src="../images/header.gif" alt="we are all robots header image" width="600" height="45"/></a></div>
+	<div id="map"></div>
+	<div id="content">
+	<p>this demo uses the newest version of the <a href="http://code.google.com/apis/maps/documentation/v3/">Google Maps API</a> and some jQuery to easily and dynamically create an interactive map of various points of interest (in this case of my country, Puerto Rico). it uses a simple <a href="http://en.wikipedia.org/wiki/Json">JSON</a> file as it's <a href="map.json">data source</a>. when it's finished loading, click an item on the list or a marker on the map to see more info about each location.</p>
+	<ul id="markers"></ul>
+	</div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9506355-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
