@@ -129,6 +129,12 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-core</artifactId>
+			<classifier>resources</classifier>
+			<type>zip</type>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${webapp.module.context}</finalName>

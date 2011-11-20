@@ -15,19 +15,20 @@
 
 	<context:component-scan
 		base-package="fr.midipascher.web" />
-		
+
     <bean id="authenticationFilter"
           class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
           <property name="authenticationManager" ref="authenticationManager"/>
           <property name="authenticationEntryPoint" ref="defaultEntryPoint"/>
     </bean>
     
+
+<!--     
     <bean id="defaultEntryPoint"
           class="fr.midipascher.web.PlainTextBasicAuthenticationEntryPoint">
           <property name="realmName" value="midipascher.fr"/>
 	</bean>         
-
-<!--     <bean id="formAuthenticationEntryPoint"
+<bean id="formAuthenticationEntryPoint"
           class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint"
           p:loginFormUrl="/login.jsp"/>
     <bean id="delegatingAuthenticationEntryPoint" class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">

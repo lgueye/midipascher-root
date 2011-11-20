@@ -62,7 +62,8 @@
 		<dbunit.version>2.4.8</dbunit.version>
 		<jetty.version>6.1.26</jetty.version>
 		<groovy.version>1.8.3</groovy.version>
-		<jbehave.version>3.5.2</jbehave.version>
+		<jbehave.version>3.5.3</jbehave.version>
+		<jbehave-site-resources.version>3.1.1</jbehave-site-resources.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 
 		<!-- BUILD -->
@@ -418,6 +419,21 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			<dependency>
+				<groupId>org.jbehave</groupId>
+				<artifactId>jbehave-core</artifactId>
+				<version>${jbehave.version}</version>
+				<classifier>resources</classifier>
+				<type>zip</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jbehave.site</groupId>
+				<artifactId>jbehave-site-resources</artifactId>
+				<version>${jbehave-site-resources.version}</version>
+				<type>zip</type>
+				<scope>test</scope>
+			</dependency>
 
 			<!-- SECURITY -->
 			<dependency>
@@ -650,22 +666,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>tomcat-maven-plugin</artifactId> 
-					<version>1.1</version> <dependencies> <dependency> <groupId>org.springframework</groupId> 
-					<artifactId>spring-context</artifactId> <version>${spring.version}</version> 
-					</dependency> <dependency> <groupId>org.springframework</groupId> <artifactId>spring-webmvc</artifactId> 
-					<version>${spring.version}</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
-					<artifactId>spring-tx</artifactId> <version>${spring.version}</version> </dependency> 
-					<dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
-					<version>${h2.version}</version> </dependency> <dependency> <groupId>commons-dbcp</groupId> 
-					<artifactId>commons-dbcp</artifactId> <version>${commons-dbcp.version}</version> 
-					</dependency> </dependencies> <configuration> <path>${webapp.module.context}</path> 
-					<contextFile>src/test/resources/context.xml</contextFile> <fork>true</fork> 
-					<port>9080</port> </configuration> <executions> <execution> <id>start-tomcat</id> 
-					<phase>pre-integration-test</phase> <goals> <goal>run-war-only</goal> </goals> 
-					<configuration> <daemon>true</daemon> </configuration> </execution> <execution> 
-					<id>stop-tomcat</id> <phase>post-integration-test</phase> <goals> <goal>shutdown</goal> 
-					</goals> </execution> </executions> </plugin> -->
 				<plugin>
 					<groupId>org.jbehave</groupId>
 					<artifactId>jbehave-maven-plugin</artifactId>
@@ -738,16 +738,28 @@
 					</dependencies>
 					<executions>
 						<execution>
-							<id>run-stories-with-annotated-embedder</id>
+							<id>run-stories-as-embeddables</id>
 							<phase>integration-test</phase>
 							<configuration>
 								<scope>test</scope>
 								<includes>
-									<include>**/StoriesRunner.java</include>
+									<include>${jbehave.embeddables}</include>
 								</includes>
+								<excludes />
+								<skip>${jbehave.skip}</skip>
+								<batch>false</batch>
+								<threads>${jbehave.threads}</threads>
+								<storyTimeoutInSecs>${jbehave.storyTimeoutInSecs}</storyTimeoutInSecs>
+								<generateViewAfterStories>true</generateViewAfterStories>
+								<ignoreFailureInStories>${jbehave.ignoreFailureInStories}</ignoreFailureInStories>
+								<ignoreFailureInView>false</ignoreFailureInView>
+								<metaFilters>
+									<metaFilter>${jbehave.meta.filters}</metaFilter>
+								</metaFilters>
 							</configuration>
 							<goals>
-								<goal>run-stories-with-annotated-embedder</goal>
+								<goal>run-stories-as-embeddables</goal>
+								<goal>unpack-view-resources</goal>
 							</goals>
 						</execution>
 					</executions>
@@ -830,6 +842,14 @@
 				<!-- container properties -->
 				<container.host>localhost</container.host>
 				<container.port>9080</container.port>
+
+				<!-- tests properties -->
+				<jbehave.embeddables>**/StoriesRunner.java</jbehave.embeddables>
+				<jbehave.skip>false</jbehave.skip>
+				<jbehave.threads>4</jbehave.threads>
+				<jbehave.storyTimeoutInSecs>3</jbehave.storyTimeoutInSecs>
+				<jbehave.ignoreFailureInStories>false</jbehave.ignoreFailureInStories>
+				<jbehave.meta.filters></jbehave.meta.filters>
 			</properties>
 		</profile>
 		<profile>
