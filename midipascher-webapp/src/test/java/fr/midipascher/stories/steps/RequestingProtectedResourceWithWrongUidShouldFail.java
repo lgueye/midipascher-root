@@ -33,7 +33,7 @@ import fr.midipascher.test.TestUtils;
  * @author louis.gueye@gmail.com
  */
 @Component
-public class Authentication {
+public class RequestingProtectedResourceWithWrongUidShouldFail {
 
 	@Autowired
 	@Qualifier("baseEndPoint")
@@ -46,7 +46,7 @@ public class Authentication {
 	Client			jerseyClient;
 	ClientResponse	response;
 
-	public Authentication() {
+	public RequestingProtectedResourceWithWrongUidShouldFail() {
 
 		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
 		this.jerseyClient = ApacheHttpClient4.create(config);

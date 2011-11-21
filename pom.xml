@@ -540,7 +540,7 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${maven-site-plugin.version}</version>
 					<configuration>
-						<outputEncoding>$project.build.sourceEncoding}</outputEncoding>
+						<outputEncoding>${project.build.sourceEncoding}</outputEncoding>
 					</configuration>
 				</plugin>
 				<plugin>
