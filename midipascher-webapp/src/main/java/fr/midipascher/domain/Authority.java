@@ -24,16 +24,16 @@ import fr.midipascher.domain.validation.Update;
  * @author louis.gueye@gmail.com
  */
 @Entity
-@Table(name = FoodSpecialty.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { FoodSpecialty.CODE_COLUMN_NAME }) })
+@Table(name = Authority.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { Authority.CODE_COLUMN_NAME }) })
 @XmlRootElement
-public class FoodSpecialty extends AbstractEntity {
+public class Authority extends AbstractEntity {
 
     /**
 	 * 
 	 */
     private static final long serialVersionUID = 8989705365648473442L;
-    public static final String TABLE_NAME = "food_specialty";
-    public static final String ID_COLUMN_NAME = "food_specialty_id";
+    public static final String TABLE_NAME = "authority";
+    public static final String ID_COLUMN_NAME = "authority_id";
     public static final String CODE_COLUMN_NAME = "code";
 
     public static final int CONSTRAINT_CODE_MAX_SIZE = 10;
@@ -41,24 +41,24 @@ public class FoodSpecialty extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = FoodSpecialty.ID_COLUMN_NAME)
-    @NotNull(message = "{foodSpecialty.id.required}", groups = { Update.class, Delete.class })
+    @Column(name = Authority.ID_COLUMN_NAME)
+    @NotNull(message = "{authority.id.required}", groups = { Update.class, Delete.class })
     private Long id;
 
-    @NotEmpty(message = "{foodSpecialty.code.required}", groups = { Create.class, Update.class })
-    @Size(max = FoodSpecialty.CONSTRAINT_CODE_MAX_SIZE, message = "{foodSpecialty.code.max.size}", groups = {
-            Create.class, Update.class })
-    @Column(name = FoodSpecialty.CODE_COLUMN_NAME)
+    @NotEmpty(message = "{authority.code.required}", groups = { Create.class, Update.class })
+    @Size(max = Authority.CONSTRAINT_CODE_MAX_SIZE, message = "{authority.code.max.size}", groups = { Create.class,
+            Update.class })
+    @Column(name = Authority.CODE_COLUMN_NAME)
     private String code;
 
-    @NotEmpty(message = "{foodSpecialty.label.required}", groups = { Create.class, Update.class })
-    @Size(max = FoodSpecialty.CONSTRAINT_LABEL_MAX_SIZE, message = "{foodSpecialty.label.max.size}", groups = {
-            Create.class, Update.class })
+    @NotEmpty(message = "{authority.label.required}", groups = { Create.class, Update.class })
+    @Size(max = Authority.CONSTRAINT_LABEL_MAX_SIZE, message = "{authority.label.max.size}", groups = { Create.class,
+            Update.class })
     private String label;
 
     private boolean active;
 
-    public FoodSpecialty() {
+    public Authority() {
         super();
         setActive(true);
     }
@@ -71,7 +71,7 @@ public class FoodSpecialty extends AbstractEntity {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final FoodSpecialty other = (FoodSpecialty) obj;
+        final Authority other = (Authority) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
