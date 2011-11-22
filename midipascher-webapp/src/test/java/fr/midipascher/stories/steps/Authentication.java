@@ -21,7 +21,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
@@ -33,7 +32,7 @@ import fr.midipascher.test.TestUtils;
  * @author louis.gueye@gmail.com
  */
 @Component
-public class RequestingProtectedResourceWithWrongUidShouldFail {
+public class Authentication {
 
 	@Autowired
 	@Qualifier("baseEndPoint")
@@ -46,19 +45,34 @@ public class RequestingProtectedResourceWithWrongUidShouldFail {
 	Client			jerseyClient;
 	ClientResponse	response;
 
-	public RequestingProtectedResourceWithWrongUidShouldFail() {
+	public Authentication() {
 
 		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
 		this.jerseyClient = ApacheHttpClient4.create(config);
-		this.jerseyClient.addFilter(new LoggingFilter());
+		// this.jerseyClient.addFilter(new LoggingFilter());
 		config.getClasses().add(JacksonJsonProvider.class);
 		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
 	}
 
 	@Given("I authenticate with <uid> uid and $password password")
-	public void authenticate(@Named("uid") final String uid, @Named("password") final String password) {
+	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
 		this.jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+	}
+
+	@Given("I authenticate with $uid uid and <password> password")
+	public void authenticateWithWrongPassword(@Named("uid") final String uid, @Named("password") final String password) {
+		this.jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+	}
+
+	@Then("the error message should be <message>")
+	public void expectMessage(@Named("message") final String message) {
+		Assert.assertEquals(message, this.response.getEntity(String.class).trim());
+	}
+
+	@Then("the response code should be $statusCode")
+	public void expectStatusCode(@Named("statusCode") final int statusCode) {
+		Assert.assertEquals(statusCode, this.response.getStatus());
 	}
 
 	@Given("I send <requestContentType>")
@@ -76,14 +90,6 @@ public class RequestingProtectedResourceWithWrongUidShouldFail {
 		this.body = TestUtils.validFoodSpecialty();
 	}
 
-	@When("I send a create food specialty request")
-	public void sendRequest() {
-		this.uri = URI.create(this.baseEndPoint + "/foodspecialty");
-		final WebResource webResource = this.jerseyClient.resource(this.uri);
-		this.response = webResource.acceptLanguage(new String[] { this.language })
-				.header("Content-Type", this.requestContentType).post(ClientResponse.class, this.body);
-	}
-
 	@Then("I should get an unsuccessfull response")
 	public void responseShouldBeUnsuccessfull() {
 		Assert.assertNotNull(this.response);
@@ -92,14 +98,12 @@ public class RequestingProtectedResourceWithWrongUidShouldFail {
 		Assert.assertTrue(statusCodeFirstDigit != 2 && statusCodeFirstDigit != 3);
 	}
 
-	@Then("the error message should be <message>")
-	public void expectMessage(@Named("message") final String message) {
-		Assert.assertEquals(message, this.response.getEntity(String.class).trim());
-	}
-
-	@Then("the response code should be $statusCode")
-	public void expectStatusCode(@Named("statusCode") final int statusCode) {
-		Assert.assertEquals(statusCode, this.response.getStatus());
+	@When("I send a create food specialty request")
+	public void sendRequest() {
+		this.uri = URI.create(this.baseEndPoint + "/foodspecialty");
+		final WebResource webResource = this.jerseyClient.resource(this.uri);
+		this.response = webResource.acceptLanguage(new String[] { this.language })
+				.header("Content-Type", this.requestContentType).post(ClientResponse.class, this.body);
 	}
 
 }

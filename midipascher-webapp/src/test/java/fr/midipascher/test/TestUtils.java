@@ -26,6 +26,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 
 import fr.midipascher.domain.Address;
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 
@@ -137,6 +138,16 @@ public abstract class TestUtils {
 
 		return out.toString("UTF-8");
 
+	}
+
+	/**
+	 * @return
+	 */
+	public static Authority validAuthority() {
+		final Authority authority = new Authority();
+		authority.setCode(RandomStringUtils.random(Authority.CONSTRAINT_CODE_MAX_SIZE, TestUtils.charSet));
+		authority.setLabel(RandomStringUtils.random(Authority.CONSTRAINT_LABEL_MAX_SIZE, TestUtils.charSet));
+		return authority;
 	}
 
 }
