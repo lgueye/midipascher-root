@@ -35,12 +35,14 @@
 		<commons-codec.version>1.5</commons-codec.version>
 		<commons-io.version>2.1</commons-io.version>
 		<guava.version>10.0.1</guava.version>
+		<joda-time.version>1.6.2</joda-time.version>
 
 		<!-- PERSISTENCE -->
 		<hibernate-entitymanager.version>3.6.5.Final</hibernate-entitymanager.version>
 		<hibernate-jpa-2.0-api.version>1.0.1.Final</hibernate-jpa-2.0-api.version>
 		<validation-api.version>1.0.0.GA</validation-api.version>
 		<hibernate-validator-annotation-processor>4.2.0.Final</hibernate-validator-annotation-processor>
+		<joda-time-hibernate.version>1.3</joda-time-hibernate.version>
 
 		<!-- CONTAINER -->
 		<spring.version>3.0.6.RELEASE</spring.version>
@@ -177,6 +179,34 @@
 						<artifactId>validation-api</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time-hibernate</artifactId>
+				<version>${joda-time-hibernate.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>hsqldb</groupId>
+						<artifactId>hsqldb</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>junit</groupId>
+						<artifactId>junit</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-core</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-entitymanager</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${joda-time.version}</version>
 			</dependency>
 
 			<!-- CONTAINER -->
@@ -512,6 +542,14 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time-hibernate</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
 		</dependency>
 	</dependencies>
 
