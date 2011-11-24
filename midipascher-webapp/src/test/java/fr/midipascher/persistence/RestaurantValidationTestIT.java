@@ -24,363 +24,363 @@ import fr.midipascher.test.TestUtils;
  */
 public class RestaurantValidationTestIT extends BasePersistenceTestIT {
 
-	private Restaurant	underTest	= null;
+    private Restaurant underTest = null;
+
+    /**
+     * Given : a valid restaurant valued with an invalid address<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateAddressRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final Address wrongData = null;
+        underTest.setAddress(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.address.required}", "address");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid city<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateCityRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.getAddress().setCity(wrongData);
+
+        assertExpectedViolation(underTest, context, "{address.city.required}", "address.city");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid city<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateCitySizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE + 1);
+        underTest.getAddress().setCity(wrongData);
+
+        assertExpectedViolation(underTest, context, "{address.city.max.size}", "address.city");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid company id<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateCompanyIdRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.setCompanyId(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.companyId.required}", "companyId");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid companyId<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateCompanyIdSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE + 1);
+        underTest.setCompanyId(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.companyId.max.size}", "companyId");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid country code<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateCountryCodeRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.getAddress().setCountryCode(wrongData);
+
+        assertExpectedViolation(underTest, context, "{address.countryCode.required}", "address.countryCode");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid country code<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateCountryCodeSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE + 1);
+        underTest.getAddress().setCountryCode(wrongData);
+
+        assertExpectedViolation(underTest, context, "{address.countryCode.exact.size}", "address.countryCode");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid description<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateDescriptionSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE + 1);
+        underTest.setDescription(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.description.max.size}", "description");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid main offer<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateMainOfferSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE + 1);
+        underTest.setMainOffer(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.mainOffer.max.size}", "mainOffer");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid name<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateNameRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.setName(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.name.required}", "name");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid name<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateNameSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_NAME_MAX_SIZE + 1);
+        underTest.setName(wrongData);
 
-	/**
-	 * Validate "create restaurant use case"
-	 */
-	@Test
-	public void shouldValidateRestaurantForCreateContext() {
+        assertExpectedViolation(underTest, context, "{restaurant.name.max.size}", "name");
 
-		shouldValidateNameRequiredConstraint(ValidationContext.CREATE);
+    }
 
-		shouldValidateNameSizeConstraint(ValidationContext.CREATE);
+    /**
+     * Given : a valid restaurant valued with an invalid phone number<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidatePhoneNumberRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.setPhoneNumber(wrongData);
 
-		shouldValidateDescriptionSizeConstraint(ValidationContext.CREATE);
+        assertExpectedViolation(underTest, context, "{restaurant.phoneNumber.required}", "phoneNumber");
 
-		shouldValidateEmailRequiredConstraint(ValidationContext.CREATE);
+    }
 
-		shouldValidateEmailValidFormatConstraint(ValidationContext.CREATE);
+    /**
+     * Given : a valid restaurant valued with an invalid phone number<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidatePhoneNumberSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE + 1);
+        underTest.setPhoneNumber(wrongData);
 
-		shouldValidatePhoneNumberRequiredConstraint(ValidationContext.CREATE);
+        assertExpectedViolation(underTest, context, "{restaurant.phoneNumber.max.size}", "phoneNumber");
 
-		shouldValidatePhoneNumberSizeConstraint(ValidationContext.CREATE);
+    }
 
-		shouldValidateMainOfferSizeConstraint(ValidationContext.CREATE);
+    /**
+     * Given : a valid restaurant valued with an invalid postal code<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidatePostalCodeRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.getAddress().setPostalCode(wrongData);
 
-		shouldValidateAddressRequiredConstraint(ValidationContext.CREATE);
+        assertExpectedViolation(underTest, context, "{address.postalCode.required}", "address.postalCode");
 
-		shouldValidateStreetAddressRequiredConstraint(ValidationContext.CREATE);
+    }
 
-		shouldValidateStreetAddressSizeConstraint(ValidationContext.CREATE);
+    /**
+     * Given : a valid restaurant valued with an invalid postal code<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidatePostalCodeSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE + 1);
+        underTest.getAddress().setPostalCode(wrongData);
 
-		shouldValidateCityRequiredConstraint(ValidationContext.CREATE);
+        assertExpectedViolation(underTest, context, "{address.postalCode.max.size}", "address.postalCode");
 
-		shouldValidateCitySizeConstraint(ValidationContext.CREATE);
+    }
 
-		shouldValidatePostalCodeRequiredConstraint(ValidationContext.CREATE);
+    /**
+     * Validate "create restaurant use case"
+     */
+    @Test
+    public void shouldValidateRestaurantForCreateContext() {
 
-		shouldValidatePostalCodeSizeConstraint(ValidationContext.CREATE);
+        shouldValidateNameRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateCountryCodeRequiredConstraint(ValidationContext.CREATE);
+        shouldValidateNameSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateCountryCodeSizeConstraint(ValidationContext.CREATE);
+        shouldValidateDescriptionSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateSpecialtiesRequiredConstraint(ValidationContext.CREATE);
+        shouldValidateCompanyIdRequiredConstraint(ValidationContext.CREATE);
 
-	}
+        shouldValidateCompanyIdSizeConstraint(ValidationContext.CREATE);
 
-	/**
-	 * Validate "create restaurant use case"
-	 */
-	@Test
-	public void shouldValidateRestaurantForUpdateContext() {
+        shouldValidatePhoneNumberRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateNameRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidatePhoneNumberSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateNameSizeConstraint(ValidationContext.UPDATE);
+        shouldValidateMainOfferSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateDescriptionSizeConstraint(ValidationContext.UPDATE);
+        shouldValidateAddressRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateEmailRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidateStreetAddressRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateEmailValidFormatConstraint(ValidationContext.UPDATE);
+        shouldValidateStreetAddressSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidatePhoneNumberRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidateCityRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidatePhoneNumberSizeConstraint(ValidationContext.UPDATE);
+        shouldValidateCitySizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateMainOfferSizeConstraint(ValidationContext.UPDATE);
+        shouldValidatePostalCodeRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateAddressRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidatePostalCodeSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateStreetAddressRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidateCountryCodeRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateStreetAddressSizeConstraint(ValidationContext.UPDATE);
+        shouldValidateCountryCodeSizeConstraint(ValidationContext.CREATE);
 
-		shouldValidateCityRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidateSpecialtiesRequiredConstraint(ValidationContext.CREATE);
 
-		shouldValidateCitySizeConstraint(ValidationContext.UPDATE);
+    }
 
-		shouldValidatePostalCodeRequiredConstraint(ValidationContext.UPDATE);
+    /**
+     * Validate "create restaurant use case"
+     */
+    @Test
+    public void shouldValidateRestaurantForUpdateContext() {
 
-		shouldValidatePostalCodeSizeConstraint(ValidationContext.UPDATE);
+        shouldValidateNameRequiredConstraint(ValidationContext.UPDATE);
 
-		shouldValidateCountryCodeRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidateNameSizeConstraint(ValidationContext.UPDATE);
 
-		shouldValidateCountryCodeSizeConstraint(ValidationContext.UPDATE);
+        shouldValidateDescriptionSizeConstraint(ValidationContext.UPDATE);
 
-		shouldValidateSpecialtiesRequiredConstraint(ValidationContext.UPDATE);
+        shouldValidateCompanyIdRequiredConstraint(ValidationContext.CREATE);
 
-	}
+        shouldValidateCompanyIdSizeConstraint(ValidationContext.CREATE);
 
-	/**
-	 * Given : a valid restaurant valued with an invalid name<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateNameRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.setName(wrongData);
+        shouldValidatePhoneNumberRequiredConstraint(ValidationContext.UPDATE);
 
-		assertExpectedViolation(this.underTest, context, "{restaurant.name.required}", "name");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid name<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateNameSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_NAME_MAX_SIZE + 1);
-		this.underTest.setName(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.name.max.size}", "name");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid phone number<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidatePhoneNumberRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.setPhoneNumber(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.phoneNumber.required}", "phoneNumber");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with invalid specialties list<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateSpecialtiesRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final Set<FoodSpecialty> wrongData = null;
-		this.underTest.setSpecialties(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.specialties.required}", "specialties");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid address<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateAddressRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final Address wrongData = null;
-		this.underTest.setAddress(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.address.required}", "address");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid street address<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateStreetAddressRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.getAddress().setStreetAddress(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.streetAddress.required}", "address.streetAddress");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid street address<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateStreetAddressSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE + 1);
-		this.underTest.getAddress().setStreetAddress(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.streetAddress.max.size}", "address.streetAddress");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid city<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateCityRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.getAddress().setCity(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.city.required}", "address.city");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid city<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateCitySizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE + 1);
-		this.underTest.getAddress().setCity(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.city.max.size}", "address.city");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid postal code<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidatePostalCodeRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.getAddress().setPostalCode(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.postalCode.required}", "address.postalCode");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid postal code<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidatePostalCodeSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE + 1);
-		this.underTest.getAddress().setPostalCode(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.postalCode.max.size}", "address.postalCode");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid country code<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateCountryCodeRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.getAddress().setCountryCode(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.countryCode.required}", "address.countryCode");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid country code<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateCountryCodeSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE + 1);
-		this.underTest.getAddress().setCountryCode(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{address.countryCode.exact.size}", "address.countryCode");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid phone number<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidatePhoneNumberSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE + 1);
-		this.underTest.setPhoneNumber(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.phoneNumber.max.size}", "phoneNumber");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid main offer<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateMainOfferSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE + 1);
-		this.underTest.setMainOffer(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.mainOffer.max.size}", "mainOffer");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid description<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateDescriptionSizeConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE + 1);
-		this.underTest.setDescription(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.description.max.size}", "description");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid email<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateEmailRequiredConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = null;
-		this.underTest.setEmail(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.email.required}", "email");
-
-	}
-
-	/**
-	 * Given : a valid restaurant valued with an invalid email<br/>
-	 * When : one persists the above restaurant<br/>
-	 * Then : system should throw a {@link ConstraintViolationException}<br/>
-	 */
-	private void shouldValidateEmailValidFormatConstraint(final ValidationContext context) {
-		// Given
-		this.underTest = TestUtils.validRestaurant();
-		final String wrongData = "foo.bar";
-		this.underTest.setEmail(wrongData);
-
-		assertExpectedViolation(this.underTest, context, "{restaurant.email.valid.format.required}", "email");
-
-	}
+        shouldValidatePhoneNumberSizeConstraint(ValidationContext.UPDATE);
+
+        shouldValidateMainOfferSizeConstraint(ValidationContext.UPDATE);
+
+        shouldValidateAddressRequiredConstraint(ValidationContext.UPDATE);
+
+        shouldValidateStreetAddressRequiredConstraint(ValidationContext.UPDATE);
+
+        shouldValidateStreetAddressSizeConstraint(ValidationContext.UPDATE);
+
+        shouldValidateCityRequiredConstraint(ValidationContext.UPDATE);
+
+        shouldValidateCitySizeConstraint(ValidationContext.UPDATE);
+
+        shouldValidatePostalCodeRequiredConstraint(ValidationContext.UPDATE);
+
+        shouldValidatePostalCodeSizeConstraint(ValidationContext.UPDATE);
+
+        shouldValidateCountryCodeRequiredConstraint(ValidationContext.UPDATE);
+
+        shouldValidateCountryCodeSizeConstraint(ValidationContext.UPDATE);
+
+        shouldValidateSpecialtiesRequiredConstraint(ValidationContext.UPDATE);
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with invalid specialties list<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateSpecialtiesRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final Set<FoodSpecialty> wrongData = null;
+        underTest.setSpecialties(wrongData);
+
+        assertExpectedViolation(underTest, context, "{restaurant.specialties.required}", "specialties");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid street address<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateStreetAddressRequiredConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = null;
+        underTest.getAddress().setStreetAddress(wrongData);
+
+        assertExpectedViolation(underTest, context, "{address.streetAddress.required}", "address.streetAddress");
+
+    }
+
+    /**
+     * Given : a valid restaurant valued with an invalid street address<br/>
+     * When : one persists the above restaurant<br/>
+     * Then : system should throw a {@link ConstraintViolationException}<br/>
+     */
+    private void shouldValidateStreetAddressSizeConstraint(final ValidationContext context) {
+        // Given
+        underTest = TestUtils.validRestaurant();
+        final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE + 1);
+        underTest.getAddress().setStreetAddress(wrongData);
+
+        assertExpectedViolation(underTest, context, "{address.streetAddress.max.size}", "address.streetAddress");
+
+    }
 }

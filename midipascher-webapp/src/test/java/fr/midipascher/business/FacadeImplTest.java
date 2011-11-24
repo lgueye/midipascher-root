@@ -333,11 +333,13 @@ public class FacadeImplTest {
 
         Mockito.verify(persistedInstance).setDescription(restaurant.getDescription());
 
-        Mockito.verify(persistedInstance).setEmail(restaurant.getEmail());
+        Mockito.verify(persistedInstance).setCompanyId(restaurant.getCompanyId());
 
         Mockito.verify(persistedInstance).setKosher(restaurant.isKosher());
 
         Mockito.verify(persistedInstance).setHalal(restaurant.isHalal());
+
+        Mockito.verify(persistedInstance).setVegetarian(restaurant.isVegetarian());
 
         Mockito.verify(persistedInstance).setMainOffer(restaurant.getMainOffer());
 
