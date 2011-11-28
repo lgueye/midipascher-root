@@ -349,6 +349,8 @@ public class FacadeImplTest {
 
         Mockito.verify(persistedInstance).setSpecialties(restaurant.getSpecialties());
 
+        Mockito.verify(persistedInstance).setUser(restaurant.getUser());
+
     }
 
     @Test(expected = IllegalArgumentException.class)

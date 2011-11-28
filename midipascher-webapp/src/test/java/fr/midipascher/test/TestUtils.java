@@ -23,12 +23,14 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.User;
 
 /**
  * @author louis.gueye@gmail.com
@@ -149,7 +151,24 @@ public abstract class TestUtils {
         restaurant.setPhoneNumber(RandomStringUtils.random(Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE,
             TestUtils.charSet));
         restaurant.setSpecialties(new HashSet<FoodSpecialty>(Arrays.asList(TestUtils.validFoodSpecialty())));
+        restaurant.setUser(TestUtils.validUser());
         return restaurant;
+    }
+
+    /**
+     * @return
+     */
+    public static User validUser() {
+        final User user = new User();
+        user.setAuthorities(new HashSet<Authority>(Arrays.asList(TestUtils.validAuthority())));
+        user.setCreated(new DateTime());
+        user.setEmail("foo@bar.com");
+        user.setFirstName(RandomStringUtils.random(User.CONSTRAINT_FIRST_NAME_MAX_SIZE, TestUtils.charSet));
+        user.setLastConnection(new DateTime());
+        user.setLastName(RandomStringUtils.random(User.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.charSet));
+        user.setLocked(false);
+        user.setPassword(RandomStringUtils.random(User.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.charSet));
+        return user;
     }
 
 }
