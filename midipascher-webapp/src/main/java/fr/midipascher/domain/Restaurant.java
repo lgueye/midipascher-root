@@ -5,7 +5,6 @@ package fr.midipascher.domain;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -31,7 +31,7 @@ import fr.midipascher.domain.validation.Update;
  * @author louis.gueye@gmail.com
  */
 @Entity
-@Table(name = Restaurant.TABLE_NAME)
+@Table(name = Restaurant.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { Restaurant.COLUMN_NAME_COMPANY_ID }) })
 @XmlRootElement
 public class Restaurant extends AbstractEntity {
 
@@ -92,7 +92,7 @@ public class Restaurant extends AbstractEntity {
 
     private boolean vegetarian;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = Restaurant.TABLE_NAME_RESTAURANT_FOOD_SPECIALTY, joinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = FoodSpecialty.ID_COLUMN_NAME) })
     @Valid
     @NotEmpty(message = "{restaurant.specialties.required}", groups = { Create.class, Update.class })

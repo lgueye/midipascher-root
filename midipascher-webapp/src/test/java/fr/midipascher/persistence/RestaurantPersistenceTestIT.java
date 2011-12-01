@@ -30,6 +30,7 @@ import org.springframework.util.ResourceUtils;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.User;
 import fr.midipascher.test.TestUtils;
 
 /**
@@ -95,7 +96,7 @@ public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldCreateRestaurant() {
         // Given
-        final Restaurant restaurant = TestUtils.validRestaurant();
+        final Restaurant restaurant = validRestaurant();
 
         // When
         baseDao.persist(restaurant);
@@ -114,7 +115,7 @@ public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldDeleteRestaurant() {
         // Given
-        final Restaurant restaurant = TestUtils.validRestaurant();
+        final Restaurant restaurant = validRestaurant();
 
         // When
         baseDao.persist(restaurant);
@@ -322,7 +323,8 @@ public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldUpdateRestaurant() {
         // Given
-        final Restaurant restaurant = TestUtils.validRestaurant();
+        final Restaurant restaurant = validRestaurant();
+
         baseDao.persist(restaurant);
         baseDao.flush();
         baseDao.evict(restaurant);
@@ -377,5 +379,18 @@ public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {
 
         // Then
         assertRestaurantHasSpecialties(persistedRestaurant, new HashSet<Long>(Arrays.asList(2L, 4L, 5L)));
+    }
+
+    private Restaurant validRestaurant() {
+        final Restaurant restaurant = TestUtils.validRestaurant();
+        restaurant.getSpecialties().clear();
+
+        final User user = baseDao.get(User.class, 2L);
+        // Should reference valid persisted user
+        restaurant.setUser(user);
+        final FoodSpecialty foodSpecialty = baseDao.get(FoodSpecialty.class, 1L);
+        // Should reference at least one valid persisted foodSpecialty
+        restaurant.getSpecialties().add(foodSpecialty);
+        return restaurant;
     }
 }

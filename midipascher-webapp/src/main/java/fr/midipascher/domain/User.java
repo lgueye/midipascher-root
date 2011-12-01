@@ -5,7 +5,6 @@ package fr.midipascher.domain;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -95,7 +94,7 @@ public class User extends AbstractEntity {
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     private DateTime lastConnection;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = User.TABLE_NAME_USER_AUTHORITY, joinColumns = { @JoinColumn(name = User.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Authority.COLUMN_NAME_ID) })
     @Valid
     @NotEmpty(message = "{user.authorities.required}", groups = { Create.class, Update.class })

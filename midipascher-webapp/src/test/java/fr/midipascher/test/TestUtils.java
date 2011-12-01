@@ -142,7 +142,7 @@ public abstract class TestUtils {
         restaurant.setAddress(TestUtils.validAddress());
         restaurant.setDescription(RandomStringUtils.random(Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE,
             TestUtils.charSet));
-        restaurant.setCompanyId("foo@bar.com");
+        restaurant.setCompanyId(RandomStringUtils.random(Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE, TestUtils.charSet));
         restaurant.setHalal(true);
         restaurant.setKosher(false);
         restaurant.setVegetarian(false);
