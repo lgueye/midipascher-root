@@ -3,8 +3,6 @@
  */
 package fr.midipascher.web;
 
-import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,22 +17,25 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.servlet.LocaleResolver;
 
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.exceptions.NotFoundException;
-import fr.midipascher.web.ExceptionResolver;
 
 /**
  * @author louis.gueye@gmail.com
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ExceptionResolverTest {
+public class ExceptionConverterTest {
 
 	@Mock
-	MessageSource					messageSource;
+	MessageSource						messageSource;
+
+	@Mock
+	LocaleResolver						localeResolver;
 
 	@InjectMocks
-	private final ExceptionResolver	underTest	= new ExceptionResolver();
+	private final ExceptionConverter	underTest	= new ExceptionConverter();
 
 	/**
 	 * Test method for
@@ -146,7 +147,7 @@ public class ExceptionResolverTest {
 	@Test
 	public final void resolveMessageShouldInvokeLocalizedExceptionMessageResolver() {
 		BusinessException th = Mockito.mock(BusinessException.class);
-		String preferredLanguage = "es";
+		String preferredLanguage = "en";
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 		Mockito.when(request.getHeader("Accept-Language")).thenReturn(preferredLanguage);
 		this.underTest.resolveMesage(request, th);
@@ -165,18 +166,4 @@ public class ExceptionResolverTest {
 		Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), httpStatus);
 	}
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveMessageShouldInvokei18ntranslatorWithAuthenticationException() {
-		Throwable th = new BadCredentialsException(null);
-		String preferredLanguage = "en";
-		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-		Mockito.when(request.getHeader("Accept-Language")).thenReturn(preferredLanguage);
-		this.underTest.resolveMesage(request, th);
-		Mockito.verify(this.messageSource).getMessage("401", null, new Locale(preferredLanguage));
-	}
 }

@@ -4,15 +4,25 @@
 package fr.midipascher.web;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,13 +39,12 @@ import fr.midipascher.domain.business.Facade;
 public class FoodSpecialtyController {
 
 	@Autowired
-	private Facade	facade;
+	private Facade				facade;
 
 	@Context
-	UriInfo			uriInfo;
+	private UriInfo				uriInfo;
 
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(FoodSpecialtyController.class);
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(FoodSpecialtyController.class);
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -49,76 +58,45 @@ public class FoodSpecialtyController {
 
 	}
 
-	//
-	// @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	// @ResponseStatus(value = HttpStatus.OK)
-	// @ResponseBody
-	// public FoodSpecialty get(@PathVariable("id") final Long foodSpecialtyId)
-	// {
-	// return this.facade.readFoodSpecialty(foodSpecialtyId);
-	// }
-	//
-	// @RequestMapping(method = RequestMethod.GET)
-	// @ResponseBody
-	// public List<FoodSpecialty> list() {
-	// return this.facade.listFoodSpecialties();
-	// }
-	//
-	// @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	// public HttpEntity<String> update(@RequestBody final FoodSpecialty
-	// foodSpecialty) throws Throwable {
-	//
-	// this.facade.updateFoodSpecialty(foodSpecialty);
-	//
-	// final ResponseEntity<String> responseEntity = new
-	// ResponseEntity<String>(HttpStatus.OK);
-	//
-	// return responseEntity;
-	//
-	// }
-	//
-	// @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	// @ResponseStatus(value = HttpStatus.OK)
-	// public HttpEntity<String> delete(@PathVariable("id") final Long
-	// foodSpecialtyId) {
-	//
-	// this.facade.deleteFoodSpecialty(foodSpecialtyId);
-	//
-	// final ResponseEntity<String> responseEntity = new
-	// ResponseEntity<String>(HttpStatus.OK);
-	//
-	// return responseEntity;
-	//
-	// }
-	//
-	// @Autowired
-	// private ExceptionResolver exceptionResolver;
-	//
-	// @Override
-	// @ExceptionHandler
-	// protected HttpEntity<ResponseError> handleThrowable(HttpServletRequest
-	// request, Throwable exception) {
-	//
-	// ResponseError response = this.exceptionResolver.resolve(exception,
-	// request);
-	//
-	// System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Resolved "
-	// + response);
-	//
-	// HttpHeaders headers = new HttpHeaders();
-	//
-	// String accept = request.getHeader("Accept");
-	//
-	// if (StringUtils.isEmpty(accept))
-	// headers.setContentType(MediaType.APPLICATION_JSON);
-	// else
-	// headers.setContentType(MediaType.valueOf(accept));
-	//
-	// final ResponseEntity<ResponseError> responseEntity = new
-	// ResponseEntity<ResponseError>(response, headers,
-	// HttpStatus.valueOf(response.getHttpStatus()));
-	//
-	// return responseEntity;
-	// }
+	@DELETE
+	@Path("{id}")
+	public Response delete(@PathParam(value = "id") final Long id) throws Throwable {
+
+		this.facade.deleteFoodSpecialty(id);
+
+		return Response.noContent().build();
+
+	}
+
+	@GET
+	@Path("{id}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
+
+		final FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(id);
+
+		if (foodSpecialty == null) return Response.status(Response.Status.NOT_FOUND).build();
+
+		return Response.ok(foodSpecialty).build();
+
+	}
+
+	@POST
+	@Path(value = "find")
+	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response find(final @FormParam("code") String code, final @FormParam("label") String label,
+			final @FormParam("active") boolean active) throws Throwable {
+
+		final List<FoodSpecialty> results = this.facade.listFoodSpecialties();
+
+		final GenericEntity<List<FoodSpecialty>> entity = new GenericEntity<List<FoodSpecialty>>(results) {
+		};
+
+		if (CollectionUtils.isEmpty(results)) FoodSpecialtyController.LOGGER.info("No results found");
+
+		return Response.ok(entity).build();
+
+	}
 
 }

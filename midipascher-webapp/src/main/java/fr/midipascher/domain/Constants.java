@@ -5,6 +5,7 @@ package fr.midipascher.domain;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author louis.gueye@gmail.com
@@ -12,4 +13,5 @@ import java.util.List;
 public class Constants {
 	public static final String			MESSAGES_BUNDLE_NAME	= "messages";
 	public static final List<String>	SUPPORTED_LOCALES		= Arrays.asList("fr", "en");
+	public static final Locale			DEFAULT_LOCALE			= Locale.ENGLISH;
 }

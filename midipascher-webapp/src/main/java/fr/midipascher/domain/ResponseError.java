@@ -12,6 +12,13 @@ public class ResponseError extends AbstractObject {
 	private int		httpStatus;
 
 	/**
+	 * 
+	 */
+	public ResponseError() {
+		super();
+	}
+
+	/**
 	 * @param errorCode
 	 * @param message
 	 * @param httpStatus

@@ -49,6 +49,7 @@
 
 		<!-- SECURITY -->
 		<spring.security.version>3.0.7.RELEASE</spring.security.version>
+		<jsr250-api.version>1.0</jsr250-api.version>
 
 		<!-- WEB, REST, MVC -->
 		<jersey.version>1.10</jersey.version>
@@ -467,6 +468,11 @@
 
 			<!-- SECURITY -->
 			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>jsr250-api</artifactId>
+				<version>${jsr250-api.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-core</artifactId>
 				<version>${spring.security.version}</version>
@@ -538,6 +544,10 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -882,12 +892,12 @@
 				<container.port>9080</container.port>
 
 				<!-- tests properties -->
-				<jbehave.embeddables>**/StoriesRunner.java</jbehave.embeddables>
+				<jbehave.embeddables>**/*Story.java</jbehave.embeddables>
 				<jbehave.skip>false</jbehave.skip>
 				<jbehave.threads>1</jbehave.threads>
 				<jbehave.storyTimeoutInSecs>3</jbehave.storyTimeoutInSecs>
 				<jbehave.ignoreFailureInStories>false</jbehave.ignoreFailureInStories>
-				<jbehave.meta.filters></jbehave.meta.filters>
+				<jbehave.meta.filters>+progress wip</jbehave.meta.filters>
 			</properties>
 		</profile>
 		<profile>

@@ -1,12 +1,10 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.LocaleResolver;
-
-import fr.midipascher.domain.Constants;
 
 /**
  * @author louis.gueye@gmail.com
@@ -28,12 +23,12 @@ public class PlainTextBasicAuthenticationEntryPoint extends BasicAuthenticationE
 
 	public static final String	BEAN_ID	= "defaultEntryPoint";
 
+	@Autowired
+	private ExceptionConverter	exceptionConverter;
+
 	public PlainTextBasicAuthenticationEntryPoint() {
 		setRealmName("midipascher.fr");
 	}
-
-	@Autowired
-	private LocaleResolver	localeResolver;
 
 	/**
 	 * @see org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint#commence(javax.servlet.http.HttpServletRequest,
@@ -44,16 +39,10 @@ public class PlainTextBasicAuthenticationEntryPoint extends BasicAuthenticationE
 	public void commence(final HttpServletRequest request, final HttpServletResponse response,
 			final AuthenticationException authException) throws IOException, ServletException {
 		response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");
-		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		response.setStatus(this.exceptionConverter.resolveHttpStatus(authException));
 		final PrintWriter writer = response.getWriter();
-		final String i18nMessage = ResourceBundle.getBundle("messages", getLocale(request)).getString("401");
+		final String i18nMessage = this.exceptionConverter.resolveMesage(request, authException);
 		writer.println(i18nMessage);
 	}
 
-	private Locale getLocale(final HttpServletRequest request) {
-		final Locale locale = this.localeResolver.resolveLocale(request);
-		if (locale == null) return Locale.ENGLISH;
-		if (!Constants.SUPPORTED_LOCALES.contains(locale.getLanguage())) return Locale.ENGLISH;
-		return new Locale(locale.getLanguage());
-	}
 }
