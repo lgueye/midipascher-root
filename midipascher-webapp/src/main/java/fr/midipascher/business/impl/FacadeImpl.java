@@ -118,6 +118,7 @@ public class FacadeImpl implements Facade {
 	 * @see fr.midipascher.domain.business.Facade#listFoodSpecialties()
 	 */
 	@Override
+	@Transactional(propagation = Propagation.SUPPORTS)
 	public List<FoodSpecialty> listFoodSpecialties() {
 
 		return this.baseDao.findAll(FoodSpecialty.class);

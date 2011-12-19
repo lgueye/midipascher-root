@@ -55,12 +55,11 @@ public class ContentNegotiationSteps {
 		final URI uri = URI.create(this.lastCreatedResourceURI);
 		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
 		config.getClasses().add(JacksonJsonProvider.class);
-		config.getClasses().add(JacksonJsonProvider.class);
 		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
 		final WebResource webResource = jerseyClient.resource(uri);
-		final FoodSpecialty foodSpecialty = webResource.accept(MediaType.valueOf(this.responseContentType)).get(
-				FoodSpecialty.class);
+		final FoodSpecialty foodSpecialty = webResource.accept("application/json").get(FoodSpecialty.class);
 		Assert.assertNotNull(foodSpecialty);
 	}
 
@@ -87,6 +86,8 @@ public class ContentNegotiationSteps {
 		config.getClasses().add(JacksonJsonProvider.class);
 		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter("admin", "secret"));
 		final WebResource webResource = jerseyClient.resource(uri);
 		jerseyClient.addFilter(new LoggingFilter());
 		final ClientResponse response = webResource.header("Content-Type", this.requestContentType).post(
@@ -108,7 +109,7 @@ public class ContentNegotiationSteps {
 		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		final Client jerseyClient = ApacheHttpClient4.create(config);
 		jerseyClient.addFilter(new LoggingFilter());
-		final ClientResponse response = jerseyClient.resource(uri).accept(this.responseContentType)
+		final ClientResponse response = jerseyClient.resource(uri).accept(MediaType.valueOf(this.responseContentType))
 				.header("Content-Type", requestContentType).post(ClientResponse.class, query);
 		this.responseStatus = response.getStatus();
 	}
@@ -143,7 +144,6 @@ public class ContentNegotiationSteps {
 			final WebResource webResource = jerseyClient.resource(uri);
 			final ClientResponse response = webResource.header("Content-Type", requestContentType).post(
 					ClientResponse.class, foodSpecialty);
-
 			if (response.getLocation() != null) this.resources.add(response.getLocation().toString());
 
 		}

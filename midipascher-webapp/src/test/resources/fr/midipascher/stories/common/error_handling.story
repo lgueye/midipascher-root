@@ -1,7 +1,7 @@
 Error Handling story
 
 Meta:
-@progress done
+@progress wip
 
 Narrative:
 In order to provide error handling capabilities to my service

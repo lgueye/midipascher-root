@@ -1,7 +1,7 @@
 Content Negotiation story
 
 Meta:
-@progress wip
+@progress done
 
 Narrative:
 In order to provide content negotiation capabilities to my service
@@ -37,13 +37,3 @@ And I should get my newly created resource
 Examples:
 |requestContentType|
 |application/json|
-
-Scenario: request content negotiation should fail
-Given I send <requestContentType> data
-When I send a create request
-Then I should get an unsuccessful response
-And the response code should be 415
-
-Examples:
-|requestContentType|
-|application/xml|
