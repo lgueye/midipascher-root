@@ -9,5 +9,7 @@
 		<class>fr.midipascher.domain.Address</class>
 		<class>fr.midipascher.domain.Restaurant</class>
 		<class>fr.midipascher.domain.FoodSpecialty</class>
+		<class>fr.midipascher.domain.User</class>
+		<class>fr.midipascher.domain.Authority</class>
 	</persistence-unit>
 </persistence>

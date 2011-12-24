@@ -3,31 +3,62 @@
  */
 package fr.midipascher.business;
 
+import java.sql.Connection;
+
+import javax.sql.DataSource;
+
 import junit.framework.Assert;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.operation.DatabaseOperation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.ResourceUtils;
 
+import fr.midipacher.TestConstants;
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.test.TestUtils;
 
 /**
- * Base class for database integration testing<br/>
- * Can not be instantiated<br/>
- * Does all the wiring plumbing<br/>
+ * Facade integration testing<br/>
  * 
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:midipascher-server.xml" })
+@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT })
 public class FacadeImplTestIT {
 
 	@Autowired
-	private Facade	facade;
+	private Facade		facade;
+
+	@Autowired
+	private DataSource	dataSource;
+
+	@Before
+	public void onSetUpInTransaction() throws Exception {
+		final Connection con = DataSourceUtils.getConnection(this.dataSource);
+		final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
+		final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
+				.getFile(TestConstants.PERSISTENCE_TEST_DATA));
+
+		try {
+			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
+		} finally {
+			DataSourceUtils.releaseConnection(con, this.dataSource);
+		}
+	}
 
 	@Test
 	public void createEntityShouldPersistAndSetId() throws Throwable {
@@ -90,4 +121,14 @@ public class FacadeImplTestIT {
 		Assert.assertNull(this.facade.readFoodSpecialty(id));
 	}
 
+	@Test
+	public void createAccountShouldSucceed() {
+		User user = TestUtils.validUser();
+		Long id = this.facade.createAccount(user);
+		User persistedUser = this.facade.readUser(id, true);
+		Assert.assertNotNull(persistedUser);
+		// When created associate by default with RMGR authority
+		Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
+		Assert.assertTrue(Authority.RMGR.equals(persistedUser.getAuthorities().iterator().next().getCode()));
+	}
 }

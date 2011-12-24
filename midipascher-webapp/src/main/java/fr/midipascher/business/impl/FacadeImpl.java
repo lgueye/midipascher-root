@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.base.Preconditions;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
@@ -212,8 +215,6 @@ public class FacadeImpl implements Facade {
 
 		persistedInstance.setSpecialties(restaurant.getSpecialties());
 
-		persistedInstance.setUser(restaurant.getUser());
-
 		persistedInstance.setVegetarian(restaurant.isVegetarian());
 
 	}
@@ -250,4 +251,72 @@ public class FacadeImpl implements Facade {
 
 	}
 
+	/**
+	 * @see fr.midipascher.domain.business.Facade#readUser(java.lang.Long)
+	 */
+	@Override
+	public User readUser(Long id) {
+
+		Preconditions.checkArgument(id != null, "Illegal call to readUser, id is required");
+
+		User user = this.baseDao.get(User.class, id);
+
+		return user;
+
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#createAccount(fr.midipascher.domain.User)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Long createAccount(User user) {
+
+		Preconditions.checkArgument(user != null, "Illegal call to createAccount, user is required");
+
+		user.clearAuthorities();
+
+		Authority exampleInstance = new Authority();
+
+		exampleInstance.setCode(Authority.RMGR);
+
+		List<Authority> authorities = this.baseDao.findByExample(exampleInstance);
+
+		Preconditions.checkState(authorities != null, "Illegal state : 'RMGR' authority expected, found none");
+
+		Preconditions.checkState(authorities.size() == 1,
+				"Illegal state : one and one only 'RMGR' authority expected, found " + authorities.size());
+
+		user.addAuthority(authorities.get(0));
+
+		this.baseDao.persist(user);
+
+		return user.getId();
+
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#readUser(java.lang.Long,
+	 *      boolean)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public User readUser(Long id, boolean initializeCollections) {
+
+		User user = readUser(id);
+
+		// if (user != null && initializeCollections) {
+		// if (CollectionUtils.isNotEmpty(user.getAuthorities()))
+		// user.getAuthorities().iterator().next();
+		// if (CollectionUtils.isNotEmpty(user.getRestaurants()))
+		// user.getRestaurants().iterator().next();
+		// }
+		if (user != null && initializeCollections) {
+			Hibernate.initialize(user.getAuthorities());
+			Hibernate.initialize(user.getRestaurants());
+		}
+
+		return user;
+
+	}
 }

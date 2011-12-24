@@ -3,18 +3,32 @@
  */
 package fr.midipascher.persistence;
 
+import java.sql.Connection;
+
 import javax.sql.DataSource;
 import javax.validation.ConstraintViolationException;
 
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.operation.DatabaseOperation;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 
+import fr.midipacher.TestConstants;
+import fr.midipascher.domain.Authority;
+import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Persistable;
+import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.test.TestUtils;
 
@@ -70,4 +84,34 @@ public abstract class BasePersistenceTestIT {
 		}
 	}
 
+	@Before
+	public void onSetUpInTransaction() throws Exception {
+		final Connection con = DataSourceUtils.getConnection(this.dataSource);
+		final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
+		final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
+				.getFile(TestConstants.PERSISTENCE_TEST_DATA));
+
+		try {
+			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
+		} finally {
+			DataSourceUtils.releaseConnection(con, this.dataSource);
+		}
+		Assert.assertEquals(2, this.baseDao.findAll(Authority.class).size());
+		Assert.assertEquals(5, this.baseDao.findAll(FoodSpecialty.class).size());
+		Assert.assertEquals(2, this.baseDao.findAll(Restaurant.class).size());
+	}
+
+	// @After
+	// public void onTearDownInTransaction() throws Exception {
+	// final Connection con = DataSourceUtils.getConnection(this.dataSource);
+	// final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
+	// final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
+	// .getFile("classpath:dbunit/BasePersistenceTestIT.xml"));
+	//
+	// try {
+	// DatabaseOperation.DELETE_ALL.execute(dbUnitCon, dataSet);
+	// } finally {
+	// DataSourceUtils.releaseConnection(con, this.dataSource);
+	// }
+	// }
 }

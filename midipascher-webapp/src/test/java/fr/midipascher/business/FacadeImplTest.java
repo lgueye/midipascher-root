@@ -3,12 +3,9 @@
  */
 package fr.midipascher.business;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -16,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.hibernate.validator.engine.ConstraintViolationImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -25,9 +23,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import fr.midipascher.business.impl.FacadeImpl;
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Persistable;
 import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
@@ -37,404 +37,499 @@ import fr.midipascher.persistence.BaseDao;
  */
 public class FacadeImplTest {
 
-    @Mock
-    private Validator validator;
+	@Mock
+	private Validator		validator;
 
-    @Mock
-    private BaseDao baseDao;
+	@Mock
+	private BaseDao			baseDao;
 
-    @InjectMocks
-    private final Facade underTest = new FacadeImpl();
+	@InjectMocks
+	private final Facade	underTest	= new FacadeImpl();
 
-    @Test
-    public void createFoodSpecialtyShouldInvokePersistence() throws Throwable {
+	@Test
+	public void createFoodSpecialtyShouldInvokePersistence() throws Throwable {
 
-        // Given
-        final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		// Given
+		final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
 
-        Mockito.when(foodSpecialty.getId()).thenReturn(2L);
+		Mockito.when(foodSpecialty.getId()).thenReturn(2L);
 
-        // When
-        underTest.createFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.createFoodSpecialty(foodSpecialty);
 
-        // Then
-        Mockito.verify(baseDao).persist(foodSpecialty);
+		// Then
+		Mockito.verify(this.baseDao).persist(foodSpecialty);
 
-        Mockito.verify(foodSpecialty, Mockito.times(2)).getId();
+		Mockito.verify(foodSpecialty, Mockito.times(2)).getId();
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() throws Throwable {
+	@Test(expected = IllegalArgumentException.class)
+	public void createFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() throws Throwable {
 
-        // Given
-        final FoodSpecialty foodSpecialty = null;
+		// Given
+		final FoodSpecialty foodSpecialty = null;
 
-        // When
-        underTest.createFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.createFoodSpecialty(foodSpecialty);
 
-    }
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void createFoodSpecialtyShouldThrowIllegalStateExceptionWithNullFoodSpecialtyId() throws Throwable {
+	@Test(expected = IllegalStateException.class)
+	public void createFoodSpecialtyShouldThrowIllegalStateExceptionWithNullFoodSpecialtyId() throws Throwable {
 
-        // Given
-        final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		// Given
+		final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
 
-        Mockito.when(foodSpecialty.getId()).thenReturn(null);
+		Mockito.when(foodSpecialty.getId()).thenReturn(null);
 
-        // When
-        underTest.createFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.createFoodSpecialty(foodSpecialty);
 
-    }
+	}
 
-    @Test
-    public void createRestaurantShouldInvokePersistence() {
+	@Test
+	public void createRestaurantShouldInvokePersistence() {
 
-        // Given
-        final Restaurant restaurant = Mockito.mock(Restaurant.class);
+		// Given
+		final Restaurant restaurant = Mockito.mock(Restaurant.class);
 
-        // When
-        underTest.createRestaurant(restaurant);
+		// When
+		this.underTest.createRestaurant(restaurant);
 
-        // Then
-        Mockito.verify(baseDao).persist(restaurant);
+		// Then
+		Mockito.verify(this.baseDao).persist(restaurant);
 
-        Mockito.verify(restaurant).getId();
+		Mockito.verify(restaurant).getId();
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
+	@Test(expected = IllegalArgumentException.class)
+	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
 
-        // Given
-        final Restaurant restaurant = null;
+		// Given
+		final Restaurant restaurant = null;
 
-        // When
-        underTest.createRestaurant(restaurant);
+		// When
+		this.underTest.createRestaurant(restaurant);
 
-    }
+	}
 
-    @Test
-    public void deleteFoodSpecialtyShouldInvokePersistence() {
+	@Test
+	public void deleteFoodSpecialtyShouldInvokePersistence() {
 
-        // Given
-        final Long foodSpecialtyId = 5L;
+		// Given
+		final Long foodSpecialtyId = 5L;
 
-        // When
-        underTest.deleteFoodSpecialty(foodSpecialtyId);
+		// When
+		this.underTest.deleteFoodSpecialty(foodSpecialtyId);
 
-        // Then
-        Mockito.verify(baseDao).delete(FoodSpecialty.class, foodSpecialtyId);
+		// Then
+		Mockito.verify(this.baseDao).delete(FoodSpecialty.class, foodSpecialtyId);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
 
-        // Given
-        final Long foodSpecialtyId = null;
+		// Given
+		final Long foodSpecialtyId = null;
 
-        // When
-        underTest.deleteFoodSpecialty(foodSpecialtyId);
+		// When
+		this.underTest.deleteFoodSpecialty(foodSpecialtyId);
 
-    }
+	}
 
-    @Test
-    public void deleteRestaurantShouldInvokePersistence() {
+	@Test
+	public void deleteRestaurantShouldInvokePersistence() {
 
-        // Given
-        final Long restaurantId = 5L;
+		// Given
+		final Long restaurantId = 5L;
 
-        // When
-        underTest.deleteRestaurant(restaurantId);
+		// When
+		this.underTest.deleteRestaurant(restaurantId);
 
-        // Then
-        Mockito.verify(baseDao).delete(Restaurant.class, restaurantId);
+		// Then
+		Mockito.verify(this.baseDao).delete(Restaurant.class, restaurantId);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void deleteRestaurantShouldThrowIllegalArgumentExceptionWithNullId() {
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteRestaurantShouldThrowIllegalArgumentExceptionWithNullId() {
 
-        // Given
-        final Long restaurantId = null;
+		// Given
+		final Long restaurantId = null;
 
-        // When
-        underTest.deleteRestaurant(restaurantId);
+		// When
+		this.underTest.deleteRestaurant(restaurantId);
 
-    }
+	}
 
-    @Test
-    public void findRestaurantByCriteriaShouldInvokePersistence() {
+	@Test
+	public void findRestaurantByCriteriaShouldInvokePersistence() {
 
-        // Given
-        final Restaurant restaurant = Mockito.mock(Restaurant.class);
+		// Given
+		final Restaurant restaurant = Mockito.mock(Restaurant.class);
 
-        // When
-        underTest.findRestaurantsByCriteria(restaurant);
+		// When
+		this.underTest.findRestaurantsByCriteria(restaurant);
 
-        // Then
-        Mockito.verify(baseDao).findByExample(restaurant);
+		// Then
+		Mockito.verify(this.baseDao).findByExample(restaurant);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void findRestaurantByCriteriaShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
+	@Test(expected = IllegalArgumentException.class)
+	public void findRestaurantByCriteriaShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
 
-        // Given
-        final Restaurant restaurant = null;
+		// Given
+		final Restaurant restaurant = null;
 
-        // When
-        underTest.findRestaurantsByCriteria(restaurant);
+		// When
+		this.underTest.findRestaurantsByCriteria(restaurant);
 
-    }
+	}
 
-    @Test
-    public void getFoodSpecialtyShouldInvokePersistence() {
+	@Test
+	public void getFoodSpecialtyShouldInvokePersistence() {
 
-        // Given
-        final Long foodSpecialtyId = 5L;
+		// Given
+		final Long foodSpecialtyId = 5L;
 
-        // When
-        underTest.readFoodSpecialty(foodSpecialtyId);
+		// When
+		this.underTest.readFoodSpecialty(foodSpecialtyId);
 
-        // Then
-        Mockito.verify(baseDao).get(FoodSpecialty.class, foodSpecialtyId);
+		// Then
+		Mockito.verify(this.baseDao).get(FoodSpecialty.class, foodSpecialtyId);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+	@Test(expected = IllegalArgumentException.class)
+	public void getFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
 
-        // Given
-        final Long foodSpecialtyId = null;
+		// Given
+		final Long foodSpecialtyId = null;
 
-        // When
-        underTest.readFoodSpecialty(foodSpecialtyId);
+		// When
+		this.underTest.readFoodSpecialty(foodSpecialtyId);
 
-    }
+	}
 
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
+	@Before
+	public void initMocks() {
+		MockitoAnnotations.initMocks(this);
+	}
 
-    @Test
-    public void listFoodSpecialtiesShouldInvokePersistence() {
+	@Test
+	public void listFoodSpecialtiesShouldInvokePersistence() {
 
-        // When
-        underTest.listFoodSpecialties();
+		// When
+		this.underTest.listFoodSpecialties();
 
-        // Then
-        Mockito.verify(baseDao).findAll(FoodSpecialty.class);
+		// Then
+		Mockito.verify(this.baseDao).findAll(FoodSpecialty.class);
 
-    }
+	}
 
-    @Test
-    public void readRestaurantShouldInvokePersistence() {
+	@Test
+	public void readRestaurantShouldInvokePersistence() {
 
-        // Given
-        final Long restaurantId = 5L;
+		// Given
+		final Long restaurantId = 5L;
 
-        // When
-        underTest.readRestaurant(restaurantId);
+		// When
+		this.underTest.readRestaurant(restaurantId);
 
-        // Then
-        Mockito.verify(baseDao).get(Restaurant.class, restaurantId);
+		// Then
+		Mockito.verify(this.baseDao).get(Restaurant.class, restaurantId);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void readRestaurantShouldThrowIllegalArgumentExceptionWithNullId() {
+	@Test(expected = IllegalArgumentException.class)
+	public void readRestaurantShouldThrowIllegalArgumentExceptionWithNullId() {
 
-        // Given
-        final Long restaurantId = null;
+		// Given
+		final Long restaurantId = null;
 
-        // When
-        underTest.readRestaurant(restaurantId);
+		// When
+		this.underTest.readRestaurant(restaurantId);
 
-    }
+	}
 
-    @Test
-    public void updateFoodSpecialtyShouldSetPropertiesThenInvokePersistence() {
+	@Test
+	public void updateFoodSpecialtyShouldSetPropertiesThenInvokePersistence() {
 
-        // Given
-        final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		// Given
+		final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
 
-        final FoodSpecialty persistedInstance = Mockito.mock(FoodSpecialty.class);
+		final FoodSpecialty persistedInstance = Mockito.mock(FoodSpecialty.class);
 
-        when(baseDao.get(eq(FoodSpecialty.class), anyLong())).thenReturn(persistedInstance);
+		Mockito.when(this.baseDao.get(Matchers.eq(FoodSpecialty.class), Matchers.anyLong())).thenReturn(
+				persistedInstance);
 
-        // When
-        underTest.updateFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.updateFoodSpecialty(foodSpecialty);
 
-        // Then
-        Mockito.verify(persistedInstance).setActive(foodSpecialty.isActive());
+		// Then
+		Mockito.verify(persistedInstance).setActive(foodSpecialty.isActive());
 
-        Mockito.verify(persistedInstance).setCode(foodSpecialty.getCode());
+		Mockito.verify(persistedInstance).setCode(foodSpecialty.getCode());
 
-        Mockito.verify(persistedInstance).setLabel(foodSpecialty.getLabel());
+		Mockito.verify(persistedInstance).setLabel(foodSpecialty.getLabel());
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void updateFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() {
+	@Test(expected = IllegalArgumentException.class)
+	public void updateFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() {
 
-        // Given
-        final FoodSpecialty foodSpecialty = null;
+		// Given
+		final FoodSpecialty foodSpecialty = null;
 
-        // When
-        underTest.updateFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.updateFoodSpecialty(foodSpecialty);
 
-    }
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void updateFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+	@Test(expected = IllegalArgumentException.class)
+	public void updateFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
 
-        // Given
-        final FoodSpecialty foodSpecialty = new FoodSpecialty();
+		// Given
+		final FoodSpecialty foodSpecialty = new FoodSpecialty();
 
-        // When
-        underTest.updateFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.updateFoodSpecialty(foodSpecialty);
 
-    }
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void updateFoodSpecialtyShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
+	@Test(expected = IllegalStateException.class)
+	public void updateFoodSpecialtyShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
 
-        // Given
-        final FoodSpecialty foodSpecialty = new FoodSpecialty();
+		// Given
+		final FoodSpecialty foodSpecialty = new FoodSpecialty();
 
-        foodSpecialty.setId(4L);
+		foodSpecialty.setId(4L);
 
-        when(baseDao.get(eq(FoodSpecialty.class), anyLong())).thenReturn(null);
+		Mockito.when(this.baseDao.get(Matchers.eq(FoodSpecialty.class), Matchers.anyLong())).thenReturn(null);
 
-        // When
-        underTest.updateFoodSpecialty(foodSpecialty);
+		// When
+		this.underTest.updateFoodSpecialty(foodSpecialty);
 
-    }
+	}
 
-    @Test
-    public void updateRestaurantShouldSetPropertiesThenInvokePersistence() {
+	@Test
+	public void updateRestaurantShouldSetPropertiesThenInvokePersistence() {
 
-        // Given
-        final Restaurant restaurant = Mockito.mock(Restaurant.class);
+		// Given
+		final Restaurant restaurant = Mockito.mock(Restaurant.class);
 
-        final Restaurant persistedInstance = Mockito.mock(Restaurant.class);
+		final Restaurant persistedInstance = Mockito.mock(Restaurant.class);
 
-        when(baseDao.get(eq(Restaurant.class), any(Long.class))).thenReturn(persistedInstance);
+		Mockito.when(this.baseDao.get(Matchers.eq(Restaurant.class), Matchers.any(Long.class))).thenReturn(
+				persistedInstance);
 
-        // When
-        underTest.updateRestaurant(restaurant);
+		// When
+		this.underTest.updateRestaurant(restaurant);
 
-        // Then
-        Mockito.verify(persistedInstance).setAddress(restaurant.getAddress());
+		// Then
+		Mockito.verify(persistedInstance).setAddress(restaurant.getAddress());
 
-        Mockito.verify(persistedInstance).setDescription(restaurant.getDescription());
+		Mockito.verify(persistedInstance).setDescription(restaurant.getDescription());
 
-        Mockito.verify(persistedInstance).setCompanyId(restaurant.getCompanyId());
+		Mockito.verify(persistedInstance).setCompanyId(restaurant.getCompanyId());
 
-        Mockito.verify(persistedInstance).setKosher(restaurant.isKosher());
+		Mockito.verify(persistedInstance).setKosher(restaurant.isKosher());
 
-        Mockito.verify(persistedInstance).setHalal(restaurant.isHalal());
+		Mockito.verify(persistedInstance).setHalal(restaurant.isHalal());
 
-        Mockito.verify(persistedInstance).setVegetarian(restaurant.isVegetarian());
+		Mockito.verify(persistedInstance).setVegetarian(restaurant.isVegetarian());
 
-        Mockito.verify(persistedInstance).setMainOffer(restaurant.getMainOffer());
+		Mockito.verify(persistedInstance).setMainOffer(restaurant.getMainOffer());
 
-        Mockito.verify(persistedInstance).setName(restaurant.getName());
+		Mockito.verify(persistedInstance).setName(restaurant.getName());
 
-        Mockito.verify(persistedInstance).setPhoneNumber(restaurant.getPhoneNumber());
+		Mockito.verify(persistedInstance).setPhoneNumber(restaurant.getPhoneNumber());
 
-        Mockito.verify(persistedInstance).setSpecialties(restaurant.getSpecialties());
+		Mockito.verify(persistedInstance).setSpecialties(restaurant.getSpecialties());
 
-        Mockito.verify(persistedInstance).setUser(restaurant.getUser());
+	}
 
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullFoodSpecialty() {
+		// Given
+		final Restaurant restaurant = null;
 
-        // Given
-        final Restaurant restaurant = null;
+		// When
+		this.underTest.updateRestaurant(restaurant);
 
-        // When
-        underTest.updateRestaurant(restaurant);
+	}
 
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void updateRestaurantShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+		// Given
+		final Restaurant restaurant = new Restaurant();
 
-        // Given
-        final Restaurant restaurant = new Restaurant();
+		// When
+		this.underTest.updateRestaurant(restaurant);
 
-        // When
-        underTest.updateRestaurant(restaurant);
+	}
 
-    }
+	@Test(expected = IllegalStateException.class)
+	public void updateRestaurantShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
 
-    @Test(expected = IllegalStateException.class)
-    public void updateRestaurantShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
+		// Given
+		final Restaurant restaurant = new Restaurant();
 
-        // Given
-        final Restaurant restaurant = new Restaurant();
+		restaurant.setId(3L);
 
-        restaurant.setId(3L);
+		Mockito.when(this.baseDao.get(Matchers.eq(Restaurant.class), Matchers.any(Long.class))).thenReturn(null);
 
-        when(baseDao.get(eq(Restaurant.class), any(Long.class))).thenReturn(null);
+		// When
+		this.underTest.updateRestaurant(restaurant);
 
-        // When
-        underTest.updateRestaurant(restaurant);
+	}
 
-    }
+	@Test
+	public void validateShouldNotThrowExceptionWithEmptyViolationsSet() {
+		// Given
+		final Restaurant toBeValidated = new Restaurant();
+		final ValidationContext validationContext = ValidationContext.CREATE;
+		final Set<ConstraintViolation<Persistable>> violations = null;
+		Mockito.when(this.validator.validate(Matchers.any(Persistable.class), Matchers.any(Class[].class))).thenReturn(
+				violations);
 
-    @Test
-    public void validateWillNotThrowExceptionWithEmptyViolationsSet() {
-        // Given
-        final Restaurant toBeValidated = new Restaurant();
-        final ValidationContext validationContext = ValidationContext.CREATE;
-        final Set<ConstraintViolation<Persistable>> violations = null;
-        Mockito.when(validator.validate(Matchers.any(Persistable.class), Matchers.any(Class[].class))).thenReturn(
-            violations);
+		// When
+		this.underTest.validate(toBeValidated, validationContext);
+	}
 
-        // When
-        underTest.validate(toBeValidated, validationContext);
-    }
+	@Test(expected = ConstraintViolationException.class)
+	public void validateShouldThrowExceptionWithNonEmptyViolationsSet() {
+		// Given
+		final Restaurant toBeValidated = new Restaurant();
+		final ValidationContext validationContext = ValidationContext.CREATE;
+		final Set<ConstraintViolation<Persistable>> violations = new HashSet<ConstraintViolation<Persistable>>();
+		violations.add(new ConstraintViolationImpl<Persistable>("{message.template}", "interpolated message",
+				Persistable.class, null, String.class, null, null, null, null));
+		Mockito.when(this.validator.validate(Matchers.any(Persistable.class), Matchers.any(Class[].class))).thenReturn(
+				violations);
 
-    @Test(expected = ConstraintViolationException.class)
-    public void validateWillThrowExceptionWithNonEmptyViolationsSet() {
-        // Given
-        final Restaurant toBeValidated = new Restaurant();
-        final ValidationContext validationContext = ValidationContext.CREATE;
-        final Set<ConstraintViolation<Persistable>> violations = new HashSet<ConstraintViolation<Persistable>>();
-        violations.add(new ConstraintViolationImpl<Persistable>("{message.template}", "interpolated message",
-                Persistable.class, null, String.class, null, null, null, null));
-        Mockito.when(validator.validate(Matchers.any(Persistable.class), Matchers.any(Class[].class))).thenReturn(
-            violations);
+		// When
+		this.underTest.validate(toBeValidated, validationContext);
+	}
 
-        // When
-        underTest.validate(toBeValidated, validationContext);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void validateShouldThrowIllegalArgumentExceptionWithNullContext() {
+		// Given
+		final Restaurant toBeValidated = new Restaurant();
+		final ValidationContext validationContext = null;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateWillThrowIllegalArgumentExceptionWithNullContext() {
-        // Given
-        final Restaurant toBeValidated = new Restaurant();
-        final ValidationContext validationContext = null;
+		// When
+		this.underTest.validate(toBeValidated, validationContext);
+	}
 
-        // When
-        underTest.validate(toBeValidated, validationContext);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void validateShouldThrowIllegalArgumentExceptionWithNullObject() {
+		// Given
+		final Restaurant toBeValidated = null;
+		final ValidationContext validationContext = ValidationContext.DELETE;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateWillThrowIllegalArgumentExceptionWithNullObject() {
-        // Given
-        final Restaurant toBeValidated = null;
-        final ValidationContext validationContext = ValidationContext.DELETE;
+		// When
+		this.underTest.validate(toBeValidated, validationContext);
+	}
 
-        // When
-        underTest.validate(toBeValidated, validationContext);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void createAccountShouldThrowIllegalArgumentExceptionWithNullInput() {
+		// Given
+		User account = null;
+
+		// When
+		this.underTest.createAccount(account);
+	}
+
+	public void createAccountShouldInvokeBaseDao() {
+		// Given
+		User user = Mockito.mock(User.class);
+
+		// When
+		this.underTest.createAccount(user);
+
+		Mockito.verify(this.baseDao).persist(user);
+		Mockito.verify(user).getId();
+		Mockito.verifyNoMoreInteractions(this.baseDao, user);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void createShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFound() {
+		// Given
+		User user = new User();
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(null);
+		this.underTest.createAccount(user);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void createShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFoundMoreThantOnce() {
+		// Given
+		User user = new User();
+		List<Authority> foundAuthorities = new ArrayList<Authority>();
+		foundAuthorities.add(new Authority());
+		foundAuthorities.add(new Authority());
+		foundAuthorities.add(new Authority());
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(foundAuthorities);
+		this.underTest.createAccount(user);
+	}
+
+	@Test
+	public void createShouldSucceed() {
+		// Given
+		User user = Mockito.mock(User.class);
+		List<Authority> foundAuthorities = new ArrayList<Authority>();
+
+		Authority expectedAuthority = new Authority();
+		foundAuthorities.add(expectedAuthority);
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(foundAuthorities);
+		this.underTest.createAccount(user);
+
+		// Then
+		// Should find by code default Authority
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(Authority.class));
+		// Should clear before adding default Authority
+		Mockito.verify(user).clearAuthorities();
+		// Should add default Authority
+		Mockito.verify(user).addAuthority(expectedAuthority);
+		// Should persist user
+		Mockito.verify(this.baseDao).persist(user);
+		// Should return id
+		Mockito.verify(user).getId();
+		Mockito.verifyNoMoreInteractions(this.baseDao, user);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void readUserShouldThrowIllegalArgumentExceptionWithNullInput() {
+		// Given
+		Long id = null;
+
+		// When
+		this.underTest.readUser(id);
+	}
+
+	public void readUserShouldInvokeBaseDao() {
+		// Given
+		Long id = 5L;
+		User expectedUser = Mockito.mock(User.class);
+		// When
+		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(expectedUser);
+		User actualUser = this.underTest.readUser(id);
+
+		Mockito.verify(this.baseDao).get(User.class, id);
+		Assert.assertSame(expectedUser, actualUser);
+		Mockito.verifyNoMoreInteractions(this.baseDao);
+	}
+
 }

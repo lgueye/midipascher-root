@@ -3,7 +3,6 @@
  */
 package fr.midipascher.persistence;
 
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -11,16 +10,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.util.ResourceUtils;
 
 import fr.midipascher.domain.Authority;
 import fr.midipascher.test.TestUtils;
@@ -45,21 +36,6 @@ public class AuthorityPersistenceTestIT extends BasePersistenceTestIT {
 			authorityIds.add(authority.getId());
 
 		Assert.assertTrue(authorityIds.containsAll(ids));
-	}
-
-	@Before
-	public void onSetUpInTransaction() throws Exception {
-		final Connection con = DataSourceUtils.getConnection(this.dataSource);
-		final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
-		final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
-				.getFile("classpath:dbunit/midipascher-test-data.xml"));
-
-		try {
-			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
-		} finally {
-			DataSourceUtils.releaseConnection(con, this.dataSource);
-		}
-		Assert.assertEquals(2, this.baseDao.findAll(Authority.class).size());
 	}
 
 	/**
