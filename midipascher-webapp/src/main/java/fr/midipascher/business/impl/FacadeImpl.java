@@ -66,6 +66,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
 	public Long createRestaurant(final Restaurant restaurant) {
 
 		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
@@ -81,6 +82,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed("ROLE_ADMIN")
 	public void deleteFoodSpecialty(final Long foodSpecialtyId) {
 
 		Preconditions.checkArgument(foodSpecialtyId != null,
@@ -159,6 +161,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed("ROLE_ADMIN")
 	public void updateFoodSpecialty(final FoodSpecialty foodSpecialty) {
 
 		Preconditions.checkArgument(foodSpecialty != null,
@@ -185,6 +188,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
 	public void updateRestaurant(final Restaurant restaurant) {
 
 		Preconditions.checkArgument(restaurant != null, "Illegal call to updateRestaurant, restaurant is required");

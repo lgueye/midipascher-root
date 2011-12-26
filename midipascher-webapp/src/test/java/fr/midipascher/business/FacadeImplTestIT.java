@@ -20,6 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
@@ -37,14 +39,17 @@ import fr.midipascher.test.TestUtils;
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT })
+@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT })
 public class FacadeImplTestIT {
 
 	@Autowired
-	private Facade		facade;
+	private AuthenticationManager	authenticationManager;
 
 	@Autowired
-	private DataSource	dataSource;
+	private Facade					facade;
+
+	@Autowired
+	private DataSource				dataSource;
 
 	@Before
 	public void onSetUpInTransaction() throws Exception {
@@ -130,5 +135,42 @@ public class FacadeImplTestIT {
 		// When created associate by default with RMGR authority
 		Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
 		Assert.assertTrue(Authority.RMGR.equals(persistedUser.getAuthorities().iterator().next().getCode()));
+	}
+
+	@Test
+	public void createFoodSpecialtyShouldSucceed() {
+		this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("admin", "secret"));
+		// Given
+		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		// ensure id nullity
+		foodSpecialty.setId(null);
+		// When
+		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+
+		// Then
+		Assert.assertNotNull(id);
+		Assert.assertEquals(id, foodSpecialty.getId());
+	}
+
+	@Test
+	public void autorizationOrAuthenticationRequiredRequestShouldFailWhenNotAuthenticatedOrGrantedCorrectAuthority() {
+		// Given
+		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		// ensure id nullity
+		foodSpecialty.setId(null);
+		try {
+			// When
+			final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+		} catch (AutenticationException e) {
+
+		}
+		this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("bob", "bob"));
+		try {
+			// When
+			final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+		} catch (AuthorizationException e) {
+
+		}
+
 	}
 }
