@@ -53,9 +53,77 @@ public class UserTest {
 	}
 
 	@Test
-	public void addAuthorityWillSucceed() {
-		int authoritiesCount = this.underTest.getAuthorities() == null ? 0 : this.underTest.getAuthorities().size();
+	public void addAuthorityWontFailWithNullSet() {
+		// Given
+		Authority authority = new Authority();
+
+		int countAuthorities = this.underTest.countAuthorities();
+		// When
+		this.underTest.addAuthority(authority);
+
+		Assert.assertEquals(countAuthorities + 1, this.underTest.countAuthorities());
+
+	}
+
+	@Test
+	public void countAuthoritiesShouldReturnZeroWithNullSet() {
+		Assert.assertEquals(0, this.underTest.countAuthorities());
+	}
+
+	@Test
+	public void countAuthoritiesShouldReturnSetSize() {
+		Set<Authority> authorities = new HashSet<Authority>();
+		this.underTest.setAuthorities(authorities);
+		Assert.assertEquals(0, this.underTest.countAuthorities());
 		this.underTest.addAuthority(new Authority());
-		Assert.assertEquals(authoritiesCount + 1, CollectionUtils.size(this.underTest.getAuthorities()));
+		Assert.assertEquals(1, this.underTest.countAuthorities());
+	}
+
+	@Test
+	public void countAuthoritiesShouldReturnZeroWithEmptySet() {
+		this.underTest.setAuthorities(new HashSet<Authority>());
+		Assert.assertEquals(0, this.underTest.countAuthorities());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void addRestaurantWillThrowIllegalArgumentExceptionWithNullInput() {
+		// Given
+		Restaurant restaurant = null;
+
+		// When
+		this.underTest.addRestaurant(restaurant);
+	}
+
+	@Test
+	public void addRestaurantWontFailWithNullSet() {
+		// Given
+		Restaurant restaurant = new Restaurant();
+
+		int countRestaurants = this.underTest.countRestaurants();
+		// When
+		this.underTest.addRestaurant(restaurant);
+
+		Assert.assertEquals(countRestaurants + 1, this.underTest.countRestaurants());
+
+	}
+
+	@Test
+	public void countRestaurantsShouldReturnZeroWithNullSet() {
+		Assert.assertEquals(0, this.underTest.countRestaurants());
+	}
+
+	@Test
+	public void countRestaurantsShouldReturnSetSize() {
+		Set<Restaurant> restaurants = new HashSet<Restaurant>();
+		this.underTest.setRestaurants(restaurants);
+		Assert.assertEquals(0, this.underTest.countRestaurants());
+		this.underTest.addRestaurant(new Restaurant());
+		Assert.assertEquals(1, this.underTest.countRestaurants());
+	}
+
+	@Test
+	public void countRestaurantsShouldReturnZeroWithEmptySet() {
+		this.underTest.setRestaurants(new HashSet<Restaurant>());
+		Assert.assertEquals(0, this.underTest.countRestaurants());
 	}
 }

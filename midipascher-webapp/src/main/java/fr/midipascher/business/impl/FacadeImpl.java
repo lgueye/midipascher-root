@@ -309,18 +309,57 @@ public class FacadeImpl implements Facade {
 
 		User user = readUser(id);
 
-		// if (user != null && initializeCollections) {
-		// if (CollectionUtils.isNotEmpty(user.getAuthorities()))
-		// user.getAuthorities().iterator().next();
-		// if (CollectionUtils.isNotEmpty(user.getRestaurants()))
-		// user.getRestaurants().iterator().next();
-		// }
 		if (user != null && initializeCollections) {
+
 			Hibernate.initialize(user.getAuthorities());
+
 			Hibernate.initialize(user.getRestaurants());
+
 		}
 
 		return user;
 
 	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#updateAccount(fr.midipascher.domain.User)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	public void updateAccount(User user) {
+
+		Preconditions.checkArgument(user != null, "Illegal call to updateAccount, user is required");
+
+		Preconditions.checkArgument(user.getId() != null, "Illegal call to updateAccount, user.id is required");
+
+		final User persistedInstance = this.baseDao.get(User.class, user.getId());
+
+		Preconditions.checkState(persistedInstance != null,
+				"Illegal call to updateAccount, provided id should have corresponding user in the store");
+
+		this.baseDao.merge(user);
+
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#createRestaurant(java.lang.Long,
+	 *      fr.midipascher.domain.Restaurant)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	public Long createRestaurant(Long userId, Restaurant restaurant) {
+
+		Preconditions.checkArgument(userId != null, "Illegal call to createRestaurant, userId is required");
+		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
+		Preconditions.checkArgument(restaurant.getId() == null,
+				"Illegal call to createRestaurant, restaurant.id should be null");
+
+		User user = this.baseDao.get(User.class, userId);
+		user.addRestaurant(restaurant);
+		this.baseDao.merge(user);
+		return restaurant.getId();
+	}
+
 }

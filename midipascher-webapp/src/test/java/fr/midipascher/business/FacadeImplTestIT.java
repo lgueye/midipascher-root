@@ -3,7 +3,11 @@
  */
 package fr.midipascher.business;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.sql.DataSource;
 
@@ -20,8 +24,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
@@ -29,6 +40,7 @@ import org.springframework.util.ResourceUtils;
 import fr.midipacher.TestConstants;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.test.TestUtils;
@@ -43,13 +55,10 @@ import fr.midipascher.test.TestUtils;
 public class FacadeImplTestIT {
 
 	@Autowired
-	private AuthenticationManager	authenticationManager;
+	private Facade		facade;
 
 	@Autowired
-	private Facade					facade;
-
-	@Autowired
-	private DataSource				dataSource;
+	private DataSource	dataSource;
 
 	@Before
 	public void onSetUpInTransaction() throws Exception {
@@ -63,10 +72,14 @@ public class FacadeImplTestIT {
 		} finally {
 			DataSourceUtils.releaseConnection(con, this.dataSource);
 		}
+
+		SecurityContextHolder.setContext(new SecurityContextImpl());
+
 	}
 
 	@Test
 	public void createEntityShouldPersistAndSetId() throws Throwable {
+		authenticateAsAdmin();
 		// Given
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		// ensure id nullity
@@ -82,6 +95,7 @@ public class FacadeImplTestIT {
 
 	@Test
 	public void updateEntityShouldPersistProperties() throws Throwable {
+		authenticateAsAdmin();
 		// Given
 		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setId(null);
@@ -110,6 +124,7 @@ public class FacadeImplTestIT {
 
 	@Test
 	public void deleteEntityShouldSucceed() throws Throwable {
+		authenticateAsAdmin();
 		// Given
 		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setId(null);
@@ -128,6 +143,7 @@ public class FacadeImplTestIT {
 
 	@Test
 	public void createAccountShouldSucceed() {
+		authenticateAsAdmin();
 		User user = TestUtils.validUser();
 		Long id = this.facade.createAccount(user);
 		User persistedUser = this.facade.readUser(id, true);
@@ -138,8 +154,54 @@ public class FacadeImplTestIT {
 	}
 
 	@Test
+	public void updateAccountShouldSucceed() {
+		authenticateAsAdmin();
+		String email;
+		User user;
+		Long id;
+
+		user = TestUtils.validUser();
+		email = "first@email.org";
+		user.setEmail(email);
+		id = this.facade.createAccount(user);
+		user = this.facade.readUser(id);
+		Assert.assertEquals(email, user.getEmail());
+
+		email = "second@email.org";
+		user.setEmail(email);
+		this.facade.updateAccount(user);
+		user = this.facade.readUser(id);
+		Assert.assertEquals(email, user.getEmail());
+	}
+
+	@Test
+	public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
+		authenticateAsAdmin();
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		// Given
+		User user = TestUtils.validUser();
+		Long userId = this.facade.createAccount(user);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getSpecialties().clear();
+		restaurant.getSpecialties().add(foodSpecialty);
+		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		assertNotNull(restaurantId);
+
+	}
+
+	@Test
+	public void persistingAccountWithUpdatedRestaurantInCollectionShouldUpdateRestaurant() {
+	}
+
+	@Test
+	public void persistingAccountWithRemovedRestaurantFromCollectionShouldDeleteRestaurant() {
+	}
+
+	@Test
 	public void createFoodSpecialtyShouldSucceed() {
-		this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("admin", "secret"));
+		authenticateAsAdmin();
 		// Given
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		// ensure id nullity
@@ -160,17 +222,37 @@ public class FacadeImplTestIT {
 		foodSpecialty.setId(null);
 		try {
 			// When
-			final Long id = this.facade.createFoodSpecialty(foodSpecialty);
-		} catch (AutenticationException e) {
-
+			this.facade.createFoodSpecialty(foodSpecialty);
+			Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
+		} catch (AuthenticationCredentialsNotFoundException e) {
+		} catch (Throwable th) {
+			Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
 		}
-		this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("bob", "bob"));
+		authenticateAsRmgr();
 		try {
 			// When
-			final Long id = this.facade.createFoodSpecialty(foodSpecialty);
-		} catch (AuthorizationException e) {
-
+			this.facade.createFoodSpecialty(foodSpecialty);
+			Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
+		} catch (AccessDeniedException e) {
+		} catch (Throwable th) {
+			Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
 		}
 
+	}
+
+	private void authenticateAs(String uid, String password, Collection<? extends GrantedAuthority> authorities) {
+		SecurityContext securityContext = new SecurityContextImpl();
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(uid, password,
+				authorities);
+		securityContext.setAuthentication(authentication);
+		SecurityContextHolder.setContext(securityContext);
+	}
+
+	private void authenticateAsAdmin() {
+		authenticateAs("admin", "secret", Arrays.asList(new GrantedAuthorityImpl("ROLE_ADMIN")));
+	}
+
+	private void authenticateAsRmgr() {
+		authenticateAs("bob", "bob", Arrays.asList(new GrantedAuthorityImpl("ROLE_USER")));
 	}
 }

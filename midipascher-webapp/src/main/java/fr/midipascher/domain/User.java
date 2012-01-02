@@ -6,6 +6,7 @@ package fr.midipascher.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -119,7 +121,7 @@ public class User extends AbstractEntity {
 	 * A unidirectional one to many with join table is much preferred. This
 	 * association is described through an @JoinTable<br/>
 	 */
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(name = User.TABLE_NAME_USER_RESTAURANT, joinColumns = { @JoinColumn(name = User.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) })
 	@Valid
 	private Set<Restaurant>		restaurants;
@@ -310,6 +312,31 @@ public class User extends AbstractEntity {
 		Preconditions.checkArgument(authority != null, "Illegal call to addAuthority, authority is required");
 		if (this.authorities == null) this.authorities = new HashSet<Authority>();
 		this.authorities.add(authority);
+	}
+
+	/**
+	 * @param restaurant
+	 */
+	public void addRestaurant(Restaurant restaurant) {
+		Preconditions.checkArgument(restaurant != null, "Illegal call to addRestaurant, restaurant is required");
+		if (this.restaurants == null) this.restaurants = new HashSet<Restaurant>();
+		this.restaurants.add(restaurant);
+	}
+
+	/**
+	 * @return
+	 */
+	public int countRestaurants() {
+		if (CollectionUtils.isEmpty(this.restaurants)) return 0;
+		return this.restaurants.size();
+	}
+
+	/**
+	 * @return
+	 */
+	public int countAuthorities() {
+		if (CollectionUtils.isEmpty(this.authorities)) return 0;
+		return this.authorities.size();
 	}
 
 }

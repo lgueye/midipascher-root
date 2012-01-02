@@ -104,16 +104,17 @@ public class FacadeImplTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
-
-		// Given
-		final Restaurant restaurant = null;
-
-		// When
-		this.underTest.createRestaurant(restaurant);
-
-	}
+	// @Test(expected = IllegalArgumentException.class)
+	// public void
+	// createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
+	//
+	// // Given
+	// final Restaurant restaurant = null;
+	//
+	// // When
+	// this.underTest.createRestaurant(restaurant);
+	//
+	// }
 
 	@Test
 	public void deleteFoodSpecialtyShouldInvokePersistence() {
@@ -532,4 +533,86 @@ public class FacadeImplTest {
 		Mockito.verifyNoMoreInteractions(this.baseDao);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void updateAccountShouldThrowIllegalArgumentExceptionWithNullInput() {
+		// Given
+		User user = null;
+
+		// When
+		this.underTest.updateAccount(user);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void updateAccountShouldThrowIllegalArgumentExceptionWithNullIdentifier() {
+		// Given
+		User user = new User();
+
+		// When
+		this.underTest.updateAccount(user);
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void updateAccountShouldThrowIllegalStateExceptionWhenNoUserFoundWithGivenId() {
+		// Given
+		User user = new User();
+		Long id = 5L;
+		user.setId(id);
+		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(null);
+
+		// When
+		this.underTest.updateAccount(user);
+	}
+
+	@Test
+	public void updateAccountShouldReadAccountFromRepositoryAndMerge() {
+		// Given
+		User user = new User();
+		Long id = 5L;
+		user.setId(id);
+		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(new User());
+
+		// When
+		this.underTest.updateAccount(user);
+		Mockito.verify(this.baseDao).get(User.class, id);
+		Mockito.verify(this.baseDao).merge(user);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullUserId() {
+		Long userId = null;
+		Restaurant restaurant = new Restaurant();
+		this.underTest.createRestaurant(userId, restaurant);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
+		Long userId = 5L;
+		Restaurant restaurant = null;
+		this.underTest.createRestaurant(userId, restaurant);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNonNullRestaurantId() {
+		Long userId = 5L;
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(45L);
+		this.underTest.createRestaurant(userId, restaurant);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createRestaurantShouldLoadUserThenAddRestaurantToItsRestaurantCollection() {
+		Long userId = 5L;
+		Restaurant restaurant = Mockito.mock(Restaurant.class);
+		User user = Mockito.mock(User.class);
+
+		Mockito.when(this.baseDao.get(User.class, userId)).thenReturn(user);
+		this.underTest.createRestaurant(userId, restaurant);
+
+		Mockito.verify(this.baseDao).get(User.class, userId);
+		Mockito.verify(user).addRestaurant(restaurant);
+		Mockito.verify(this.baseDao).merge(user);
+		Mockito.verify(restaurant).getId();
+
+		Mockito.verifyNoMoreInteractions(this.baseDao, user, restaurant);
+	}
 }

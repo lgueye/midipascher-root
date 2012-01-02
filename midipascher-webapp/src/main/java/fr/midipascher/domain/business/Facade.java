@@ -109,4 +109,16 @@ public interface Facade {
 	 */
 	User readUser(Long id, boolean initializeCollections);
 
+	/**
+	 * @param user
+	 */
+	void updateAccount(User user);
+
+	/**
+	 * @param userId
+	 * @param restaurant
+	 * @return
+	 */
+	Long createRestaurant(Long userId, Restaurant restaurant);
+
 }

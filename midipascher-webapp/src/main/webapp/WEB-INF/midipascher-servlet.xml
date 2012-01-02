@@ -11,12 +11,10 @@
                            http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
 
 	<import resource="classpath:midipascher-server.xml"/>
+	<import resource="classpath:midipascher-security.xml"/>
 
 	<context:component-scan
 		base-package="fr.midipascher.web" />
-
-    <sec:global-method-security
-            jsr250-annotations="enabled"/>
 
     <sec:http entry-point-ref="defaultEntryPoint" auto-config="true">
         <sec:http-basic/>
@@ -27,23 +25,6 @@
         <property name="authenticationManager" ref="authenticationManager"/>
         <property name="authenticationEntryPoint" ref="defaultEntryPoint"/>
     </bean>
-
-    <bean
-            class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetClass"
-                  value="org.springframework.security.core.context.SecurityContextHolder"/>
-        <property name="targetMethod" value="setStrategyName"/>
-        <property name="arguments" value="MODE_INHERITABLETHREADLOCAL"/>
-    </bean>
-
-    <sec:authentication-manager alias="authenticationManager">
-        <sec:authentication-provider>
-            <sec:user-service>
-                <sec:user name="bob" password="bob" authorities="ROLE_USER"/>
-                <sec:user name="admin" password="secret" authorities="ROLE_USER,ROLE_ADMIN"/>
-            </sec:user-service>
-        </sec:authentication-provider>
-    </sec:authentication-manager>
 
     <bean class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>
 
