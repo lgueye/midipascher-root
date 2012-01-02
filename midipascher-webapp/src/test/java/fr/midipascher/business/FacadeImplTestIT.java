@@ -182,8 +182,6 @@ public class FacadeImplTestIT {
 
     @Test
     public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
-        System.out.println("---------------------------- Debut test en erreur");
-
         authenticateAsAdmin();
         final Long foodSpecialtyId = facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
         final FoodSpecialty foodSpecialty = facade.readFoodSpecialty(foodSpecialtyId);
@@ -196,7 +194,6 @@ public class FacadeImplTestIT {
         restaurant.addSpecialty(foodSpecialty);
         final Long restaurantId = facade.createRestaurant(userId, restaurant);
         assertNotNull(restaurantId);
-        System.out.println("---------------------------- Fin test en erreur");
 
     }
 
