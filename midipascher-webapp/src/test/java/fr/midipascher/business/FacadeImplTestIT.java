@@ -54,205 +54,205 @@ import fr.midipascher.test.TestUtils;
 @ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT })
 public class FacadeImplTestIT {
 
-	@Autowired
-	private Facade		facade;
+    @Autowired
+    private Facade facade;
 
-	@Autowired
-	private DataSource	dataSource;
+    @Autowired
+    private DataSource dataSource;
 
-	@Before
-	public void onSetUpInTransaction() throws Exception {
-		final Connection con = DataSourceUtils.getConnection(this.dataSource);
-		final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
-		final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
-				.getFile(TestConstants.PERSISTENCE_TEST_DATA));
+    private void authenticateAs(final String uid, final String password,
+            final Collection<? extends GrantedAuthority> authorities) {
+        final SecurityContext securityContext = new SecurityContextImpl();
+        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(uid,
+                password, authorities);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
 
-		try {
-			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
-		} finally {
-			DataSourceUtils.releaseConnection(con, this.dataSource);
-		}
+    private void authenticateAsAdmin() {
+        authenticateAs("admin", "secret", Arrays.asList(new GrantedAuthorityImpl("ROLE_ADMIN")));
+    }
 
-		SecurityContextHolder.setContext(new SecurityContextImpl());
+    private void authenticateAsRmgr() {
+        authenticateAs("bob", "bob", Arrays.asList(new GrantedAuthorityImpl("ROLE_USER")));
+    }
 
-	}
+    @Test
+    public void autorizationOrAuthenticationRequiredRequestShouldFailWhenNotAuthenticatedOrGrantedCorrectAuthority() {
+        // Given
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        // ensure id nullity
+        foodSpecialty.setId(null);
+        try {
+            // When
+            facade.createFoodSpecialty(foodSpecialty);
+            Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
+        } catch (final AuthenticationCredentialsNotFoundException e) {} catch (final Throwable th) {
+            Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
+        }
+        authenticateAsRmgr();
+        try {
+            // When
+            facade.createFoodSpecialty(foodSpecialty);
+            Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
+        } catch (final AccessDeniedException e) {} catch (final Throwable th) {
+            Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
+        }
 
-	@Test
-	public void createEntityShouldPersistAndSetId() throws Throwable {
-		authenticateAsAdmin();
-		// Given
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		// ensure id nullity
-		foodSpecialty.setId(null);
-		// When
-		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+    }
 
-		// Then
-		Assert.assertNotNull(id);
-		Assert.assertEquals(id, foodSpecialty.getId());
+    @Test
+    public void createAccountShouldSucceed() {
+        authenticateAsAdmin();
+        final User user = TestUtils.validUser();
+        final Long id = facade.createAccount(user);
+        final User persistedUser = facade.readUser(id, true);
+        Assert.assertNotNull(persistedUser);
+        // When created associate by default with RMGR authority
+        Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
+        Assert.assertTrue(Authority.RMGR.equals(persistedUser.getAuthorities().iterator().next().getCode()));
+    }
 
-	}
+    @Test
+    public void createEntityShouldPersistAndSetId() throws Throwable {
+        authenticateAsAdmin();
+        // Given
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        // ensure id nullity
+        foodSpecialty.setId(null);
+        // When
+        final Long id = facade.createFoodSpecialty(foodSpecialty);
 
-	@Test
-	public void updateEntityShouldPersistProperties() throws Throwable {
-		authenticateAsAdmin();
-		// Given
-		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		foodSpecialty.setId(null);
-		// When
-		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
-		// Then
-		Assert.assertNotNull(id);
-		Assert.assertEquals(id, foodSpecialty.getId());
-		final String newCode = "New Code";
-		final String newLabel = "Brand New Code";
+        // Then
+        Assert.assertNotNull(id);
+        Assert.assertEquals(id, foodSpecialty.getId());
 
-		// Given
-		foodSpecialty.setCode(newCode);
-		foodSpecialty.setLabel(newLabel);
+    }
 
-		// When
-		this.facade.updateFoodSpecialty(foodSpecialty);
+    @Test
+    public void createFoodSpecialtyShouldSucceed() {
+        authenticateAsAdmin();
+        // Given
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        // ensure id nullity
+        foodSpecialty.setId(null);
+        // When
+        final Long id = facade.createFoodSpecialty(foodSpecialty);
 
-		foodSpecialty = this.facade.readFoodSpecialty(id);
+        // Then
+        Assert.assertNotNull(id);
+        Assert.assertEquals(id, foodSpecialty.getId());
+    }
 
-		// Then
-		Assert.assertEquals(newCode, foodSpecialty.getCode());
-		Assert.assertEquals(newLabel, foodSpecialty.getLabel());
+    @Test
+    public void deleteEntityShouldSucceed() throws Throwable {
+        authenticateAsAdmin();
+        // Given
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        foodSpecialty.setId(null);
+        // When
+        final Long id = facade.createFoodSpecialty(foodSpecialty);
+        // Then
+        Assert.assertNotNull(id);
+        Assert.assertEquals(id, foodSpecialty.getId());
 
-	}
+        // When
+        facade.deleteFoodSpecialty(foodSpecialty.getId());
 
-	@Test
-	public void deleteEntityShouldSucceed() throws Throwable {
-		authenticateAsAdmin();
-		// Given
-		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		foodSpecialty.setId(null);
-		// When
-		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
-		// Then
-		Assert.assertNotNull(id);
-		Assert.assertEquals(id, foodSpecialty.getId());
+        // Then
+        Assert.assertNull(facade.readFoodSpecialty(id));
+    }
 
-		// When
-		this.facade.deleteFoodSpecialty(foodSpecialty.getId());
+    @Before
+    public void onSetUpInTransaction() throws Exception {
+        final Connection con = DataSourceUtils.getConnection(dataSource);
+        final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
+        final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
+                .getFile(TestConstants.PERSISTENCE_TEST_DATA));
 
-		// Then
-		Assert.assertNull(this.facade.readFoodSpecialty(id));
-	}
+        try {
+            DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
+        } finally {
+            DataSourceUtils.releaseConnection(con, dataSource);
+        }
 
-	@Test
-	public void createAccountShouldSucceed() {
-		authenticateAsAdmin();
-		User user = TestUtils.validUser();
-		Long id = this.facade.createAccount(user);
-		User persistedUser = this.facade.readUser(id, true);
-		Assert.assertNotNull(persistedUser);
-		// When created associate by default with RMGR authority
-		Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
-		Assert.assertTrue(Authority.RMGR.equals(persistedUser.getAuthorities().iterator().next().getCode()));
-	}
+        SecurityContextHolder.setContext(new SecurityContextImpl());
 
-	@Test
-	public void updateAccountShouldSucceed() {
-		authenticateAsAdmin();
-		String email;
-		User user;
-		Long id;
+    }
 
-		user = TestUtils.validUser();
-		email = "first@email.org";
-		user.setEmail(email);
-		id = this.facade.createAccount(user);
-		user = this.facade.readUser(id);
-		Assert.assertEquals(email, user.getEmail());
+    @Test
+    public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
+        System.out.println("---------------------------- Debut test en erreur");
 
-		email = "second@email.org";
-		user.setEmail(email);
-		this.facade.updateAccount(user);
-		user = this.facade.readUser(id);
-		Assert.assertEquals(email, user.getEmail());
-	}
+        authenticateAsAdmin();
+        final Long foodSpecialtyId = facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+        final FoodSpecialty foodSpecialty = facade.readFoodSpecialty(foodSpecialtyId);
+        assertNotNull(foodSpecialty);
+        // Given
+        final User user = TestUtils.validUser();
+        final Long userId = facade.createAccount(user);
+        final Restaurant restaurant = TestUtils.validRestaurant();
+        restaurant.clearSpecialties();
+        restaurant.addSpecialty(foodSpecialty);
+        final Long restaurantId = facade.createRestaurant(userId, restaurant);
+        assertNotNull(restaurantId);
+        System.out.println("---------------------------- Fin test en erreur");
 
-	@Test
-	public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
-		authenticateAsAdmin();
-		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
-		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
-		assertNotNull(foodSpecialty);
-		// Given
-		User user = TestUtils.validUser();
-		Long userId = this.facade.createAccount(user);
-		Restaurant restaurant = TestUtils.validRestaurant();
-		restaurant.getSpecialties().clear();
-		restaurant.getSpecialties().add(foodSpecialty);
-		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
-		assertNotNull(restaurantId);
+    }
 
-	}
+    @Test
+    public void persistingAccountWithRemovedRestaurantFromCollectionShouldDeleteRestaurant() {}
 
-	@Test
-	public void persistingAccountWithUpdatedRestaurantInCollectionShouldUpdateRestaurant() {
-	}
+    @Test
+    public void persistingAccountWithUpdatedRestaurantInCollectionShouldUpdateRestaurant() {}
 
-	@Test
-	public void persistingAccountWithRemovedRestaurantFromCollectionShouldDeleteRestaurant() {
-	}
+    @Test
+    public void updateAccountShouldSucceed() {
+        authenticateAsAdmin();
+        String email;
+        User user;
+        Long id;
 
-	@Test
-	public void createFoodSpecialtyShouldSucceed() {
-		authenticateAsAdmin();
-		// Given
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		// ensure id nullity
-		foodSpecialty.setId(null);
-		// When
-		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
+        user = TestUtils.validUser();
+        email = "first@email.org";
+        user.setEmail(email);
+        id = facade.createAccount(user);
+        user = facade.readUser(id);
+        Assert.assertEquals(email, user.getEmail());
 
-		// Then
-		Assert.assertNotNull(id);
-		Assert.assertEquals(id, foodSpecialty.getId());
-	}
+        email = "second@email.org";
+        user.setEmail(email);
+        facade.updateAccount(user);
+        user = facade.readUser(id);
+        Assert.assertEquals(email, user.getEmail());
+    }
 
-	@Test
-	public void autorizationOrAuthenticationRequiredRequestShouldFailWhenNotAuthenticatedOrGrantedCorrectAuthority() {
-		// Given
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		// ensure id nullity
-		foodSpecialty.setId(null);
-		try {
-			// When
-			this.facade.createFoodSpecialty(foodSpecialty);
-			Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
-		} catch (AuthenticationCredentialsNotFoundException e) {
-		} catch (Throwable th) {
-			Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
-		}
-		authenticateAsRmgr();
-		try {
-			// When
-			this.facade.createFoodSpecialty(foodSpecialty);
-			Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
-		} catch (AccessDeniedException e) {
-		} catch (Throwable th) {
-			Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
-		}
+    @Test
+    public void updateEntityShouldPersistProperties() throws Throwable {
+        authenticateAsAdmin();
+        // Given
+        FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        foodSpecialty.setId(null);
+        // When
+        final Long id = facade.createFoodSpecialty(foodSpecialty);
+        // Then
+        Assert.assertNotNull(id);
+        Assert.assertEquals(id, foodSpecialty.getId());
+        final String newCode = "New Code";
+        final String newLabel = "Brand New Code";
 
-	}
+        // Given
+        foodSpecialty.setCode(newCode);
+        foodSpecialty.setLabel(newLabel);
 
-	private void authenticateAs(String uid, String password, Collection<? extends GrantedAuthority> authorities) {
-		SecurityContext securityContext = new SecurityContextImpl();
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(uid, password,
-				authorities);
-		securityContext.setAuthentication(authentication);
-		SecurityContextHolder.setContext(securityContext);
-	}
+        // When
+        facade.updateFoodSpecialty(foodSpecialty);
 
-	private void authenticateAsAdmin() {
-		authenticateAs("admin", "secret", Arrays.asList(new GrantedAuthorityImpl("ROLE_ADMIN")));
-	}
+        foodSpecialty = facade.readFoodSpecialty(id);
 
-	private void authenticateAsRmgr() {
-		authenticateAs("bob", "bob", Arrays.asList(new GrantedAuthorityImpl("ROLE_USER")));
-	}
+        // Then
+        Assert.assertEquals(newCode, foodSpecialty.getCode());
+        Assert.assertEquals(newLabel, foodSpecialty.getLabel());
+
+    }
 }
