@@ -103,11 +103,11 @@ public interface Facade {
 	Long createAccount(User user);
 
 	/**
-	 * @param id
+	 * @param userId
 	 * @param initializeCollections
 	 * @return
 	 */
-	User readUser(Long id, boolean initializeCollections);
+	User readUser(Long userId, boolean initializeCollections);
 
 	/**
 	 * @param user
@@ -120,5 +120,12 @@ public interface Facade {
 	 * @return
 	 */
 	Long createRestaurant(Long userId, Restaurant restaurant);
+
+	/**
+	 * @param restaurantId
+	 * @param initializeCollections
+	 * @return
+	 */
+	Restaurant readRestaurant(Long restaurantId, boolean initializeCollections);
 
 }

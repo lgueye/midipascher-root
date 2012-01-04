@@ -358,8 +358,24 @@ public class FacadeImpl implements Facade {
 
 		User user = this.baseDao.get(User.class, userId);
 		user.addRestaurant(restaurant);
-		this.baseDao.merge(user);
+		this.baseDao.persist(user);
 		return restaurant.getId();
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long,
+	 *      boolean)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Restaurant readRestaurant(Long restaurantId, boolean initializeCollections) {
+
+		Restaurant restaurant = readRestaurant(restaurantId);
+
+		if (restaurant != null && initializeCollections) Hibernate.initialize(restaurant.getSpecialties());
+
+		return restaurant;
+
 	}
 
 }

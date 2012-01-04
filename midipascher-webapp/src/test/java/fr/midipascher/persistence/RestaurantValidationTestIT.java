@@ -291,7 +291,7 @@ public class RestaurantValidationTestIT extends BasePersistenceTestIT {
 
 		shouldValidateCountryCodeSizeConstraint(ValidationContext.CREATE);
 
-		// shouldValidateSpecialtiesRequiredConstraint(ValidationContext.CREATE);
+		shouldValidateSpecialtiesRequiredConstraint(ValidationContext.CREATE);
 
 	}
 

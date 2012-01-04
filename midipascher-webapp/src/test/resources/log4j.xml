@@ -19,8 +19,12 @@
 		<level value="debug" />
 	</logger>
  -->
+	<logger name="org.dbunit.dataset.AbstractTableMetaData">
+		<level value="error" />
+	</logger>
 
 	<!-- Root Logger -->
+	
 	<root>
 		<priority value="warn" />
 		<appender-ref ref="console" />

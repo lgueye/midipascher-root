@@ -3,6 +3,7 @@
  */
 package fr.midipascher.business;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.sql.Connection;
@@ -177,24 +178,169 @@ public class FacadeImplTestIT {
 	@Test
 	public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
 		authenticateAsAdmin();
-		// Long foodSpecialtyId =
-		// this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
-		// FoodSpecialty foodSpecialty =
-		// this.facade.readFoodSpecialty(foodSpecialtyId);
-		// assertNotNull(foodSpecialty);
-		// Given
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
 		User user = TestUtils.validUser();
 		Long userId = this.facade.createAccount(user);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
-		// restaurant.getSpecialties().add(foodSpecialty);
+		restaurant.getSpecialties().add(foodSpecialty);
 		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
 		assertNotNull(restaurantId);
-
+		restaurant = this.facade.readRestaurant(restaurantId, true);
+		assertNotNull(restaurant);
+		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
+		user = this.facade.readUser(userId, true);
+		assertNotNull(userId);
+		assertEquals(1, CollectionUtils.size(user.getRestaurants()));
 	}
 
 	@Test
-	public void persistingAccountWithUpdatedRestaurantInCollectionShouldUpdateRestaurant() {
+	public void updatingSimplePropertiesShouldSucceedWhenMergingRestaurant() {
+		authenticateAsAdmin();
+
+		// Given
+		Long restaurantId = createRestaurant();
+		assertNotNull(restaurantId);
+		Restaurant restaurant = this.facade.readRestaurant(restaurantId);
+
+		String city = "new city";
+		String countryCode = "fr";
+		String postalCode = "92800";
+		String streetAddress = "new street address";
+		String companyId = "new company id";
+		String description = "new description";
+		boolean halal = true;
+		boolean kosher = false;
+		String mainOffer = "new main offer";
+		String name = "new name";
+		String phoneNumber = "new phone number";
+		boolean vegetarian = true;
+
+		restaurant.getAddress().setCity(city);
+		restaurant.getAddress().setCountryCode(countryCode);
+		restaurant.getAddress().setPostalCode(postalCode);
+		restaurant.getAddress().setStreetAddress(streetAddress);
+		restaurant.setCompanyId(companyId);
+		restaurant.setDescription(description);
+		restaurant.setHalal(halal);
+		restaurant.setKosher(kosher);
+		restaurant.setMainOffer(mainOffer);
+		restaurant.setName(name);
+		restaurant.setPhoneNumber(phoneNumber);
+		restaurant.setVegetarian(vegetarian);
+		// When
+		this.facade.updateRestaurant(restaurant);
+		restaurant = this.facade.readRestaurant(restaurantId);
+
+		// Then
+		assertEquals(city, restaurant.getAddress().getCity());
+		assertEquals(countryCode, restaurant.getAddress().getCountryCode());
+		assertEquals(postalCode, restaurant.getAddress().getPostalCode());
+		assertEquals(streetAddress, restaurant.getAddress().getStreetAddress());
+		assertEquals(companyId, restaurant.getCompanyId());
+		assertEquals(description, restaurant.getDescription());
+		assertEquals(mainOffer, restaurant.getMainOffer());
+		assertEquals(name, restaurant.getName());
+		assertEquals(phoneNumber, restaurant.getPhoneNumber());
+	}
+
+	/**
+	 * @return
+	 */
+	private Long createRestaurant() {
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		User user = TestUtils.validUser();
+		Long userId = this.facade.createAccount(user);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getSpecialties().clear();
+		restaurant.getSpecialties().add(foodSpecialty);
+		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		return restaurantId;
+	}
+
+	@Test
+	public void addingSpecialtyShouldSucceedWhenMergingRestaurant() {
+		authenticateAsAdmin();
+
+		// Given
+		Long restaurantId = createRestaurant();
+		assertNotNull(restaurantId);
+		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
+		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		restaurant.addSpecialty(foodSpecialty);
+
+		// When
+		this.facade.updateRestaurant(restaurant);
+		restaurant = this.facade.readRestaurant(restaurantId, true);
+
+		// Then
+		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
+	}
+
+	@Test
+	public void removingSpecialtyShouldSucceedWhenMergingRestaurant() {
+		authenticateAsAdmin();
+
+		// Given
+		Long restaurantId = createRestaurant();
+		assertNotNull(restaurantId);
+		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
+		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		restaurant.addSpecialty(foodSpecialty);
+		this.facade.updateRestaurant(restaurant);
+		restaurant = this.facade.readRestaurant(restaurantId, true);
+		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
+		restaurant.getSpecialties().remove(foodSpecialty);
+
+		// When
+		this.facade.updateRestaurant(restaurant);
+		restaurant = this.facade.readRestaurant(restaurantId, true);
+
+		// Then
+		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
+	}
+
+	@Test
+	public void updatingRestaurantSpecialtyShouldNotSucceedWhenMerging() {
+		authenticateAsAdmin();
+
+		// Given
+		Long restaurantId = createRestaurant();
+		assertNotNull(restaurantId);
+		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
+		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		restaurant.addSpecialty(foodSpecialty);
+
+		// When
+		this.facade.updateRestaurant(restaurant);
+		restaurant = this.facade.readRestaurant(restaurantId, true);
+
+		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
+		String newLabel = "new Label";
+		String label = restaurant.getSpecialties().iterator().next().getLabel();
+		foodSpecialty = restaurant.getSpecialties().iterator().next();
+		foodSpecialty.setLabel(newLabel);
+
+		// When
+		this.facade.updateRestaurant(restaurant);
+		restaurant = this.facade.readRestaurant(restaurantId, true);
+
+		for (FoodSpecialty specialty : restaurant.getSpecialties())
+			if (specialty.equals(foodSpecialty)) assertEquals(label, specialty.getLabel());
+
 	}
 
 	@Test
@@ -257,4 +403,5 @@ public class FacadeImplTestIT {
 	private void authenticateAsRmgr() {
 		authenticateAs("bob", "bob", Arrays.asList(new GrantedAuthorityImpl("ROLE_USER")));
 	}
+
 }

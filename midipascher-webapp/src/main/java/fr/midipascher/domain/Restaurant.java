@@ -3,6 +3,7 @@
  */
 package fr.midipascher.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -20,7 +21,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.google.common.base.Preconditions;
 
 import fr.midipascher.domain.validation.Create;
 import fr.midipascher.domain.validation.Delete;
@@ -94,7 +98,7 @@ public class Restaurant extends AbstractEntity {
 	@ManyToMany
 	@JoinTable(name = Restaurant.TABLE_NAME_RESTAURANT_FOOD_SPECIALTY, joinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = FoodSpecialty.ID_COLUMN_NAME) })
 	@Valid
-	@NotEmpty(message = "{restaurant.specialties.required}", groups = { Update.class })
+	@NotEmpty(message = "{restaurant.specialties.required}", groups = { Create.class, Update.class })
 	private Set<FoodSpecialty>	specialties;
 
 	@Valid
@@ -107,6 +111,31 @@ public class Restaurant extends AbstractEntity {
 	public Restaurant() {
 		super();
 		setAddress(new Address());
+	}
+
+	/**
+	 * @param foodSpecialty
+	 */
+	public void addSpecialty(final FoodSpecialty foodSpecialty) {
+		Preconditions.checkArgument(foodSpecialty != null, "Illegal call to addSpecialty, specialty is required");
+		if (this.specialties == null) this.specialties = new HashSet<FoodSpecialty>();
+		this.specialties.add(foodSpecialty);
+	}
+
+	/**
+     * 
+     */
+	public void clearSpecialties() {
+		if (this.specialties == null) return;
+		this.specialties.clear();
+	}
+
+	/**
+	 * @return
+	 */
+	public int countSpecialties() {
+		if (CollectionUtils.isEmpty(this.specialties)) return 0;
+		return this.specialties.size();
 	}
 
 	@Override
