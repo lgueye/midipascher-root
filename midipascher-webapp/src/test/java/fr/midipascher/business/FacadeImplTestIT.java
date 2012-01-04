@@ -177,15 +177,17 @@ public class FacadeImplTestIT {
 	@Test
 	public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
 		authenticateAsAdmin();
-		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
-		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
-		assertNotNull(foodSpecialty);
+		// Long foodSpecialtyId =
+		// this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		// FoodSpecialty foodSpecialty =
+		// this.facade.readFoodSpecialty(foodSpecialtyId);
+		// assertNotNull(foodSpecialty);
 		// Given
 		User user = TestUtils.validUser();
 		Long userId = this.facade.createAccount(user);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
-		restaurant.getSpecialties().add(foodSpecialty);
+		// restaurant.getSpecialties().add(foodSpecialty);
 		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
 		assertNotNull(restaurantId);
 

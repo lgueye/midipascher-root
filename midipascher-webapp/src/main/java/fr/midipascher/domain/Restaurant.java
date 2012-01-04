@@ -94,7 +94,7 @@ public class Restaurant extends AbstractEntity {
 	@ManyToMany
 	@JoinTable(name = Restaurant.TABLE_NAME_RESTAURANT_FOOD_SPECIALTY, joinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = FoodSpecialty.ID_COLUMN_NAME) })
 	@Valid
-	@NotEmpty(message = "{restaurant.specialties.required}", groups = { Create.class, Update.class })
+	@NotEmpty(message = "{restaurant.specialties.required}", groups = { Update.class })
 	private Set<FoodSpecialty>	specialties;
 
 	@Valid
