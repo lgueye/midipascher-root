@@ -4,6 +4,7 @@
 package fr.midipascher.domain;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -337,6 +338,33 @@ public class User extends AbstractEntity {
 	public int countAuthorities() {
 		if (CollectionUtils.isEmpty(this.authorities)) return 0;
 		return this.authorities.size();
+	}
+
+	/**
+	 * @param restaurantId
+	 */
+	public void removeRestaurant(Long restaurantId) {
+
+		if (restaurantId != null && countRestaurants() > 0) {
+
+			Iterator<Restaurant> restaurantsIterator = this.restaurants.iterator();
+
+			while (restaurantsIterator.hasNext()) {
+
+				Restaurant restaurant = restaurantsIterator.next();
+
+				if (restaurant != null && restaurantId.equals(restaurant.getId())) {
+
+					restaurantsIterator.remove();
+
+					break;
+
+				}
+
+			}
+
+		}
+
 	}
 
 }

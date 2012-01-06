@@ -5,6 +5,7 @@ package fr.midipascher.business;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
 import java.util.Arrays;
@@ -79,7 +80,7 @@ public class FacadeImplTestIT {
 	}
 
 	@Test
-	public void createEntityShouldPersistAndSetId() throws Throwable {
+	public void createFoodSpecialtyShouldSucceed() throws Throwable {
 		authenticateAsAdmin();
 		// Given
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
@@ -95,7 +96,7 @@ public class FacadeImplTestIT {
 	}
 
 	@Test
-	public void updateEntityShouldPersistProperties() throws Throwable {
+	public void updateFoodSpecialtyShouldSucceed() throws Throwable {
 		authenticateAsAdmin();
 		// Given
 		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
@@ -124,7 +125,24 @@ public class FacadeImplTestIT {
 	}
 
 	@Test
-	public void deleteEntityShouldSucceed() throws Throwable {
+	public void inactivateFoodSpecialtyShouldSucceed() {
+		authenticateAsAdmin();
+		// Given
+		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		// ensure id nullity
+		foodSpecialty.setId(null);
+		// When
+		final Long foodSpecialtyId = this.facade.createFoodSpecialty(foodSpecialty);
+		foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		// Then
+		Assert.assertNotNull(foodSpecialty);
+		this.facade.inactivateFoodSpecialty(foodSpecialtyId);
+		foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		Assert.assertFalse(foodSpecialty.isActive());
+	}
+
+	@Test
+	public void deleteFoodSpecialtyShouldSucceed() throws Throwable {
 		authenticateAsAdmin();
 		// Given
 		FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
@@ -147,7 +165,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 		User user = TestUtils.validUser();
 		Long id = this.facade.createAccount(user);
-		User persistedUser = this.facade.readUser(id, true);
+		User persistedUser = this.facade.readAccount(id, true);
 		Assert.assertNotNull(persistedUser);
 		// When created associate by default with RMGR authority
 		Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
@@ -165,13 +183,13 @@ public class FacadeImplTestIT {
 		email = "first@email.org";
 		user.setEmail(email);
 		id = this.facade.createAccount(user);
-		user = this.facade.readUser(id);
+		user = this.facade.readAccount(id);
 		Assert.assertEquals(email, user.getEmail());
 
 		email = "second@email.org";
 		user.setEmail(email);
 		this.facade.updateAccount(user);
-		user = this.facade.readUser(id);
+		user = this.facade.readAccount(id);
 		Assert.assertEquals(email, user.getEmail());
 	}
 
@@ -191,9 +209,73 @@ public class FacadeImplTestIT {
 		restaurant = this.facade.readRestaurant(restaurantId, true);
 		assertNotNull(restaurant);
 		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
-		user = this.facade.readUser(userId, true);
+		user = this.facade.readAccount(userId, true);
 		assertNotNull(userId);
 		assertEquals(1, CollectionUtils.size(user.getRestaurants()));
+	}
+
+	@Test
+	public void deletingRestaurantShouldSucceed() {
+		authenticateAsAdmin();
+
+		// Given
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		User user = TestUtils.validUser();
+		Long userId = this.facade.createAccount(user);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getSpecialties().clear();
+		restaurant.getSpecialties().add(foodSpecialty);
+		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		assertNotNull(this.facade.readRestaurant(restaurantId));
+
+		// When
+		this.facade.deleteRestaurant(userId, restaurantId);
+
+		// Then
+		assertNull(this.facade.readRestaurant(restaurantId));
+
+	}
+
+	@Test
+	public void deletingAccountShouldSucceed() {
+		authenticateAsAdmin();
+
+		// Given
+		Long userId = this.facade.createAccount(TestUtils.validUser());
+		assertNotNull(this.facade.readAccount(userId));
+		// When
+		this.facade.deleteAccount(userId);
+
+		// Then
+		assertNull(this.facade.readAccount(userId));
+
+	}
+
+	@Test
+	public void deletingAccountShouldAlsoDeleteItsRestaurants() {
+		authenticateAsAdmin();
+
+		// Given
+		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+		assertNotNull(foodSpecialty);
+		User user = TestUtils.validUser();
+		Long userId = this.facade.createAccount(user);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getSpecialties().clear();
+		restaurant.getSpecialties().add(foodSpecialty);
+		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+
+		// When
+		this.facade.deleteAccount(userId);
+
+		// Then
+		assertNull(this.facade.readAccount(userId));
+		assertNull(this.facade.readRestaurant(restaurantId));
+		assertNotNull(this.facade.readFoodSpecialty(foodSpecialtyId));
+
 	}
 
 	@Test
@@ -345,21 +427,6 @@ public class FacadeImplTestIT {
 
 	@Test
 	public void persistingAccountWithRemovedRestaurantFromCollectionShouldDeleteRestaurant() {
-	}
-
-	@Test
-	public void createFoodSpecialtyShouldSucceed() {
-		authenticateAsAdmin();
-		// Given
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		// ensure id nullity
-		foodSpecialty.setId(null);
-		// When
-		final Long id = this.facade.createFoodSpecialty(foodSpecialty);
-
-		// Then
-		Assert.assertNotNull(id);
-		Assert.assertEquals(id, foodSpecialty.getId());
 	}
 
 	@Test

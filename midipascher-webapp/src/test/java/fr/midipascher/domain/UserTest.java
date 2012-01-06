@@ -3,6 +3,9 @@
  */
 package fr.midipascher.domain;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +13,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import fr.midipascher.test.TestUtils;
 
 /**
  * @author louis.gueye@gmail.com
@@ -125,5 +130,63 @@ public class UserTest {
 	public void countRestaurantsShouldReturnZeroWithEmptySet() {
 		this.underTest.setRestaurants(new HashSet<Restaurant>());
 		Assert.assertEquals(0, this.underTest.countRestaurants());
+	}
+
+	@Test
+	public void removeRestaurantWontFailWithNullRestaurantsCollection() {
+		this.underTest.setRestaurants(null);
+		try {
+			this.underTest.removeRestaurant(5L);
+		} catch (Throwable th) {
+			fail("No exception expected");
+		}
+	}
+
+	@Test
+	public void removeRestaurantWontFailWithEmptyRestaurantsCollection() {
+		this.underTest.setRestaurants(new HashSet<Restaurant>());
+		try {
+			this.underTest.removeRestaurant(5L);
+		} catch (Throwable th) {
+			fail("No exception expected");
+		}
+	}
+
+	@Test
+	public void removeRestaurantWontFailWithNullProvidedRestaurantId() {
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setId(9L);
+		this.underTest.addRestaurant(restaurant);
+
+		try {
+			this.underTest.removeRestaurant(null);
+		} catch (Throwable th) {
+			fail("No exception expected");
+		}
+	}
+
+	@Test
+	public void removeRestaurantWontFailWithNullRestaurantIdInCollection() {
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setId(null);
+		this.underTest.addRestaurant(restaurant);
+
+		try {
+			this.underTest.removeRestaurant(null);
+		} catch (Throwable th) {
+			fail("No exception expected");
+		}
+	}
+
+	@Test
+	public void removeRestaurantShouldSucceed() {
+		Long id = 4L;
+		int countRestaurant;
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setId(id);
+		this.underTest.addRestaurant(restaurant);
+		countRestaurant = this.underTest.countRestaurants();
+		this.underTest.removeRestaurant(id);
+		assertEquals(countRestaurant - 1, this.underTest.countRestaurants());
 	}
 }

@@ -42,10 +42,11 @@ public interface Facade {
 	void deleteFoodSpecialty(Long foodSpecialtyId);
 
 	/**
+	 * @param userId TODO
 	 * @param restaurantId
 	 * @throws ConstraintViolationException
 	 */
-	void deleteRestaurant(Long restaurantId);
+	void deleteRestaurant(Long userId, Long restaurantId);
 
 	/**
 	 * @param criteria
@@ -94,7 +95,7 @@ public interface Facade {
 	 * @param id
 	 * @return
 	 */
-	User readUser(Long id);
+	User readAccount(Long id);
 
 	/**
 	 * @param user
@@ -107,7 +108,7 @@ public interface Facade {
 	 * @param initializeCollections
 	 * @return
 	 */
-	User readUser(Long userId, boolean initializeCollections);
+	User readAccount(Long userId, boolean initializeCollections);
 
 	/**
 	 * @param user
@@ -127,5 +128,15 @@ public interface Facade {
 	 * @return
 	 */
 	Restaurant readRestaurant(Long restaurantId, boolean initializeCollections);
+
+	/**
+	 * @param foodSpecialtyId
+	 */
+	void inactivateFoodSpecialty(Long foodSpecialtyId);
+
+	/**
+	 * @param userId
+	 */
+	void deleteAccount(Long userId);
 
 }

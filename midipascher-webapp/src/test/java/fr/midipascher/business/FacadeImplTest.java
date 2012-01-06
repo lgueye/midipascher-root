@@ -146,12 +146,17 @@ public class FacadeImplTest {
 
 		// Given
 		final Long restaurantId = 5L;
+		final Long userId = 5L;
 
 		// When
-		this.underTest.deleteRestaurant(restaurantId);
+		User user = Mockito.mock(User.class);
+		Mockito.when(this.baseDao.get(User.class, userId)).thenReturn(user);
+		this.underTest.deleteRestaurant(userId, restaurantId);
 
 		// Then
-		Mockito.verify(this.baseDao).delete(Restaurant.class, restaurantId);
+		Mockito.verify(this.baseDao).get(User.class, userId);
+		Mockito.verify(user).removeRestaurant(restaurantId);
+		Mockito.verifyNoMoreInteractions(this.baseDao, user);
 
 	}
 
@@ -162,7 +167,7 @@ public class FacadeImplTest {
 		final Long restaurantId = null;
 
 		// When
-		this.underTest.deleteRestaurant(restaurantId);
+		this.underTest.deleteRestaurant(null, restaurantId);
 
 	}
 
@@ -517,7 +522,7 @@ public class FacadeImplTest {
 		Long id = null;
 
 		// When
-		this.underTest.readUser(id);
+		this.underTest.readAccount(id);
 	}
 
 	public void readUserShouldInvokeBaseDao() {
@@ -526,7 +531,7 @@ public class FacadeImplTest {
 		User expectedUser = Mockito.mock(User.class);
 		// When
 		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(expectedUser);
-		User actualUser = this.underTest.readUser(id);
+		User actualUser = this.underTest.readAccount(id);
 
 		Mockito.verify(this.baseDao).get(User.class, id);
 		Assert.assertSame(expectedUser, actualUser);
@@ -614,5 +619,44 @@ public class FacadeImplTest {
 		Mockito.verify(restaurant).getId();
 
 		Mockito.verifyNoMoreInteractions(this.baseDao, user, restaurant);
+	}
+
+	@Test
+	public void inactivatFoodSpecialtyShouldSetActiveToFalse() {
+		// Given
+		Long foodSpecialtyId = 3L;
+		FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		Mockito.when(this.baseDao.get(FoodSpecialty.class, foodSpecialtyId)).thenReturn(foodSpecialty);
+
+		// When
+		this.underTest.inactivateFoodSpecialty(foodSpecialtyId);
+
+		// Then
+		Mockito.verify(foodSpecialty).setActive(false);
+	}
+
+	@Test
+	public void deleteAccountShouldInvokePersistence() {
+
+		// Given
+		final Long userId = 5L;
+
+		// When
+		this.underTest.deleteAccount(userId);
+
+		// Then
+		Mockito.verify(this.baseDao).delete(User.class, userId);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void deleteAccountShouldThrowIllegalArgumentExceptionWithNullId() {
+
+		// Given
+		final Long userId = null;
+
+		// When
+		this.underTest.deleteAccount(userId);
+
 	}
 }

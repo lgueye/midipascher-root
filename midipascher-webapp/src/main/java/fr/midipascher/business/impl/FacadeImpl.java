@@ -93,16 +93,18 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#deleteRestaurant(java.lang.Long)
+	 * @see fr.midipascher.domain.business.Facade#deleteRestaurant(Long,
+	 *      java.lang.Long)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void deleteRestaurant(final Long restaurantId) {
+	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	public void deleteRestaurant(Long userId, final Long restaurantId) {
 
 		Preconditions.checkArgument(restaurantId != null,
 				"Illegal call to deleteRestaurant, restaurant identifier is required");
 
-		this.baseDao.delete(Restaurant.class, restaurantId);
+		this.baseDao.get(User.class, userId).removeRestaurant(restaurantId);
 
 	}
 
@@ -256,10 +258,10 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#readUser(java.lang.Long)
+	 * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long)
 	 */
 	@Override
-	public User readUser(Long id) {
+	public User readAccount(Long id) {
 
 		Preconditions.checkArgument(id != null, "Illegal call to readUser, id is required");
 
@@ -300,14 +302,14 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#readUser(java.lang.Long,
+	 * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long,
 	 *      boolean)
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public User readUser(Long id, boolean initializeCollections) {
+	public User readAccount(Long id, boolean initializeCollections) {
 
-		User user = readUser(id);
+		User user = readAccount(id);
 
 		if (user != null && initializeCollections) {
 
@@ -375,6 +377,34 @@ public class FacadeImpl implements Facade {
 		if (restaurant != null && initializeCollections) Hibernate.initialize(restaurant.getSpecialties());
 
 		return restaurant;
+
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#inactivateFoodSpecialty(java.lang.Long)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_ADMIN" })
+	public void inactivateFoodSpecialty(Long foodSpecialtyId) {
+
+		FoodSpecialty foodSpecialty = readFoodSpecialty(foodSpecialtyId);
+
+		foodSpecialty.setActive(false);
+
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#deleteAccount(java.lang.Long)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	public void deleteAccount(Long userId) {
+
+		Preconditions.checkArgument(userId != null, "Illegal call to deleteAccount, user identifier is required");
+
+		this.baseDao.delete(User.class, userId);
 
 	}
 
