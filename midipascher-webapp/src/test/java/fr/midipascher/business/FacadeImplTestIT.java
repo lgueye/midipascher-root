@@ -420,7 +420,7 @@ public class FacadeImplTestIT {
 		this.facade.updateRestaurant(restaurant);
 		restaurant = this.facade.readRestaurant(restaurantId, true);
 
-		for (FoodSpecialty specialty : restaurant.getSpecialties())
+		for ( FoodSpecialty specialty : restaurant.getSpecialties() )
 			if (specialty.equals(foodSpecialty)) assertEquals(label, specialty.getLabel());
 
 	}
@@ -468,7 +468,7 @@ public class FacadeImplTestIT {
 	}
 
 	private void authenticateAsRmgr() {
-		authenticateAs("bob", "bob", Arrays.asList(new GrantedAuthorityImpl("ROLE_USER")));
+		authenticateAs("rmgr", "secret", Arrays.asList(new GrantedAuthorityImpl("ROLE_RMGR")));
 	}
 
 }

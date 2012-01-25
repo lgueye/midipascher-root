@@ -1,6 +1,7 @@
 Security story
 
 Meta:
+@refs 2
 @progress done
 
 Narrative:

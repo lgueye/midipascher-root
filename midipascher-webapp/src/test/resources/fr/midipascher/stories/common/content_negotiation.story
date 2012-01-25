@@ -1,6 +1,7 @@
 Content Negotiation story
 
 Meta:
+@refs 1
 @progress done
 
 Narrative:

@@ -27,8 +27,8 @@
     <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider>
             <sec:user-service>
-                <sec:user name="bob" password="bob" authorities="ROLE_USER"/>
-                <sec:user name="admin" password="secret" authorities="ROLE_USER,ROLE_ADMIN"/>
+                <sec:user name="rmgr" password="secret" authorities="ROLE_RMGR"/>
+                <sec:user name="admin" password="secret" authorities="ROLE_RMGR,ROLE_ADMIN"/>
             </sec:user-service>
         </sec:authentication-provider>
     </sec:authentication-manager>
