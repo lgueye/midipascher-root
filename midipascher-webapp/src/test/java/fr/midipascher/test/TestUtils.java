@@ -37,7 +37,7 @@ import fr.midipascher.domain.User;
  */
 public abstract class TestUtils {
 
-	private static final String	STANDARD_CHARSET	= "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBNéèçàù7894561230";
+	public static final String	STANDARD_CHARSET	= "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBNéèçàù7894561230";
 	private static final String	EMAIL_CHARSET		= "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN";
 
 	/**
