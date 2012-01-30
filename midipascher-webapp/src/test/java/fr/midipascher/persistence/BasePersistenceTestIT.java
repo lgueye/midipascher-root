@@ -40,7 +40,7 @@ import fr.midipascher.test.TestUtils;
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:midipascher-server.xml" })
+@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.VALIDATION_CONTEXT })
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 public abstract class BasePersistenceTestIT {

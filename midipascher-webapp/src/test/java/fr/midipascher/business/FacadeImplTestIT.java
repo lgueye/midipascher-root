@@ -53,7 +53,8 @@ import fr.midipascher.test.TestUtils;
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT })
+@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT,
+		TestConstants.VALIDATION_CONTEXT })
 public class FacadeImplTestIT {
 
 	@Autowired
