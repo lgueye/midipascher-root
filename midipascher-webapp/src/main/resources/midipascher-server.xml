@@ -28,7 +28,7 @@
 	</bean>
 	
 	<bean id="hibernatePersistenceProvider"
-		class="fr.midipascher.persistence.HibernateExtendedPersistenceProvider">
+		class="fr.midipascher.persistence.impl.HibernateExtendedPersistenceProvider">
 		<property name="preInsertEventListeners">
 			<list>
 				<ref bean="preInsertEventListener" />

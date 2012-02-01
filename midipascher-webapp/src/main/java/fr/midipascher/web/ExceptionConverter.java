@@ -7,9 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -82,6 +85,12 @@ public class ExceptionConverter {
 				.getString(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
 		if (th instanceof AccessDeniedException) return ResourceBundle.getBundle("messages", getLocale(request))
 				.getString(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
+		if (th instanceof ConstraintViolationException) {
+			ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
+			Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
+			final ConstraintViolation<?> violation = violations.iterator().next();
+			return violation.getMessage();
+		}
 		if (!(th instanceof LocalizedException)) return th.getMessage();
 		return ((LocalizedException) th).getMessage(getLocale(request).getLanguage());
 

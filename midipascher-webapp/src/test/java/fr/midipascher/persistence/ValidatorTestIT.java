@@ -67,7 +67,6 @@ public class ValidatorTestIT {
 		foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setCode(RandomStringUtils.random(FoodSpecialty.CONSTRAINT_CODE_MAX_SIZE + 1,
 				TestUtils.STANDARD_CHARSET));
-
 		// When
 		violations = this.underTest.validate(foodSpecialty, Create.class);
 

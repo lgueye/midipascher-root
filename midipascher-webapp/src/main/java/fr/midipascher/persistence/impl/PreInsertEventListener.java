@@ -6,11 +6,14 @@ package fr.midipascher.persistence.impl;
 import org.hibernate.event.PreInsertEvent;
 import org.springframework.stereotype.Component;
 
+import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.validation.ValidationContext;
+
 /**
  * @author louis.gueye@gmail.com
  */
 @Component(PreInsertEventListener.BEAN_ID)
-public class PreInsertEventListener implements org.hibernate.event.PreInsertEventListener {
+public class PreInsertEventListener extends AbstractEventListener implements org.hibernate.event.PreInsertEventListener {
 
 	public static final String	BEAN_ID				= "preInsertEventListener";
 
@@ -24,8 +27,8 @@ public class PreInsertEventListener implements org.hibernate.event.PreInsertEven
 	 */
 	@Override
 	public boolean onPreInsert(PreInsertEvent event) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		validate((AbstractEntity) event.getEntity(), ValidationContext.CREATE);
+		return false;
 	}
 
 }
