@@ -31,7 +31,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -465,11 +465,11 @@ public class FacadeImplTestIT {
 	}
 
 	private void authenticateAsAdmin() {
-		authenticateAs("admin", "secret", Arrays.asList(new GrantedAuthorityImpl("ROLE_ADMIN")));
+		authenticateAs("admin", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 	}
 
 	private void authenticateAsRmgr() {
-		authenticateAs("rmgr", "secret", Arrays.asList(new GrantedAuthorityImpl("ROLE_RMGR")));
+		authenticateAs("rmgr", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_RMGR")));
 	}
 
 }

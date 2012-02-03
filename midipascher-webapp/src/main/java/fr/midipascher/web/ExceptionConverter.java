@@ -19,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -45,6 +47,10 @@ public class ExceptionConverter {
 
 	@Autowired
 	private LocaleResolver				localeResolver;
+
+	@Autowired
+	@Qualifier("messageSources")
+	MessageSource						messageSource;
 
 	protected Locale getLocale(final HttpServletRequest request) {
 		final Locale locale = this.localeResolver.resolveLocale(request);
@@ -83,8 +89,10 @@ public class ExceptionConverter {
 		if (request == null) return th.getMessage();
 		if (th instanceof AuthenticationException) return ResourceBundle.getBundle("messages", getLocale(request))
 				.getString(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
-		if (th instanceof AccessDeniedException) return ResourceBundle.getBundle("messages", getLocale(request))
-				.getString(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
+		// if (th instanceof AccessDeniedException) return
+		// ResourceBundle.getBundle("messages", getLocale(request))
+		// .getString(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
+		if (th instanceof AccessDeniedException) return this.messageSource.getMessage("403", null, getLocale(request));
 		if (th instanceof ConstraintViolationException) {
 			ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
 			Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();

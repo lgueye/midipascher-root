@@ -21,19 +21,22 @@ And I accept "fr" language
 And I accept "application/xml" format
 When I send a valid "create food specialty" request
 Then the response code should be "403"
-And the message should be "Accès refusé"
+And the message should be "<message>"
+Examples:
+|message|
+|Accès refusé|
 
 Scenario: create food specialty with wrong code should fail
 Given I authenticate with "admin" uid and "secret" password
-And I accept "en" language
+And I accept "fr" language
 And I accept "application/json" format
 When I send a "create food specialty" request with "<wrong_code>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
 |wrong_code|message|
-||code is required|
-|dlfjyyprpmz|code max length is 10|
+||Code is required|
+|dlfjyyprpmz|Code max length is 10|
 |EXISTS|code already used|
 
 Scenario: create food specialty with wrong label should fail
