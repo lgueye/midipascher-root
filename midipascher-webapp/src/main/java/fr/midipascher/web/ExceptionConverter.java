@@ -38,76 +38,96 @@ import fr.midipascher.domain.exceptions.NotFoundException;
 @Component(ExceptionConverter.BEAN_ID)
 public class ExceptionConverter {
 
-	public static final String			BEAN_ID					= "ExceptionConverter";
+    public static final String BEAN_ID = "ExceptionConverter";
 
-	public static final List<String>	SUPPORTED_MEDIA_TYPES	= Arrays.asList(MediaType.APPLICATION_JSON,
-																		MediaType.APPLICATION_XML);
+    public static final List<String> SUPPORTED_MEDIA_TYPES = Arrays.asList(MediaType.APPLICATION_JSON,
+        MediaType.APPLICATION_XML);
 
-	public static final String			DEFAULT_MEDIA_TYPE		= MediaType.APPLICATION_JSON;
+    public static final String DEFAULT_MEDIA_TYPE = MediaType.APPLICATION_JSON;
 
-	@Autowired
-	private LocaleResolver				localeResolver;
+    @Autowired
+    private LocaleResolver localeResolver;
 
-	@Autowired
-	@Qualifier("messageSources")
-	MessageSource						messageSource;
+    @Autowired
+    @Qualifier("messageSources")
+    MessageSource messageSource;
 
-	protected Locale getLocale(final HttpServletRequest request) {
-		final Locale locale = this.localeResolver.resolveLocale(request);
-		if (locale == null) return Constants.DEFAULT_LOCALE;
-		if (!Constants.SUPPORTED_LOCALES.contains(locale.getLanguage())) return Constants.DEFAULT_LOCALE;
-		return new Locale(locale.getLanguage());
-	}
+    protected Locale getLocale(final HttpServletRequest request) {
+        final Locale locale = localeResolver.resolveLocale(request);
+        if (locale == null)
+            return Constants.DEFAULT_LOCALE;
+        if (!Constants.SUPPORTED_LOCALES.contains(locale.getLanguage()))
+            return Constants.DEFAULT_LOCALE;
+        return new Locale(locale.getLanguage());
+    }
 
-	/**
-	 * @param th
-	 * @return
-	 */
-	public int resolveHttpStatus(final Throwable th) {
-		if (th == null) return HttpServletResponse.SC_OK;
-		// th.printStackTrace();
-		if (th instanceof NotFoundException) return HttpServletResponse.SC_NOT_FOUND;
-		if (th instanceof AuthenticationException) return HttpServletResponse.SC_UNAUTHORIZED;
-		if (th instanceof AccessDeniedException) return HttpServletResponse.SC_FORBIDDEN;
-		if (th instanceof IllegalArgumentException || th instanceof ValidationException
-				|| th instanceof BusinessException) return HttpServletResponse.SC_BAD_REQUEST;
-		if (th instanceof IllegalStateException) return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-		if (th instanceof WebApplicationException && ((WebApplicationException) th).getResponse() != null) return ((WebApplicationException) th)
-				.getResponse().getStatus();
-		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-	}
+    /**
+     * @param th
+     * @return
+     */
+    public int resolveHttpStatus(final Throwable th) {
+        if (th == null)
+            return HttpServletResponse.SC_OK;
+        // th.printStackTrace();
+        if (th instanceof NotFoundException)
+            return HttpServletResponse.SC_NOT_FOUND;
+        if (th instanceof AuthenticationException)
+            return HttpServletResponse.SC_UNAUTHORIZED;
+        if (th instanceof AccessDeniedException)
+            return HttpServletResponse.SC_FORBIDDEN;
+        if (th instanceof IllegalArgumentException || th instanceof ValidationException
+            || th instanceof BusinessException)
+            return HttpServletResponse.SC_BAD_REQUEST;
+        if (th instanceof IllegalStateException)
+            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        if (th instanceof WebApplicationException && ((WebApplicationException) th).getResponse() != null)
+            return ((WebApplicationException) th).getResponse().getStatus();
+        return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+    }
 
-	/**
-	 * @param request
-	 * @param th
-	 * @return
-	 */
-	public String resolveMesage(final HttpServletRequest request, final Throwable th) {
+    /**
+     * @param request
+     * @param th
+     * @return
+     */
+    public String resolveMesage(final HttpServletRequest request, final Throwable th) {
 
-		if (th == null && request == null) return StringUtils.EMPTY;
-		if (th == null) return StringUtils.EMPTY;
-		if (request == null) return th.getMessage();
-		if (th instanceof AuthenticationException) return ResourceBundle.getBundle("messages", getLocale(request))
-				.getString(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
-		// if (th instanceof AccessDeniedException) return
-		// ResourceBundle.getBundle("messages", getLocale(request))
-		// .getString(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
-		if (th instanceof AccessDeniedException) return this.messageSource.getMessage("403", null, getLocale(request));
-		if (th instanceof ConstraintViolationException) {
-			ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
-			Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
-			final ConstraintViolation<?> violation = violations.iterator().next();
-			return violation.getMessage();
-		}
-		if (!(th instanceof LocalizedException)) return th.getMessage();
-		return ((LocalizedException) th).getMessage(getLocale(request).getLanguage());
+        if (th == null && request == null)
+            return StringUtils.EMPTY;
+        if (th == null)
+            return StringUtils.EMPTY;
+        if (request == null)
+            return th.getMessage();
+        if (th instanceof AuthenticationException)
+            return ResourceBundle.getBundle("messages", getLocale(request)).getString(
+                String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
+        // if (th instanceof AccessDeniedException) return
+        // ResourceBundle.getBundle("messages", getLocale(request))
+        // .getString(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
+        if (th instanceof AccessDeniedException) {
+            System.out.println("messageSource resolution=" + messageSource.getMessage("403", null, getLocale(request)));
+            System.out.println("resource bundle resolution="
+                + ResourceBundle.getBundle("messages", getLocale(request)).getString(
+                    String.valueOf(HttpServletResponse.SC_FORBIDDEN)));
 
-	}
+            return messageSource.getMessage("403", null, getLocale(request));
+        }
+        if (th instanceof ConstraintViolationException) {
+            final ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
+            final Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
+            final ConstraintViolation<?> violation = violations.iterator().next();
+            return violation.getMessage();
+        }
+        if (!(th instanceof LocalizedException))
+            return th.getMessage();
+        return ((LocalizedException) th).getMessage(getLocale(request).getLanguage());
 
-	public ResponseError toResponseError(final Throwable th, final HttpServletRequest request) {
-		final String message = resolveMesage(request, th);
-		final int httpStatus = resolveHttpStatus(th);
-		final ResponseError responseError = new ResponseError(message, httpStatus);
-		return responseError;
-	}
+    }
+
+    public ResponseError toResponseError(final Throwable th, final HttpServletRequest request) {
+        final String message = resolveMesage(request, th);
+        final int httpStatus = resolveHttpStatus(th);
+        final ResponseError responseError = new ResponseError(message, httpStatus);
+        return responseError;
+    }
 }

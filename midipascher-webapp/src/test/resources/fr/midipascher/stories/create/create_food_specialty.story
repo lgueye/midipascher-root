@@ -18,7 +18,7 @@ And I should be able to read the new resource
 Scenario: create food specialty as user with wrong role should fail
 Given I authenticate with "rmgr" uid and "secret" password
 And I accept "fr" language
-And I accept "application/xml" format
+And I accept "application/json" format
 When I send a valid "create food specialty" request
 Then the response code should be "403"
 And the message should be "<message>"
@@ -28,7 +28,7 @@ Examples:
 
 Scenario: create food specialty with wrong code should fail
 Given I authenticate with "admin" uid and "secret" password
-And I accept "fr" language
+And I accept "en" language
 And I accept "application/json" format
 When I send a "create food specialty" request with "<wrong_code>"
 Then the response code should be "400"
