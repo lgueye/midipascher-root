@@ -6,7 +6,6 @@ package fr.midipascher.web;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.persistence.PersistenceException;
@@ -67,23 +66,31 @@ public class ExceptionConverter {
      * @return
      */
     public int resolveHttpStatus(final Throwable th) {
+        // th.printStackTrace();
         if (th == null)
             return HttpServletResponse.SC_OK;
-        // th.printStackTrace();
+
         if (th instanceof NotFoundException)
             return HttpServletResponse.SC_NOT_FOUND;
+
         if (th instanceof AuthenticationException)
             return HttpServletResponse.SC_UNAUTHORIZED;
+
         if (th instanceof AccessDeniedException)
             return HttpServletResponse.SC_FORBIDDEN;
+
         if (th instanceof IllegalArgumentException || th instanceof ValidationException
             || th instanceof BusinessException || th instanceof PersistenceException)
             return HttpServletResponse.SC_BAD_REQUEST;
+
         if (th instanceof IllegalStateException)
             return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+
         if (th instanceof WebApplicationException && ((WebApplicationException) th).getResponse() != null)
             return ((WebApplicationException) th).getResponse().getStatus();
+
         return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+
     }
 
     /**
@@ -94,27 +101,30 @@ public class ExceptionConverter {
     public String resolveMesage(final HttpServletRequest request, final Throwable th) {
         if (th == null && request == null)
             return StringUtils.EMPTY;
+
         if (th == null)
             return StringUtils.EMPTY;
-        th.printStackTrace();
+
         if (request == null)
             return th.getMessage();
+
         if (th instanceof AuthenticationException)
-            return ResourceBundle.getBundle("messages", getLocale(request)).getString(
-                String.valueOf(HttpServletResponse.SC_UNAUTHORIZED));
-        // if (th instanceof AccessDeniedException) return
-        // ResourceBundle.getBundle("messages", getLocale(request))
-        // .getString(String.valueOf(HttpServletResponse.SC_FORBIDDEN));
+            return messageSource.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null,
+                getLocale(request));
+
         if (th instanceof AccessDeniedException)
-            return messageSource.getMessage("403", null, getLocale(request));
+            return messageSource.getMessage(String.valueOf(HttpServletResponse.SC_FORBIDDEN), null, getLocale(request));
+
         if (th instanceof ConstraintViolationException) {
             final ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
             final Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
             final ConstraintViolation<?> violation = violations.iterator().next();
             return violation.getMessage();
         }
+
         if (!(th instanceof LocalizedException))
             return th.getMessage();
+
         return ((LocalizedException) th).getMessage(getLocale(request).getLanguage());
 
     }

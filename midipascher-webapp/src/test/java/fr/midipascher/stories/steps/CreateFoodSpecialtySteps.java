@@ -83,10 +83,31 @@ public class CreateFoodSpecialtySteps {
         Assert.assertEquals(statusCode, response.getStatus());
     }
 
-    @When("I send a \"create food specialty\" request with \"<wrong_code>\"")
+    @When("I send a \"create food specialty\" request with wrong code \"<wrong_code>\"")
     public void sendCreateFoodSpecialtyRequestWithWrongCode(@Named("wrong_code") final String code) {
         final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
         foodSpecialty.setCode(code);
+        final String path = "/foodspecialty";
+        final URI uri = URI.create(baseEndPoint + path);
+        final String requestContentType = "application/json";
+        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+        config.getClasses().add(JacksonJsonProvider.class);
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        final Client jerseyClient = ApacheHttpClient4.create(config);
+        jerseyClient.addFilter(new LoggingFilter());
+        jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+        final WebResource webResource = jerseyClient.resource(uri);
+
+        final String format = this.format;
+        final String language = this.language;
+        response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+                .header("Content-Type", requestContentType).post(ClientResponse.class, foodSpecialty);
+    }
+
+    @When("I send a \"create food specialty\" request with wrong label \"<wrong_label>\"")
+    public void sendCreateFoodSpecialtyRequestWithWrongLabel(@Named("wrong_label") final String label) {
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        foodSpecialty.setLabel(label);
         final String path = "/foodspecialty";
         final URI uri = URI.create(baseEndPoint + path);
         final String requestContentType = "application/json";
