@@ -18,6 +18,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -43,419 +44,421 @@ import fr.midipascher.persistence.BaseDao;
 @Service(Facade.BEAN_ID)
 public class FacadeImpl implements Facade {
 
-	@Autowired
-	private Validator			validator;
+    @Autowired
+    private Validator validator;
 
-	@Autowired
-	private BaseDao				baseDao;
+    @Autowired
+    private BaseDao baseDao;
 
-	@Autowired
-	private MessageSource		messageSource;
+    @Autowired
+    @Qualifier("messageSources")
+    private MessageSource messageSource;
 
-	private static final Logger	LOGGER	= LoggerFactory.getLogger(FacadeImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FacadeImpl.class);
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#createFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
-	 */
-	@Override
-	@RolesAllowed("ROLE_ADMIN")
-	@Transactional(propagation = Propagation.REQUIRED)
-	public Long createFoodSpecialty(final FoodSpecialty foodSpecialty) {
+    /**
+     * @param foodSpecialty
+     * @throws NoSuchMessageException
+     * @throws BusinessException
+     */
+    public void checkUniqueFoodSpecialtyCode(final FoodSpecialty foodSpecialty) throws NoSuchMessageException,
+            BusinessException {
 
-		Preconditions.checkArgument(foodSpecialty != null,
-				"Illegal call to createFoodSpecialty, foodSpecialty is required");
+        final String code = foodSpecialty.getCode();
 
-		checkUniqueFoodSpecialtyCode(foodSpecialty);
+        if (StringUtils.isEmpty(code))
+            return;
 
-		this.baseDao.persist(foodSpecialty);
+        final FoodSpecialty criteria = new FoodSpecialty();
 
-		Preconditions.checkState(foodSpecialty.getId() != null, "foodSpecialty id should not be null");
+        criteria.setCode(code);
 
-		return foodSpecialty.getId();
+        final List<FoodSpecialty> results = baseDao.findByExample(criteria);
 
-	}
+        if (CollectionUtils.isEmpty(results))
+            return;
 
-	/**
-	 * @param foodSpecialty
-	 * @throws NoSuchMessageException
-	 * @throws BusinessException
-	 */
-	public void checkUniqueFoodSpecialtyCode(final FoodSpecialty foodSpecialty) throws NoSuchMessageException,
-			BusinessException {
+        final String messageCode = "foodSpecialty.code.already.used";
 
-		String code = foodSpecialty.getCode();
+        final String message = messageSource.getMessage(messageCode, new Object[] { code },
+            LocaleContextHolder.getLocale());
 
-		if (StringUtils.isEmpty(code)) return;
+        LOGGER.error(message);
 
-		FoodSpecialty criteria = new FoodSpecialty();
+        final String defaultMessage = "Code already used";
 
-		criteria.setCode(code);
+        throw new BusinessException(messageCode, new Object[] { code }, defaultMessage);
 
-		List<FoodSpecialty> results = this.baseDao.findByExample(criteria);
+    }
 
-		if (CollectionUtils.isEmpty(results)) return;
+    /**
+     * @see fr.midipascher.domain.business.Facade#createAccount(fr.midipascher.domain.User)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Long createAccount(final User user) {
 
-		String messageCode = "foodSpecialty.code.already.used";
+        Preconditions.checkArgument(user != null, "Illegal call to createAccount, user is required");
 
-		String message = this.messageSource.getMessage(messageCode, new Object[] { code },
-				LocaleContextHolder.getLocale());
+        user.clearAuthorities();
 
-		LOGGER.error(message);
+        final Authority exampleInstance = new Authority();
 
-		String defaultMessage = "Code already used";
+        exampleInstance.setCode(Authority.RMGR);
 
-		throw new BusinessException(messageCode, new Object[] { code }, defaultMessage);
+        final List<Authority> authorities = baseDao.findByExample(exampleInstance);
 
-	}
+        Preconditions.checkState(authorities != null, "Illegal state : 'RMGR' authority expected, found none");
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#createRestaurant(fr.midipascher.domain.Restaurant)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public Long createRestaurant(final Restaurant restaurant) {
+        Preconditions.checkState(authorities.size() == 1,
+            "Illegal state : one and one only 'RMGR' authority expected, found " + authorities.size());
 
-		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
+        user.addAuthority(authorities.get(0));
 
-		this.baseDao.persist(restaurant);
+        baseDao.persist(user);
 
-		return restaurant.getId();
+        return user.getId();
 
-	}
+    }
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#deleteFoodSpecialty(java.lang.Long)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed("ROLE_ADMIN")
-	public void deleteFoodSpecialty(final Long foodSpecialtyId) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#createFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
+     */
+    @Override
+    @RolesAllowed("ROLE_ADMIN")
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Long createFoodSpecialty(final FoodSpecialty foodSpecialty) {
 
-		Preconditions.checkArgument(foodSpecialtyId != null,
-				"Illegal call to deleteFoodSpecialty, foodSpecialtyId is required");
+        Preconditions.checkArgument(foodSpecialty != null,
+            "Illegal call to createFoodSpecialty, foodSpecialty is required");
 
-		this.baseDao.delete(FoodSpecialty.class, foodSpecialtyId);
+        checkUniqueFoodSpecialtyCode(foodSpecialty);
 
-	}
+        baseDao.persist(foodSpecialty);
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#deleteRestaurant(Long,
-	 *      java.lang.Long)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void deleteRestaurant(Long userId, final Long restaurantId) {
+        Preconditions.checkState(foodSpecialty.getId() != null, "foodSpecialty id should not be null");
 
-		Preconditions.checkArgument(restaurantId != null,
-				"Illegal call to deleteRestaurant, restaurant identifier is required");
+        return foodSpecialty.getId();
 
-		this.baseDao.get(User.class, userId).removeRestaurant(restaurantId);
+    }
 
-	}
+    /**
+     * @see fr.midipascher.domain.business.Facade#createRestaurant(java.lang.Long, fr.midipascher.domain.Restaurant)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+    public Long createRestaurant(final Long userId, final Restaurant restaurant) {
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#findRestaurantsByCriteria(fr.midipascher.domain.Restaurant)
-	 */
-	@Override
-	public List<Restaurant> findRestaurantsByCriteria(final Restaurant criteria) {
+        Preconditions.checkArgument(userId != null, "Illegal call to createRestaurant, userId is required");
+        Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
+        Preconditions.checkArgument(restaurant.getId() == null,
+            "Illegal call to createRestaurant, restaurant.id should be null");
 
-		Preconditions
-				.checkArgument(criteria != null, "Illegal call to findRestaurantsByCriteria, criteria is required");
+        final User user = baseDao.get(User.class, userId);
+        user.addRestaurant(restaurant);
+        baseDao.persist(user);
+        return restaurant.getId();
+    }
 
-		return this.baseDao.findByExample(criteria);
+    /**
+     * @see fr.midipascher.domain.business.Facade#createRestaurant(fr.midipascher.domain.Restaurant)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+    public Long createRestaurant(final Restaurant restaurant) {
 
-	}
+        Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#listFoodSpecialties()
-	 */
-	@Override
-	@Transactional(propagation = Propagation.SUPPORTS)
-	public List<FoodSpecialty> listFoodSpecialties() {
+        baseDao.persist(restaurant);
 
-		return this.baseDao.findAll(FoodSpecialty.class);
+        return restaurant.getId();
 
-	}
+    }
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readFoodSpecialty(java.lang.Long)
-	 */
-	@Override
-	public FoodSpecialty readFoodSpecialty(final Long foodSpecialtyId) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#deleteAccount(java.lang.Long)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+    public void deleteAccount(final Long userId) {
 
-		Preconditions.checkArgument(foodSpecialtyId != null,
-				"Illegal call to readFoodSpecialty, foodSpecialtyId is required");
+        Preconditions.checkArgument(userId != null, "Illegal call to deleteAccount, user identifier is required");
 
-		return this.baseDao.get(FoodSpecialty.class, foodSpecialtyId);
+        baseDao.delete(User.class, userId);
 
-	}
+    }
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long)
-	 */
-	@Override
-	public Restaurant readRestaurant(final Long restaurantId) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#deleteFoodSpecialty(java.lang.Long)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed("ROLE_ADMIN")
+    public void deleteFoodSpecialty(final Long foodSpecialtyId) {
 
-		Preconditions.checkArgument(restaurantId != null,
-				"Illegal call to readRestaurant, restaurant identifier is required");
+        Preconditions.checkArgument(foodSpecialtyId != null,
+            "Illegal call to deleteFoodSpecialty, foodSpecialtyId is required");
 
-		return this.baseDao.get(Restaurant.class, restaurantId);
+        baseDao.delete(FoodSpecialty.class, foodSpecialtyId);
 
-	}
+    }
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#updateFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed("ROLE_ADMIN")
-	public void updateFoodSpecialty(final FoodSpecialty foodSpecialty) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#deleteRestaurant(Long, java.lang.Long)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+    public void deleteRestaurant(final Long userId, final Long restaurantId) {
 
-		Preconditions.checkArgument(foodSpecialty != null,
-				"Illegal call to updateFoodSpecialty, foodSpecialty is required");
+        Preconditions.checkArgument(restaurantId != null,
+            "Illegal call to deleteRestaurant, restaurant identifier is required");
 
-		Long id = foodSpecialty.getId();
+        baseDao.get(User.class, userId).removeRestaurant(restaurantId);
 
-		Preconditions.checkArgument(id != null, "Illegal call to updateFoodSpecialty, foodSpecialty.id is required");
+    }
 
-		checkUniqueFoodSpecialtyCode(foodSpecialty);
+    /**
+     * @see fr.midipascher.domain.business.Facade#findRestaurantsByCriteria(fr.midipascher.domain.Restaurant)
+     */
+    @Override
+    public List<Restaurant> findRestaurantsByCriteria(final Restaurant criteria) {
 
-		final FoodSpecialty persistedInstance = this.baseDao.get(FoodSpecialty.class, id);
+        Preconditions
+                .checkArgument(criteria != null, "Illegal call to findRestaurantsByCriteria, criteria is required");
 
-		Preconditions.checkState(persistedInstance != null,
-				"Illegal call to updateFoodSpecialty, provided id should have corresponding foodSpecialty in store");
+        return baseDao.findByExample(criteria);
 
-		persistedInstance.setActive(foodSpecialty.isActive());
+    }
 
-		persistedInstance.setCode(foodSpecialty.getCode());
+    /**
+     * @see fr.midipascher.domain.business.Facade#inactivateFoodSpecialty(java.lang.Long)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_ADMIN" })
+    public void inactivateFoodSpecialty(final Long foodSpecialtyId) {
 
-		persistedInstance.setLabel(foodSpecialty.getLabel());
+        final FoodSpecialty foodSpecialty = readFoodSpecialty(foodSpecialtyId);
 
-	}
+        foodSpecialty.setActive(false);
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#updateRestaurant(fr.midipascher.domain.Restaurant)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void updateRestaurant(final Restaurant restaurant) {
+    }
 
-		Preconditions.checkArgument(restaurant != null, "Illegal call to updateRestaurant, restaurant is required");
+    /**
+     * @see fr.midipascher.domain.business.Facade#listFoodSpecialties()
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<FoodSpecialty> listFoodSpecialties() {
 
-		Preconditions.checkArgument(restaurant.getId() != null,
-				"Illegal call to updateRestaurant, restaurant.id is required");
+        return baseDao.findAll(FoodSpecialty.class);
 
-		final Restaurant persistedInstance = this.baseDao.get(Restaurant.class, restaurant.getId());
+    }
 
-		Preconditions.checkState(persistedInstance != null,
-				"Illegal call to updateRestaurant, provided id should have corresponding restaurant in the store");
+    /**
+     * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long)
+     */
+    @Override
+    public User readAccount(final Long id) {
 
-		persistedInstance.setAddress(restaurant.getAddress());
+        Preconditions.checkArgument(id != null, "Illegal call to readUser, id is required");
 
-		persistedInstance.setCompanyId(restaurant.getCompanyId());
+        final User user = baseDao.get(User.class, id);
 
-		persistedInstance.setDescription(restaurant.getDescription());
+        return user;
 
-		persistedInstance.setHalal(restaurant.isHalal());
+    }
 
-		persistedInstance.setKosher(restaurant.isKosher());
+    /**
+     * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long, boolean)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public User readAccount(final Long id, final boolean initializeCollections) {
 
-		persistedInstance.setMainOffer(restaurant.getMainOffer());
+        final User user = readAccount(id);
 
-		persistedInstance.setName(restaurant.getName());
+        if (user != null && initializeCollections) {
 
-		persistedInstance.setPhoneNumber(restaurant.getPhoneNumber());
+            Hibernate.initialize(user.getAuthorities());
 
-		persistedInstance.setSpecialties(restaurant.getSpecialties());
+            Hibernate.initialize(user.getRestaurants());
 
-		persistedInstance.setVegetarian(restaurant.isVegetarian());
+        }
 
-	}
+        return user;
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#validate(fr.midipascher.domain.AbstractEntity,
-	 *      fr.midipascher.domain.validation.ValidationContext)
-	 */
-	@Override
-	public <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
+    }
 
-		Preconditions.checkArgument(type != null, "Illegal call to validate, object is required");
+    /**
+     * @see fr.midipascher.domain.business.Facade#readFoodSpecialty(java.lang.Long)
+     */
+    @Override
+    public FoodSpecialty readFoodSpecialty(final Long foodSpecialtyId) {
 
-		Preconditions.checkArgument(context != null, "Illegal call to validate, validation context is required");
+        Preconditions.checkArgument(foodSpecialtyId != null,
+            "Illegal call to readFoodSpecialty, foodSpecialtyId is required");
 
-		final Set<ConstraintViolation<T>> constraintViolations = this.validator.validate(type, context.getContext());
+        return baseDao.get(FoodSpecialty.class, foodSpecialtyId);
 
-		if (CollectionUtils.isEmpty(constraintViolations)) return;
+    }
 
-		final Set<ConstraintViolation<?>> propagatedViolations = new HashSet<ConstraintViolation<?>>(
-				constraintViolations.size());
+    /**
+     * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long)
+     */
+    @Override
+    public Restaurant readRestaurant(final Long restaurantId) {
 
-		final Set<String> classNames = new HashSet<String>();
+        Preconditions.checkArgument(restaurantId != null,
+            "Illegal call to readRestaurant, restaurant identifier is required");
 
-		for ( final ConstraintViolation<?> violation : constraintViolations ) {
+        return baseDao.get(Restaurant.class, restaurantId);
 
-			propagatedViolations.add(violation);
+    }
 
-			classNames.add(violation.getLeafBean().getClass().getName());
+    /**
+     * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long, boolean)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Restaurant readRestaurant(final Long restaurantId, final boolean initializeCollections) {
 
-		}
+        final Restaurant restaurant = readRestaurant(restaurantId);
 
-		throw new ConstraintViolationException(propagatedViolations);
+        if (restaurant != null && initializeCollections) {
+            Hibernate.initialize(restaurant.getSpecialties());
+        }
 
-	}
+        return restaurant;
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long)
-	 */
-	@Override
-	public User readAccount(Long id) {
+    }
 
-		Preconditions.checkArgument(id != null, "Illegal call to readUser, id is required");
+    /**
+     * @see fr.midipascher.domain.business.Facade#updateAccount(fr.midipascher.domain.User)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+    public void updateAccount(final User user) {
 
-		User user = this.baseDao.get(User.class, id);
+        Preconditions.checkArgument(user != null, "Illegal call to updateAccount, user is required");
 
-		return user;
+        Preconditions.checkArgument(user.getId() != null, "Illegal call to updateAccount, user.id is required");
 
-	}
+        final User persistedInstance = baseDao.get(User.class, user.getId());
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#createAccount(fr.midipascher.domain.User)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	public Long createAccount(User user) {
+        Preconditions.checkState(persistedInstance != null,
+            "Illegal call to updateAccount, provided id should have corresponding user in the store");
 
-		Preconditions.checkArgument(user != null, "Illegal call to createAccount, user is required");
+        baseDao.merge(user);
 
-		user.clearAuthorities();
+    }
 
-		Authority exampleInstance = new Authority();
+    /**
+     * @see fr.midipascher.domain.business.Facade#updateFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed("ROLE_ADMIN")
+    public void updateFoodSpecialty(final FoodSpecialty foodSpecialty) {
 
-		exampleInstance.setCode(Authority.RMGR);
+        Preconditions.checkArgument(foodSpecialty != null,
+            "Illegal call to updateFoodSpecialty, foodSpecialty is required");
 
-		List<Authority> authorities = this.baseDao.findByExample(exampleInstance);
+        final Long id = foodSpecialty.getId();
 
-		Preconditions.checkState(authorities != null, "Illegal state : 'RMGR' authority expected, found none");
+        Preconditions.checkArgument(id != null, "Illegal call to updateFoodSpecialty, foodSpecialty.id is required");
 
-		Preconditions.checkState(authorities.size() == 1,
-				"Illegal state : one and one only 'RMGR' authority expected, found " + authorities.size());
+        checkUniqueFoodSpecialtyCode(foodSpecialty);
 
-		user.addAuthority(authorities.get(0));
+        final FoodSpecialty persistedInstance = baseDao.get(FoodSpecialty.class, id);
 
-		this.baseDao.persist(user);
+        Preconditions.checkState(persistedInstance != null,
+            "Illegal call to updateFoodSpecialty, provided id should have corresponding foodSpecialty in store");
 
-		return user.getId();
+        persistedInstance.setActive(foodSpecialty.isActive());
 
-	}
+        persistedInstance.setCode(foodSpecialty.getCode());
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long,
-	 *      boolean)
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public User readAccount(Long id, boolean initializeCollections) {
+        persistedInstance.setLabel(foodSpecialty.getLabel());
 
-		User user = readAccount(id);
+    }
 
-		if (user != null && initializeCollections) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#updateRestaurant(fr.midipascher.domain.Restaurant)
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+    public void updateRestaurant(final Restaurant restaurant) {
 
-			Hibernate.initialize(user.getAuthorities());
+        Preconditions.checkArgument(restaurant != null, "Illegal call to updateRestaurant, restaurant is required");
 
-			Hibernate.initialize(user.getRestaurants());
+        Preconditions.checkArgument(restaurant.getId() != null,
+            "Illegal call to updateRestaurant, restaurant.id is required");
 
-		}
+        final Restaurant persistedInstance = baseDao.get(Restaurant.class, restaurant.getId());
 
-		return user;
+        Preconditions.checkState(persistedInstance != null,
+            "Illegal call to updateRestaurant, provided id should have corresponding restaurant in the store");
 
-	}
+        persistedInstance.setAddress(restaurant.getAddress());
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#updateAccount(fr.midipascher.domain.User)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void updateAccount(User user) {
+        persistedInstance.setCompanyId(restaurant.getCompanyId());
 
-		Preconditions.checkArgument(user != null, "Illegal call to updateAccount, user is required");
+        persistedInstance.setDescription(restaurant.getDescription());
 
-		Preconditions.checkArgument(user.getId() != null, "Illegal call to updateAccount, user.id is required");
+        persistedInstance.setHalal(restaurant.isHalal());
 
-		final User persistedInstance = this.baseDao.get(User.class, user.getId());
+        persistedInstance.setKosher(restaurant.isKosher());
 
-		Preconditions.checkState(persistedInstance != null,
-				"Illegal call to updateAccount, provided id should have corresponding user in the store");
+        persistedInstance.setMainOffer(restaurant.getMainOffer());
 
-		this.baseDao.merge(user);
+        persistedInstance.setName(restaurant.getName());
 
-	}
+        persistedInstance.setPhoneNumber(restaurant.getPhoneNumber());
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#createRestaurant(java.lang.Long,
-	 *      fr.midipascher.domain.Restaurant)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public Long createRestaurant(Long userId, Restaurant restaurant) {
+        persistedInstance.setSpecialties(restaurant.getSpecialties());
 
-		Preconditions.checkArgument(userId != null, "Illegal call to createRestaurant, userId is required");
-		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
-		Preconditions.checkArgument(restaurant.getId() == null,
-				"Illegal call to createRestaurant, restaurant.id should be null");
+        persistedInstance.setVegetarian(restaurant.isVegetarian());
 
-		User user = this.baseDao.get(User.class, userId);
-		user.addRestaurant(restaurant);
-		this.baseDao.persist(user);
-		return restaurant.getId();
-	}
+    }
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long,
-	 *      boolean)
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public Restaurant readRestaurant(Long restaurantId, boolean initializeCollections) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#validate(fr.midipascher.domain.AbstractEntity,
+     *      fr.midipascher.domain.validation.ValidationContext)
+     */
+    @Override
+    public <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
 
-		Restaurant restaurant = readRestaurant(restaurantId);
+        Preconditions.checkArgument(type != null, "Illegal call to validate, object is required");
 
-		if (restaurant != null && initializeCollections) Hibernate.initialize(restaurant.getSpecialties());
+        Preconditions.checkArgument(context != null, "Illegal call to validate, validation context is required");
 
-		return restaurant;
+        final Set<ConstraintViolation<T>> constraintViolations = validator.validate(type, context.getContext());
 
-	}
+        if (CollectionUtils.isEmpty(constraintViolations))
+            return;
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#inactivateFoodSpecialty(java.lang.Long)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_ADMIN" })
-	public void inactivateFoodSpecialty(Long foodSpecialtyId) {
+        final Set<ConstraintViolation<?>> propagatedViolations = new HashSet<ConstraintViolation<?>>(
+                constraintViolations.size());
 
-		FoodSpecialty foodSpecialty = readFoodSpecialty(foodSpecialtyId);
+        final Set<String> classNames = new HashSet<String>();
 
-		foodSpecialty.setActive(false);
+        for (final ConstraintViolation<?> violation : constraintViolations) {
 
-	}
+            propagatedViolations.add(violation);
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#deleteAccount(java.lang.Long)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void deleteAccount(Long userId) {
+            classNames.add(violation.getLeafBean().getClass().getName());
 
-		Preconditions.checkArgument(userId != null, "Illegal call to deleteAccount, user identifier is required");
+        }
 
-		this.baseDao.delete(User.class, userId);
+        throw new ConstraintViolationException(propagatedViolations);
 
-	}
+    }
 
 }

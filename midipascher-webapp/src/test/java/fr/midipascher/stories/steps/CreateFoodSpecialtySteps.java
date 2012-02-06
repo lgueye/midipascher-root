@@ -4,6 +4,8 @@
 package fr.midipascher.stories.steps;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -37,126 +39,143 @@ import fr.midipascher.test.TestUtils;
  */
 public class CreateFoodSpecialtySteps {
 
-	private final String	baseEndPoint	= ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
-	private String			uid;
-	private String			password;
-	private ClientResponse	response;
-	private String			language;
-	private String			format;
+    private final String baseEndPoint = ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
+    private String uid;
+    private String password;
+    private ClientResponse response;
+    private String language;
+    private String format;
+    private final List<String> resources = new ArrayList<String>();
 
-	@AfterScenario
-	public void afterScenario() {
-		this.language = null;
-		this.format = null;
-	}
+    @AfterScenario
+    public void afterScenario() {
+        language = null;
+        format = null;
+    }
 
-	@Given("I authenticate with \"$uid\" uid and \"$password\" password")
-	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
-		this.uid = uid;
-		this.password = password;
-	}
+    @Given("I authenticate with \"$uid\" uid and \"$password\" password")
+    public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
+        this.uid = uid;
+        this.password = password;
+    }
 
-	@Then("the message should be \"<message>\"")
-	public void expectedMessage(@Named("message") final String message) {
-		Assert.assertEquals(message, this.response.getEntity(ResponseError.class).getMessage());
-	}
+    @Then("the message should be \"<message>\"")
+    public void expectedMessage(@Named("message") final String message) {
+        Assert.assertEquals(message, response.getEntity(ResponseError.class).getMessage());
+    }
 
-	@Then("I should be able to read the new resource")
-	public void expectedNewResource() {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final WebResource webResource = jerseyClient.resource(this.response.getLocation());
-		this.response = webResource.accept(MediaType.valueOf("application/json")).acceptLanguage(new String[] { "fr" })
-				.get(ClientResponse.class);
-		Assert.assertEquals(200, this.response.getStatus());
-	}
+    @Then("I should be able to read the new resource")
+    public void expectedNewResource() {
+        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+        config.getClasses().add(JacksonJsonProvider.class);
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        final Client jerseyClient = ApacheHttpClient4.create(config);
+        jerseyClient.addFilter(new LoggingFilter());
+        jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+        final WebResource webResource = jerseyClient.resource(response.getLocation());
+        response = webResource.accept(MediaType.valueOf("application/json")).acceptLanguage(new String[] { "fr" })
+                .get(ClientResponse.class);
+        Assert.assertEquals(200, response.getStatus());
+    }
 
-	@Then("the response code should be \"$statusCode\"")
-	public void expectStatusCode(@Named("statusCode") final int statusCode) {
-		Assert.assertEquals(statusCode, this.response.getStatus());
-	}
+    @Then("the response code should be \"$statusCode\"")
+    public void expectStatusCode(@Named("statusCode") final int statusCode) {
+        Assert.assertEquals(statusCode, response.getStatus());
+    }
 
-	@When("I send a \"create food specialty\" request with \"<wrong_code>\"")
-	public void sendCreateFoodSpecialtyRequestWithWrongCode(@Named("wrong_code") final String code) {
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		foodSpecialty.setCode(code);
-		final String path = "/foodspecialty";
-		final URI uri = URI.create(this.baseEndPoint + path);
-		final String requestContentType = "application/json";
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final WebResource webResource = jerseyClient.resource(uri);
+    @When("I send a \"create food specialty\" request with \"<wrong_code>\"")
+    public void sendCreateFoodSpecialtyRequestWithWrongCode(@Named("wrong_code") final String code) {
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        foodSpecialty.setCode(code);
+        final String path = "/foodspecialty";
+        final URI uri = URI.create(baseEndPoint + path);
+        final String requestContentType = "application/json";
+        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+        config.getClasses().add(JacksonJsonProvider.class);
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        final Client jerseyClient = ApacheHttpClient4.create(config);
+        jerseyClient.addFilter(new LoggingFilter());
+        jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+        final WebResource webResource = jerseyClient.resource(uri);
 
-		final String format = this.format;
-		final String language = this.language;
-		this.response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
-				.header("Content-Type", requestContentType).post(ClientResponse.class, foodSpecialty);
-	}
+        final String format = this.format;
+        final String language = this.language;
+        response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+                .header("Content-Type", requestContentType).post(ClientResponse.class, foodSpecialty);
+    }
 
-	@When("I send a valid \"create food specialty\" request")
-	public void sendValidCreateFoodSpecialtyRequest() {
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		final String path = "/foodspecialty";
-		final URI uri = URI.create(this.baseEndPoint + path);
-		final String requestContentType = "application/json";
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final WebResource webResource = jerseyClient.resource(uri);
+    @When("I send a valid \"create food specialty\" request")
+    public void sendValidCreateFoodSpecialtyRequest() {
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final String path = "/foodspecialty";
+        final URI uri = URI.create(baseEndPoint + path);
+        final String requestContentType = "application/json";
+        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+        config.getClasses().add(JacksonJsonProvider.class);
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        final Client jerseyClient = ApacheHttpClient4.create(config);
+        jerseyClient.addFilter(new LoggingFilter());
+        jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
+        final WebResource webResource = jerseyClient.resource(uri);
 
-		final String format = this.format == null ? "application/json" : this.format;
-		final String language = this.language == null ? "en" : this.language;
-		this.response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
-				.header("Content-Type", requestContentType).post(ClientResponse.class, foodSpecialty);
-	}
+        final String format = this.format == null ? "application/json" : this.format;
+        final String language = this.language == null ? "en" : this.language;
+        response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+                .header("Content-Type", requestContentType).post(ClientResponse.class, foodSpecialty);
+    }
 
-	@Given("existing food specialties: $foodSpecialties")
-	public void setup(@Named("foodSpecialties") final ExamplesTable foodSpecialtiesAsTable) {
+    @Given("I accept \"$format\" format")
+    public void setFormat(@Named("format") final String format) {
+        this.format = format;
+    }
 
-		final String path = "/foodspecialty";
-		final URI uri = URI.create(this.baseEndPoint + path);
-		final String requestContentType = "application/json";
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final WebResource webResource = jerseyClient.resource(uri);
+    @Given("I accept \"$language\" language")
+    public void setLanguage(@Named("language") final String language) {
+        this.language = language;
+    }
 
-		final String format = this.format == null ? "application/json" : this.format;
-		final String language = this.language == null ? "en" : this.language;
+    @Given("existing food specialties: $foodSpecialties")
+    public void setup(@Named("foodSpecialties") final ExamplesTable foodSpecialtiesAsTable) {
 
-		for ( final Map<String, String> row : foodSpecialtiesAsTable.getRows() )
-			if (row != null) {
-				final FoodSpecialty foodSpecialty = new FoodSpecialty();
-				foodSpecialty.setActive(Boolean.valueOf(row.get("active")));
-				foodSpecialty.setCode(row.get("code"));
-				foodSpecialty.setLabel(row.get("label"));
-				webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
-						.header("Content-Type", requestContentType).post(ClientResponse.class, foodSpecialty);
-			}
+        final String path = "/foodspecialty";
+        final URI uri = URI.create(baseEndPoint + path);
+        final String requestContentType = "application/json";
+        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+        config.getClasses().add(JacksonJsonProvider.class);
+        config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        final Client jerseyClient = ApacheHttpClient4.create(config);
+        jerseyClient.addFilter(new LoggingFilter());
+        jerseyClient.addFilter(new HTTPBasicAuthFilter("admin", "secret"));
+        final WebResource webResource = jerseyClient.resource(uri);
 
-	}
+        final String format = this.format == null ? "application/json" : this.format;
+        final String language = this.language == null ? "en" : this.language;
 
-	@Given("I accept \"$format\" format")
-	public void setFormat(@Named("format") final String format) {
-		this.format = format;
-	}
+        for (final Map<String, String> row : foodSpecialtiesAsTable.getRows())
+            if (row != null) {
+                final FoodSpecialty foodSpecialty = new FoodSpecialty();
+                foodSpecialty.setActive(Boolean.valueOf(row.get("active")));
+                foodSpecialty.setCode(row.get("code"));
+                foodSpecialty.setLabel(row.get("label"));
+                final ClientResponse response = webResource.accept(MediaType.valueOf(format))
+                        .acceptLanguage(new String[] { language }).header("Content-Type", requestContentType)
+                        .post(ClientResponse.class, foodSpecialty);
+                resources.add(response.getLocation().toString());
 
-	@Given("I accept \"$language\" language")
-	public void setLanguage(@Named("language") final String language) {
-		this.language = language;
-	}
+            }
+
+    }
+
+    @Then("delete existing food specialties")
+    public void teardown() {
+        final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+        final Client jerseyClient = ApacheHttpClient4.create(config);
+        jerseyClient.addFilter(new LoggingFilter());
+        jerseyClient.addFilter(new HTTPBasicAuthFilter("admin", "secret"));
+        for (final String resource : resources) {
+            final WebResource webResource = jerseyClient.resource(resource);
+            webResource.delete();
+        }
+        resources.clear();
+    }
 }

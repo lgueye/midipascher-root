@@ -36,10 +36,11 @@ And I accept "application/json" format
 When I send a "create food specialty" request with "<wrong_code>"
 Then the response code should be "400"
 And the message should be "<message>"
+Then delete existing food specialties
 Examples:
 |wrong_code|message|
 ||Code is required|
 |dlfjyyprpmz|Code max length is 10|
-|EXISTS|code already used|
+|EXISTS|Code "EXISTS" already used|
 
 Scenario: create food specialty with wrong label should fail
