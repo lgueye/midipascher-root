@@ -27,7 +27,10 @@ Examples:
 |Accès refusé|
 
 Scenario: create food specialty with wrong code should fail
-Given I authenticate with "admin" uid and "secret" password
+Given existing food specialties:
+|code|label|active|
+|EXISTS|An existing food specialty|true|
+And I authenticate with "admin" uid and "secret" password
 And I accept "en" language
 And I accept "application/json" format
 When I send a "create food specialty" request with "<wrong_code>"

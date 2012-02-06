@@ -13,8 +13,14 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +33,7 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
 
@@ -37,10 +44,15 @@ import fr.midipascher.persistence.BaseDao;
 public class FacadeImpl implements Facade {
 
 	@Autowired
-	private Validator	validator;
+	private Validator			validator;
 
 	@Autowired
-	private BaseDao		baseDao;
+	private BaseDao				baseDao;
+
+	@Autowired
+	private MessageSource		messageSource;
+
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(FacadeImpl.class);
 
 	/**
 	 * @see fr.midipascher.domain.business.Facade#createFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
@@ -53,11 +65,46 @@ public class FacadeImpl implements Facade {
 		Preconditions.checkArgument(foodSpecialty != null,
 				"Illegal call to createFoodSpecialty, foodSpecialty is required");
 
+		checkUniqueFoodSpecialtyCode(foodSpecialty);
+
 		this.baseDao.persist(foodSpecialty);
 
 		Preconditions.checkState(foodSpecialty.getId() != null, "foodSpecialty id should not be null");
 
 		return foodSpecialty.getId();
+
+	}
+
+	/**
+	 * @param foodSpecialty
+	 * @throws NoSuchMessageException
+	 * @throws BusinessException
+	 */
+	public void checkUniqueFoodSpecialtyCode(final FoodSpecialty foodSpecialty) throws NoSuchMessageException,
+			BusinessException {
+
+		String code = foodSpecialty.getCode();
+
+		if (StringUtils.isEmpty(code)) return;
+
+		FoodSpecialty criteria = new FoodSpecialty();
+
+		criteria.setCode(code);
+
+		List<FoodSpecialty> results = this.baseDao.findByExample(criteria);
+
+		if (CollectionUtils.isEmpty(results)) return;
+
+		String messageCode = "foodSpecialty.code.already.used";
+
+		String message = this.messageSource.getMessage(messageCode, new Object[] { code },
+				LocaleContextHolder.getLocale());
+
+		LOGGER.error(message);
+
+		String defaultMessage = "Code already used";
+
+		throw new BusinessException(messageCode, new Object[] { code }, defaultMessage);
 
 	}
 
@@ -169,10 +216,13 @@ public class FacadeImpl implements Facade {
 		Preconditions.checkArgument(foodSpecialty != null,
 				"Illegal call to updateFoodSpecialty, foodSpecialty is required");
 
-		Preconditions.checkArgument(foodSpecialty.getId() != null,
-				"Illegal call to updateFoodSpecialty, foodSpecialty.id is required");
+		Long id = foodSpecialty.getId();
 
-		final FoodSpecialty persistedInstance = this.baseDao.get(FoodSpecialty.class, foodSpecialty.getId());
+		Preconditions.checkArgument(id != null, "Illegal call to updateFoodSpecialty, foodSpecialty.id is required");
+
+		checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		final FoodSpecialty persistedInstance = this.baseDao.get(FoodSpecialty.class, id);
 
 		Preconditions.checkState(persistedInstance != null,
 				"Illegal call to updateFoodSpecialty, provided id should have corresponding foodSpecialty in store");
@@ -245,7 +295,7 @@ public class FacadeImpl implements Facade {
 
 		final Set<String> classNames = new HashSet<String>();
 
-		for (final ConstraintViolation<?> violation : constraintViolations) {
+		for ( final ConstraintViolation<?> violation : constraintViolations ) {
 
 			propagatedViolations.add(violation);
 

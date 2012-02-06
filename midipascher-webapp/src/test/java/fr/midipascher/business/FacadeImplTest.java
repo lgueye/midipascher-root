@@ -4,8 +4,11 @@
 package fr.midipascher.business;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -21,6 +24,8 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import fr.midipascher.business.impl.FacadeImpl;
 import fr.midipascher.domain.Authority;
@@ -29,8 +34,10 @@ import fr.midipascher.domain.Persistable;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.test.TestUtils;
 
 /**
  * @author louis.gueye@gmail.com
@@ -43,24 +50,40 @@ public class FacadeImplTest {
 	@Mock
 	private BaseDao			baseDao;
 
+	@Mock
+	private MessageSource	messageSource;
+
 	@InjectMocks
 	private final Facade	underTest	= new FacadeImpl();
 
 	@Test
 	public void createFoodSpecialtyShouldInvokePersistence() throws Throwable {
 
-		// Given
-		final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		// Variables
+		FoodSpecialty foodSpecialty;
+		String code;
+		List<FoodSpecialty> results;
 
-		Mockito.when(foodSpecialty.getId()).thenReturn(2L);
+		// Given
+		code = "BLABLA";
+		results = null;
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+		foodSpecialty = Mockito.mock(FoodSpecialty.class);
 
 		// When
+		Mockito.when(foodSpecialty.getId()).thenReturn(2L);
+		Mockito.when(foodSpecialty.getCode()).thenReturn(code);
+		Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
 		this.underTest.createFoodSpecialty(foodSpecialty);
 
 		// Then
+		Mockito.verify(foodSpecialty, Mockito.times(2)).getId();
+		Mockito.verify(foodSpecialty).getCode();
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(FoodSpecialty.class));
 		Mockito.verify(this.baseDao).persist(foodSpecialty);
 
-		Mockito.verify(foodSpecialty, Mockito.times(2)).getId();
+		Mockito.verifyZeroInteractions(this.validator, this.messageSource);
+		Mockito.verifyNoMoreInteractions(foodSpecialty, this.baseDao);
 
 	}
 
@@ -265,24 +288,48 @@ public class FacadeImplTest {
 	@Test
 	public void updateFoodSpecialtyShouldSetPropertiesThenInvokePersistence() {
 
+		// Variables
+		FoodSpecialty foodSpecialty;
+		FoodSpecialty persistedInstance;
+		String code;
+		List<FoodSpecialty> results;
+		String label;
+		boolean active;
+		Long id;
+
 		// Given
-		final FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
-
-		final FoodSpecialty persistedInstance = Mockito.mock(FoodSpecialty.class);
-
-		Mockito.when(this.baseDao.get(Matchers.eq(FoodSpecialty.class), Matchers.anyLong())).thenReturn(
-				persistedInstance);
+		code = "BLABLA";
+		results = null;
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+		foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		persistedInstance = Mockito.mock(FoodSpecialty.class);
+		label = "bla";
+		active = true;
+		id = 5L;
 
 		// When
+		Mockito.when(this.baseDao.get(FoodSpecialty.class, id)).thenReturn(persistedInstance);
+		Mockito.when(foodSpecialty.getId()).thenReturn(id);
+		Mockito.when(foodSpecialty.getCode()).thenReturn(code);
+		Mockito.when(foodSpecialty.isActive()).thenReturn(active);
+		Mockito.when(foodSpecialty.getLabel()).thenReturn(label);
+		Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
 		this.underTest.updateFoodSpecialty(foodSpecialty);
 
 		// Then
-		Mockito.verify(persistedInstance).setActive(foodSpecialty.isActive());
+		Mockito.verify(persistedInstance).setActive(active);
+		Mockito.verify(persistedInstance).setCode(code);
+		Mockito.verify(persistedInstance).setLabel(label);
 
-		Mockito.verify(persistedInstance).setCode(foodSpecialty.getCode());
+		Mockito.verify(foodSpecialty).getId();
+		Mockito.verify(foodSpecialty, Mockito.times(2)).getCode();
+		Mockito.verify(foodSpecialty).isActive();
+		Mockito.verify(foodSpecialty).getLabel();
+		Mockito.verify(this.baseDao).get(FoodSpecialty.class, id);
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(FoodSpecialty.class));
 
-		Mockito.verify(persistedInstance).setLabel(foodSpecialty.getLabel());
-
+		Mockito.verifyZeroInteractions(this.validator, this.messageSource);
+		Mockito.verifyNoMoreInteractions(foodSpecialty, this.baseDao, persistedInstance);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -657,6 +704,119 @@ public class FacadeImplTest {
 
 		// When
 		this.underTest.deleteAccount(userId);
+
+	}
+
+	public void checkUniqueFoodSpecialtyCodeShouldIgnoreNullInput() {
+		// Variables
+		FoodSpecialty foodSpecialty;
+
+		// Given
+		foodSpecialty = null;
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueFoodSpecialtyCodeShouldIgnoreEmptyCode() {
+		// Variables
+		FoodSpecialty foodSpecialty;
+		String code;
+
+		// Given
+		foodSpecialty = new FoodSpecialty();
+		code = null;
+		foodSpecialty.setCode(code);
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+		// Given
+		foodSpecialty = new FoodSpecialty();
+		code = "";
+		foodSpecialty.setCode(code);
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueFoodSpecialtyCodeShouldIgnoreEmptyResult() {
+		// Variables
+		FoodSpecialty foodSpecialty;
+		String code;
+		List<FoodSpecialty> results;
+
+		// Given
+		foodSpecialty = new FoodSpecialty();
+		code = "BLABLA";
+		foodSpecialty.setCode(code);
+		results = null;
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
+		((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+		// Given
+		foodSpecialty = new FoodSpecialty();
+		code = "BLABLA";
+		foodSpecialty.setCode(code);
+		results = Collections.emptyList();
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
+		((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void checkUniqueFoodSpecialtyCodeShouldThrowBusinessException() {
+
+		// Variables
+		FoodSpecialty foodSpecialty;
+		String code;
+		List<FoodSpecialty> results;
+		String messageCode;
+		String message;
+
+		// Given
+		foodSpecialty = new FoodSpecialty();
+		code = "BLABLA";
+		foodSpecialty.setCode(code);
+		results = Arrays.asList(TestUtils.validFoodSpecialty());
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+		messageCode = "foodSpecialty.code.already.used";
+		message = "Code already used";
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
+		Mockito.when(
+				this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+						Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
+		((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		// Then
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(FoodSpecialty.class));
+		Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+				Matchers.eq(LocaleContextHolder.getLocale()));
+		Mockito.verifyZeroInteractions(this.validator);
+		Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
 
 	}
 }
