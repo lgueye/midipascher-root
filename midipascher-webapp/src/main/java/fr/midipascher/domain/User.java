@@ -25,6 +25,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.ext.JodaSerializers.DateTimeSerializer;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -96,10 +98,12 @@ public class User extends AbstractEntity {
 	private boolean				locked;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+	@JsonSerialize(using = DateTimeSerializer.class)
 	private DateTime			created;
 
 	@Column(name = User.COLUMN_NAME_LAST_CONNECTION)
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+	@JsonSerialize(using = DateTimeSerializer.class)
 	private DateTime			lastConnection;
 
 	@ManyToMany

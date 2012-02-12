@@ -1,4 +1,4 @@
-Create user stories
+Create account scenarii
 
 Meta:
 @refs 5
@@ -6,22 +6,22 @@ Meta:
 
 
 Narrative:
-Given I provide a create user request
+Given I provide a create account request
 When I send that request
 It should either succeed or fail
 
-Scenario: create user should succeed
-When I send a valid "create user" request
+Scenario: create account should succeed
+When I send a valid "create account" request
 Then the response code should be "201"
 And I should be able to read the new resource
 
-Scenario: create user with wrong uid should fail
-Given existing users:
+Scenario: create account with wrong uid should fail
+Given existing accounts:
 |firstName|lastName|uid|password|
 |firstName|lastName|EXISTS|password|
 And I accept "en" language
 And I accept "application/json" format
-When I send a "create user" request with wrong uid "<wrong_uid>"
+When I send a "create account" request with wrong uid "<wrong_uid>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
@@ -31,10 +31,10 @@ Examples:
 |mailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmail@mail.mail|Email max length is 100|
 |EXISTS|Email "EXISTS" already used|
 
-Scenario: create user with wrong password should fail
+Scenario: create account with wrong password should fail
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create user" request with wrong password "<wrong_password>"
+When I send a "create account" request with wrong password "<wrong_password>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
@@ -42,10 +42,10 @@ Examples:
 ||Password is required|
 |aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax|Password max length is 200|
 
-Scenario: create user with wrong first name
+Scenario: create account with wrong first name
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create user" request with wrong first name "<wrong_first_name>"
+When I send a "create account" request with wrong first name "<wrong_first_name>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
@@ -53,10 +53,10 @@ Examples:
 ||First name is required|
 |ccccccccccccccccccccccccccccccccccccccccccccccccccx|First name max length is 50|
 
-Scenario: create user with wrong last name
+Scenario: create account with wrong last name
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create user" request with wrong last name "<wrong_last_name>"
+When I send a "create account" request with wrong last name "<wrong_last_name>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
