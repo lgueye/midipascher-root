@@ -69,29 +69,29 @@ public class User extends AbstractEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = User.COLUMN_NAME_ID)
-	@NotNull(message = "{user.id.required}", groups = { Update.class, Delete.class })
+	@NotNull(message = "{account.id.required}", groups = { Update.class, Delete.class })
 	private Long				id;
 
 	@Column(name = User.COLUMN_NAME_FIRST_NAME)
-	@NotEmpty(message = "{user.firstName.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_FIRST_NAME_MAX_SIZE, message = "{user.firstName.max.size}", groups = { Create.class,
+	@NotEmpty(message = "{account.firstName.required}", groups = { Create.class, Update.class })
+	@Size(max = User.CONSTRAINT_FIRST_NAME_MAX_SIZE, message = "{account.firstName.max.size}", groups = { Create.class,
 			Update.class })
 	private String				firstName;
 
 	@Column(name = User.COLUMN_NAME_LAST_NAME)
-	@NotEmpty(message = "{user.lastName.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_LAST_NAME_MAX_SIZE, message = "{user.lastName.max.size}", groups = { Create.class,
+	@NotEmpty(message = "{account.lastName.required}", groups = { Create.class, Update.class })
+	@Size(max = User.CONSTRAINT_LAST_NAME_MAX_SIZE, message = "{account.lastName.max.size}", groups = { Create.class,
 			Update.class })
 	private String				lastName;
 
-	@NotNull(message = "{user.email.required}", groups = { Create.class, Update.class })
-	@Email(message = "{user.email.valid.format.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_EMAIL_MAX_SIZE, message = "{user.email.max.size}", groups = { Create.class,
+	@NotEmpty(message = "{account.email.required}", groups = { Create.class, Update.class })
+	@Email(message = "{account.email.valid.format.required}", groups = { Create.class, Update.class })
+	@Size(max = User.CONSTRAINT_EMAIL_MAX_SIZE, message = "{account.email.max.size}", groups = { Create.class,
 			Update.class })
 	private String				email;
 
-	@NotEmpty(message = "{user.password.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_PASSWORD_MAX_SIZE, message = "{user.password.max.size}", groups = { Create.class,
+	@NotEmpty(message = "{account.password.required}", groups = { Create.class, Update.class })
+	@Size(max = User.CONSTRAINT_PASSWORD_MAX_SIZE, message = "{account.password.max.size}", groups = { Create.class,
 			Update.class })
 	private String				password;
 
@@ -109,7 +109,7 @@ public class User extends AbstractEntity {
 	@ManyToMany
 	@JoinTable(name = User.TABLE_NAME_USER_AUTHORITY, joinColumns = { @JoinColumn(name = User.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Authority.COLUMN_NAME_ID) })
 	@Valid
-	@NotEmpty(message = "{user.authorities.required}", groups = { Create.class, Update.class })
+	@NotEmpty(message = "{account.authorities.required}", groups = { Create.class, Update.class })
 	private Set<Authority>		authorities;
 
 	/**

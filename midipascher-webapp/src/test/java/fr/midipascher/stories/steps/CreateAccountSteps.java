@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.jbehave.core.annotations.AfterScenario;
+import org.jbehave.core.annotations.BeforeStory;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -30,6 +30,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.User;
 import fr.midipascher.test.TestUtils;
@@ -40,23 +41,34 @@ import fr.midipascher.test.TestUtils;
 public class CreateAccountSteps {
 
 	private final String		baseEndPoint	= ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
-	private String				uid;
-	private String				password;
 	private ClientResponse		response;
 	private String				language;
 	private String				format;
 	private final List<String>	resources		= new ArrayList<String>();
 
-	@AfterScenario
-	public void afterScenario() {
-		this.language = null;
-		this.format = null;
-	}
+	@BeforeStory
+	public void beforeStory() {
+		final String path = "/admin/authorities";
+		final URI uri = URI.create(this.baseEndPoint + path);
+		final String requestContentType = "application/json";
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter("admin", "secret"));
+		final WebResource webResource = jerseyClient.resource(uri);
 
-	@Given("I authenticate with \"$uid\" uid and \"$password\" password")
-	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
-		this.uid = uid;
-		this.password = password;
+		final String format = "application/json";
+		final String language = "en";
+
+		final Authority account = new Authority();
+		account.setCode(Authority.RMGR);
+		account.setActive(true);
+		account.setLabel("Restaurant manager role");
+		webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+				.header("Content-Type", requestContentType).post(ClientResponse.class, account);
+
 	}
 
 	@Then("the message should be \"<message>\"")
@@ -71,7 +83,8 @@ public class CreateAccountSteps {
 		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 		final Client jerseyClient = ApacheHttpClient4.create(config);
 		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		// jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid,
+		// this.password));
 		final WebResource webResource = jerseyClient.resource(this.response.getLocation());
 		this.response = webResource.accept(MediaType.valueOf("application/json")).acceptLanguage(new String[] { "fr" })
 				.get(ClientResponse.class);
@@ -103,7 +116,7 @@ public class CreateAccountSteps {
 				.header("Content-Type", requestContentType).post(ClientResponse.class, account);
 	}
 
-	@When("I send a \"create account\" request with wrong first name \"<wrong_last_name>\"")
+	@When("I send a \"create account\" request with wrong last name \"<wrong_last_name>\"")
 	public void sendCreateUserRequestWithWrongLastName(@Named("wrong_last_name") final String lastName) {
 		final User account = TestUtils.validUser();
 		account.setLastName(lastName);
@@ -123,7 +136,7 @@ public class CreateAccountSteps {
 				.header("Content-Type", requestContentType).post(ClientResponse.class, account);
 	}
 
-	@When("I send a \"create account\" request with wrong first name \"<wrong_uid>\"")
+	@When("I send a \"create account\" request with wrong uid \"<wrong_uid>\"")
 	public void sendCreateUserRequestWithWrongUID(@Named("wrong_uid") final String email) {
 		final User account = TestUtils.validUser();
 		account.setEmail(email);
@@ -143,7 +156,7 @@ public class CreateAccountSteps {
 				.header("Content-Type", requestContentType).post(ClientResponse.class, account);
 	}
 
-	@When("I send a \"create account \" request with wrong first name \"<wrong_password>\"")
+	@When("I send a \"create account\" request with wrong password \"<wrong_password>\"")
 	public void sendCreateUserRequestWithWrongPassword(@Named("wrong_password") final String password) {
 		final User account = TestUtils.validUser();
 		account.setPassword(password);
@@ -194,7 +207,6 @@ public class CreateAccountSteps {
 
 	@Given("existing accounts: $accounts")
 	public void setup(@Named("accounts") final ExamplesTable accountsAsTable) {
-
 		final String path = "/accounts";
 		final URI uri = URI.create(this.baseEndPoint + path);
 		final String requestContentType = "application/json";
@@ -224,8 +236,12 @@ public class CreateAccountSteps {
 
 	}
 
-	@Then("delete existing accounts")
-	public void teardown() {
+	@Given("I delete existing accounts")
+	public void clear() {
+		System.out
+				.println("----------------------------------------------------------------------dfgsdfffffffffffffffffffffffff");
+		this.language = null;
+		this.format = null;
 		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
 		final Client jerseyClient = ApacheHttpClient4.create(config);
 		jerseyClient.addFilter(new LoggingFilter());

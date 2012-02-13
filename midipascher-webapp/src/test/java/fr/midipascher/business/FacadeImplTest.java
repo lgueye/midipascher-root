@@ -15,6 +15,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -84,6 +85,37 @@ public class FacadeImplTest {
 
 		Mockito.verifyZeroInteractions(this.validator, this.messageSource);
 		Mockito.verifyNoMoreInteractions(foodSpecialty, this.baseDao);
+
+	}
+
+	@Test
+	public void createAuthorityShouldInvokePersistence() throws Throwable {
+
+		// Variables
+		Authority authority;
+		String code;
+		List<Authority> results;
+
+		// Given
+		code = "BLABLA";
+		results = null;
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+		authority = Mockito.mock(Authority.class);
+
+		// When
+		Mockito.when(authority.getId()).thenReturn(2L);
+		Mockito.when(authority.getCode()).thenReturn(code);
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(results);
+		this.underTest.createAuthority(authority);
+
+		// Then
+		Mockito.verify(authority, Mockito.times(1)).getId();
+		Mockito.verify(authority).getCode();
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(Authority.class));
+		Mockito.verify(this.baseDao).persist(authority);
+
+		Mockito.verifyZeroInteractions(this.validator, this.messageSource);
+		Mockito.verifyNoMoreInteractions(authority, this.baseDao);
 
 	}
 
@@ -553,6 +585,7 @@ public class FacadeImplTest {
 		// Should find by code default Authority
 		Mockito.verify(this.baseDao).findByExample(Matchers.any(Authority.class));
 		// Should clear before adding default Authority
+		Mockito.verify(user).getEmail();
 		Mockito.verify(user).clearAuthorities();
 		// Should add default Authority
 		Mockito.verify(user).addAuthority(expectedAuthority);
@@ -813,6 +846,232 @@ public class FacadeImplTest {
 
 		// Then
 		Mockito.verify(this.baseDao).findByExample(Matchers.any(FoodSpecialty.class));
+		Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+				Matchers.eq(LocaleContextHolder.getLocale()));
+		Mockito.verifyZeroInteractions(this.validator);
+		Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueAuthorityCodeShouldIgnoreNullInput() {
+		// Variables
+		Authority authority;
+
+		// Given
+		authority = null;
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueAuthorityCodeShouldIgnoreEmptyCode() {
+		// Variables
+		Authority authority;
+		String code;
+
+		// Given
+		authority = new Authority();
+		code = null;
+		authority.setCode(code);
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+		// Given
+		authority = new Authority();
+		code = "";
+		authority.setCode(code);
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueAuthorityCodeShouldIgnoreEmptyResult() {
+		// Variables
+		Authority authority;
+		String code;
+		List<Authority> results;
+
+		// Given
+		authority = new Authority();
+		code = "BLABLA";
+		authority.setCode(code);
+		results = null;
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(results);
+		((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+		// Given
+		authority = new Authority();
+		code = "BLABLA";
+		authority.setCode(code);
+		results = Collections.emptyList();
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(results);
+		((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void checkUniqueAuthorityCodeShouldThrowBusinessException() {
+
+		// Variables
+		Authority authority;
+		String code;
+		List<Authority> results;
+		String messageCode;
+		String message;
+
+		// Given
+		authority = new Authority();
+		code = "BLABLA";
+		authority.setCode(code);
+		results = Arrays.asList(TestUtils.validAuthority());
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+		messageCode = "authority.code.already.used";
+		message = "Code already used";
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(results);
+		Mockito.when(
+				this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+						Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
+		((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
+
+		// Then
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(Authority.class));
+		Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+				Matchers.eq(LocaleContextHolder.getLocale()));
+		Mockito.verifyZeroInteractions(this.validator);
+		Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueAccountUIDShouldIgnoreNullInput() {
+		// Variables
+		User account;
+
+		// Given
+		account = null;
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueAccountUIDShouldIgnoreEmptyUID() {
+		// Variables
+		User account;
+		String email;
+
+		// Given
+		account = new User();
+		email = null;
+		account.setEmail(email);
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+		// Given
+		account = new User();
+		email = StringUtils.EMPTY;
+		account.setEmail(email);
+
+		// When
+		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
+		// Variables
+		User account;
+		String email;
+		List<User> results;
+
+		// Given
+		account = new User();
+		email = "BLABLA";
+		account.setEmail(email);
+		results = null;
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(User.class))).thenReturn(results);
+		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+		// Given
+		account = new User();
+		email = "BLABLA";
+		account.setEmail(email);
+		results = Collections.emptyList();
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(User.class))).thenReturn(results);
+		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
+
+		// Then
+		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void checkUniqueAccountUIDShouldThrowBusinessException() {
+
+		// Variables
+		User account;
+		String email;
+		List<User> results;
+		String messageCode;
+		String message;
+
+		// Given
+		account = new User();
+		email = "mail@mail.com";
+		account.setEmail(email);
+		results = Arrays.asList(TestUtils.validUser());
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+		messageCode = "account.email.already.used";
+		message = "Email already used";
+
+		// When
+		Mockito.when(this.baseDao.findByExample(Matchers.any(User.class))).thenReturn(results);
+		Mockito.when(
+				this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+						Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
+		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
+
+		// Then
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(User.class));
 		Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
 				Matchers.eq(LocaleContextHolder.getLocale()));
 		Mockito.verifyZeroInteractions(this.validator);

@@ -6,7 +6,6 @@ package fr.midipascher.web;
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,16 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.User;
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.business.Facade;
 
 /**
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = "/accounts")
+@Path(value = "/admin/authorities")
 @Scope("request")
-public class AccountsResource {
+public class AuthoritiesResource {
 
 	@Autowired
 	private Facade				facade;
@@ -40,27 +39,17 @@ public class AccountsResource {
 	@Context
 	private UriInfo				uriInfo;
 
-	private static final Logger	LOGGER	= LoggerFactory.getLogger(AccountsResource.class);
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(AuthoritiesResource.class);
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response create(final User user) throws Throwable {
+	public Response create(final Authority authority) throws Throwable {
 
-		final Long id = this.facade.createAccount(user);
+		final Long id = this.facade.createAuthority(authority);
 
 		final URI uri = this.uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
 
 		return Response.created(uri).build();
-
-	}
-
-	@DELETE
-	@Path("{id}")
-	public Response delete(@PathParam(value = "id") final Long id) throws Throwable {
-
-		this.facade.deleteAccount(id);
-
-		return Response.noContent().build();
 
 	}
 
@@ -69,11 +58,11 @@ public class AccountsResource {
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
-		final User account = this.facade.readAccount(id, true);
+		final Authority authority = this.facade.readAuthority(id);
 
-		if (account == null) return Response.status(Response.Status.NOT_FOUND).build();
+		if (authority == null) return Response.status(Response.Status.NOT_FOUND).build();
 
-		return Response.ok(account).build();
+		return Response.ok(authority).build();
 
 	}
 

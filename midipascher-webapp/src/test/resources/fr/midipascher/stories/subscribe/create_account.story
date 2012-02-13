@@ -16,9 +16,10 @@ Then the response code should be "201"
 And I should be able to read the new resource
 
 Scenario: create account with wrong uid should fail
+Given I delete existing accounts
 Given existing accounts:
 |firstName|lastName|uid|password|
-|firstName|lastName|EXISTS|password|
+|firstName|lastName|exists@mail.com|password|
 And I accept "en" language
 And I accept "application/json" format
 When I send a "create account" request with wrong uid "<wrong_uid>"
@@ -27,9 +28,9 @@ And the message should be "<message>"
 Examples:
 |wrong_uid|message|
 ||Email is required|
-|@mail.mail|Valid email format is required|
+|mail.mail|Valid email format is required|
 |mailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmail@mail.mail|Email max length is 100|
-|EXISTS|Email "EXISTS" already used|
+|exists@mail.com|Email "exists@mail.com" already used|
 
 Scenario: create account with wrong password should fail
 Given I accept "en" language

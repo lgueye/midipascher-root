@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.ConstraintViolationException;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.User;
@@ -42,7 +43,8 @@ public interface Facade {
 	void deleteFoodSpecialty(Long foodSpecialtyId);
 
 	/**
-	 * @param userId TODO
+	 * @param userId
+	 *            TODO
 	 * @param restaurantId
 	 * @throws ConstraintViolationException
 	 */
@@ -138,5 +140,17 @@ public interface Facade {
 	 * @param userId
 	 */
 	void deleteAccount(Long userId);
+
+	/**
+	 * @param authority
+	 * @return
+	 */
+	Long createAuthority(Authority authority);
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	Authority readAuthority(Long id);
 
 }
