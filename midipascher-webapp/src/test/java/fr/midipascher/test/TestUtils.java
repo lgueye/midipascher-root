@@ -30,7 +30,7 @@ import fr.midipascher.domain.Address;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.User;
+import fr.midipascher.domain.Account;
 
 /**
  * @author louis.gueye@gmail.com
@@ -162,18 +162,18 @@ public abstract class TestUtils {
 	/**
 	 * @return
 	 */
-	public static User validUser() {
-		final User user = new User();
-		user.setAuthorities(new HashSet<Authority>(Arrays.asList(TestUtils.validAuthority())));
-		user.setCreated(new DateTime());
-		user.setEmail(RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + "@"
+	public static Account validUser() {
+		final Account account = new Account();
+		account.setAuthorities(new HashSet<Authority>(Arrays.asList(TestUtils.validAuthority())));
+		account.setCreated(new DateTime());
+		account.setEmail(RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + "@"
 				+ RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + ".com");
-		user.setFirstName(RandomStringUtils.random(User.CONSTRAINT_FIRST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
-		user.setLastConnection(new DateTime());
-		user.setLastName(RandomStringUtils.random(User.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
-		user.setLocked(false);
-		user.setPassword(RandomStringUtils.random(User.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.STANDARD_CHARSET));
-		return user;
+		account.setFirstName(RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+		account.setLastConnection(new DateTime());
+		account.setLastName(RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+		account.setLocked(false);
+		account.setPassword(RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+		return account;
 	}
 
 }

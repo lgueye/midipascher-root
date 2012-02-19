@@ -32,7 +32,7 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.ResponseError;
-import fr.midipascher.domain.User;
+import fr.midipascher.domain.Account;
 import fr.midipascher.test.TestUtils;
 
 /**
@@ -98,7 +98,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong first name \"<wrong_first_name>\"")
 	public void sendCreateUserRequestWithWrongFirstName(@Named("wrong_first_name") final String firstName) {
-		final User account = TestUtils.validUser();
+		final Account account = TestUtils.validUser();
 		account.setFirstName(firstName);
 		final String path = "/accounts";
 		final URI uri = URI.create(this.baseEndPoint + path);
@@ -118,7 +118,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong last name \"<wrong_last_name>\"")
 	public void sendCreateUserRequestWithWrongLastName(@Named("wrong_last_name") final String lastName) {
-		final User account = TestUtils.validUser();
+		final Account account = TestUtils.validUser();
 		account.setLastName(lastName);
 		final String path = "/accounts";
 		final URI uri = URI.create(this.baseEndPoint + path);
@@ -138,7 +138,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong uid \"<wrong_uid>\"")
 	public void sendCreateUserRequestWithWrongUID(@Named("wrong_uid") final String email) {
-		final User account = TestUtils.validUser();
+		final Account account = TestUtils.validUser();
 		account.setEmail(email);
 		final String path = "/accounts";
 		final URI uri = URI.create(this.baseEndPoint + path);
@@ -158,7 +158,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong password \"<wrong_password>\"")
 	public void sendCreateUserRequestWithWrongPassword(@Named("wrong_password") final String password) {
-		final User account = TestUtils.validUser();
+		final Account account = TestUtils.validUser();
 		account.setPassword(password);
 		final String path = "/accounts";
 		final URI uri = URI.create(this.baseEndPoint + path);
@@ -178,7 +178,7 @@ public class CreateAccountSteps {
 
 	@When("I send a valid \"create account\" request")
 	public void sendValidCreateUserRequest() {
-		final User account = TestUtils.validUser();
+		final Account account = TestUtils.validUser();
 		final String path = "/accounts";
 		final URI uri = URI.create(this.baseEndPoint + path);
 		final String requestContentType = "application/json";
@@ -222,7 +222,7 @@ public class CreateAccountSteps {
 
 		for ( final Map<String, String> row : accountsAsTable.getRows() )
 			if (row != null) {
-				final User account = TestUtils.validUser();
+				final Account account = TestUtils.validUser();
 				account.setFirstName(row.get("firstName"));
 				account.setLastName(row.get("lastName"));
 				account.setEmail(row.get("uid"));

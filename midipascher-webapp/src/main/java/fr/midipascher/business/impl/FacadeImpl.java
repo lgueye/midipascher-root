@@ -29,10 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.base.Preconditions;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.validation.ValidationContext;
@@ -122,21 +122,21 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @param user
+	 * @param account
 	 * @throws NoSuchMessageException
 	 * @throws BusinessException
 	 */
-	public void checkUniqueAccountUID(final User user) throws NoSuchMessageException, BusinessException {
+	public void checkUniqueAccountUID(final Account account) throws NoSuchMessageException, BusinessException {
 
-		final String email = user.getEmail();
+		final String email = account.getEmail();
 
 		if (StringUtils.isEmpty(email)) return;
 
-		final User criteria = new User();
+		final Account criteria = new Account();
 
 		criteria.setEmail(email);
 
-		final List<User> results = this.baseDao.findByExample(criteria);
+		final List<Account> results = this.baseDao.findByExample(criteria);
 
 		if (CollectionUtils.isEmpty(results)) return;
 
@@ -154,15 +154,15 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#createAccount(fr.midipascher.domain.User)
+	 * @see fr.midipascher.domain.business.Facade#createAccount(fr.midipascher.domain.Account)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Long createAccount(final User user) {
+	public Long createAccount(final Account account) {
 
-		Preconditions.checkArgument(user != null, "Illegal call to createAccount, user is required");
+		Preconditions.checkArgument(account != null, "Illegal call to createAccount, account is required");
 
-		user.clearAuthorities();
+		account.clearAuthorities();
 
 		final Authority exampleInstance = new Authority();
 
@@ -175,13 +175,13 @@ public class FacadeImpl implements Facade {
 		Preconditions.checkState(authorities.size() == 1,
 				"Illegal state : one and one only 'RMGR' authority expected, found " + authorities.size());
 
-		user.addAuthority(authorities.get(0));
+		account.addAuthority(authorities.get(0));
 
-		checkUniqueAccountUID(user);
+		checkUniqueAccountUID(account);
 
-		this.baseDao.persist(user);
+		this.baseDao.persist(account);
 
-		return user.getId();
+		return account.getId();
 
 	}
 
@@ -213,16 +213,16 @@ public class FacadeImpl implements Facade {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public Long createRestaurant(final Long userId, final Restaurant restaurant) {
+	public Long createRestaurant(final Long accountId, final Restaurant restaurant) {
 
-		Preconditions.checkArgument(userId != null, "Illegal call to createRestaurant, userId is required");
+		Preconditions.checkArgument(accountId != null, "Illegal call to createRestaurant, accountId is required");
 		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
 		Preconditions.checkArgument(restaurant.getId() == null,
 				"Illegal call to createRestaurant, restaurant.id should be null");
 
-		final User user = this.baseDao.get(User.class, userId);
-		user.addRestaurant(restaurant);
-		this.baseDao.persist(user);
+		final Account account = this.baseDao.get(Account.class, accountId);
+		account.addRestaurant(restaurant);
+		this.baseDao.persist(account);
 		return restaurant.getId();
 	}
 
@@ -248,11 +248,11 @@ public class FacadeImpl implements Facade {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void deleteAccount(final Long userId) {
+	public void deleteAccount(final Long accountId) {
 
-		Preconditions.checkArgument(userId != null, "Illegal call to deleteAccount, user identifier is required");
+		Preconditions.checkArgument(accountId != null, "Illegal call to deleteAccount, account identifier is required");
 
-		this.baseDao.delete(User.class, userId);
+		this.baseDao.delete(Account.class, accountId);
 
 	}
 
@@ -278,12 +278,12 @@ public class FacadeImpl implements Facade {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void deleteRestaurant(final Long userId, final Long restaurantId) {
+	public void deleteRestaurant(final Long accountId, final Long restaurantId) {
 
 		Preconditions.checkArgument(restaurantId != null,
 				"Illegal call to deleteRestaurant, restaurant identifier is required");
 
-		this.baseDao.get(User.class, userId).removeRestaurant(restaurantId);
+		this.baseDao.get(Account.class, accountId).removeRestaurant(restaurantId);
 
 	}
 
@@ -329,13 +329,13 @@ public class FacadeImpl implements Facade {
 	 * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long)
 	 */
 	@Override
-	public User readAccount(final Long id) {
+	public Account readAccount(final Long id) {
 
 		Preconditions.checkArgument(id != null, "Illegal call to readUser, id is required");
 
-		final User user = this.baseDao.get(User.class, id);
+		final Account account = this.baseDao.get(Account.class, id);
 
-		return user;
+		return account;
 
 	}
 
@@ -345,19 +345,19 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public User readAccount(final Long id, final boolean initializeCollections) {
+	public Account readAccount(final Long id, final boolean initializeCollections) {
 
-		final User user = readAccount(id);
+		final Account account = readAccount(id);
 
-		if (user != null && initializeCollections) {
+		if (account != null && initializeCollections) {
 
-			Hibernate.initialize(user.getAuthorities());
+			Hibernate.initialize(account.getAuthorities());
 
-			Hibernate.initialize(user.getRestaurants());
+			Hibernate.initialize(account.getRestaurants());
 
 		}
 
-		return user;
+		return account;
 
 	}
 
@@ -404,25 +404,25 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#updateAccount(fr.midipascher.domain.User)
+	 * @see fr.midipascher.domain.business.Facade#updateAccount(fr.midipascher.domain.Account)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void updateAccount(final User user) {
+	public void updateAccount(final Account account) {
 
-		Preconditions.checkArgument(user != null, "Illegal call to updateAccount, user is required");
+		Preconditions.checkArgument(account != null, "Illegal call to updateAccount, account is required");
 
-		Preconditions.checkArgument(user.getId() != null, "Illegal call to updateAccount, user.id is required");
+		Preconditions.checkArgument(account.getId() != null, "Illegal call to updateAccount, account.id is required");
 
-		checkUniqueAccountUID(user);
+		checkUniqueAccountUID(account);
 
-		final User persistedInstance = this.baseDao.get(User.class, user.getId());
+		final Account persistedInstance = this.baseDao.get(Account.class, account.getId());
 
 		Preconditions.checkState(persistedInstance != null,
-				"Illegal call to updateAccount, provided id should have corresponding user in the store");
+				"Illegal call to updateAccount, provided id should have corresponding account in the store");
 
-		this.baseDao.merge(user);
+		this.baseDao.merge(account);
 
 	}
 

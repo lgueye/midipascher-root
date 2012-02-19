@@ -14,7 +14,7 @@ Scenario: create restaurant with wrong request type should fail
 Scenario: create restaurant with wrong name should fail
 Scenario: create restaurant with wrong description should fail
 Scenario: create restaurant with wrong phone number should fail
-Scenario: create restaurant with wrong user should fail
+Scenario: create restaurant with wrong account should fail
 Scenario: create restaurant with wrong man offer should fail
 Scenario: create restaurant with wrong specialties should fail
 Scenario: create restaurant with wrong street adress should fail

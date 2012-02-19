@@ -15,7 +15,7 @@ When I send a valid "create food specialty" request
 Then the response code should be "201"
 And I should be able to read the new resource
 
-Scenario: create food specialty as user with wrong role should fail
+Scenario: create food specialty as account with wrong role should fail
 Given I authenticate with "rmgr" uid and "secret" password
 And I accept "fr" language
 And I accept "application/json" format

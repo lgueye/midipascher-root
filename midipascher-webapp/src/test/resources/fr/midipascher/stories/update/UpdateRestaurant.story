@@ -15,7 +15,7 @@ Scenario: update restaurant with wrong id should fail
 Scenario: update restaurant with wrong name should fail
 Scenario: update restaurant with wrong description should fail
 Scenario: update restaurant with wrong phone number should fail
-Scenario: update restaurant with wrong user should fail
+Scenario: update restaurant with wrong account should fail
 Scenario: update restaurant with wrong man offer should fail
 Scenario: update restaurant with wrong specialties should fail
 Scenario: update restaurant with wrong street adress should fail

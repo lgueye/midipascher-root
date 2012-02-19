@@ -8,8 +8,8 @@
 	<food_specialty food_specialty_id="4" code="CHN" label="Chinois" active="1"/>
 	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
 	 	
-	<users user_id="1" first_name="louis" last_name="gueye" email="foo@bar.com" password="secret" locked="0"/>
-	<users user_id="2" first_name="lefou" last_name="lefou" email="lefou@bar.com" password="secret" locked="0"/>
+	<account account_id="1" first_name="louis" last_name="gueye" email="foo@bar.com" password="secret" locked="0"/>
+	<account account_id="2" first_name="lefou" last_name="lefou" email="lefou@bar.com" password="secret" locked="0"/>
 
 	<restaurant restaurant_id="1" address_city="Paris" address_country_code="FR" address_postal_code="75009" 
 		address_street_address="12 rue du Hedler" description="Vous composez votre salade nous la réalisons" halal="0" 
@@ -20,11 +20,11 @@
 		address_street_address="12 rue Lafayette" description="venez découvrir nos compositions uniques de salade originales" halal="0" 
 		kosher="0" vegetarian="0" main_offer="Salade quinoa 6,20€" name="Noon" phone_number="0143568532" company_id="552 100 558"/>
 	
-	<users_authorities authority_id="1" user_id="1"/>
-	<users_authorities authority_id="2" user_id="2"/>
+	<accounts_authorities authority_id="1" account_id="1"/>
+	<accounts_authorities authority_id="2" account_id="2"/>
 
-	<users_restaurants restaurant_id="1" user_id="1"/>
-	<users_restaurants restaurant_id="2" user_id="1"/>
+	<accounts_restaurants restaurant_id="1" account_id="1"/>
+	<accounts_restaurants restaurant_id="2" account_id="1"/>
 
 	<restaurant_food_specialty restaurant_id="1" food_specialty_id="1"/>
 	<restaurant_food_specialty restaurant_id="1" food_specialty_id="2"/>

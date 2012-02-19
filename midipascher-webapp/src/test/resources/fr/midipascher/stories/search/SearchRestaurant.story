@@ -13,7 +13,7 @@ Scenario: search restaurant with wrong request type should fail
 Scenario: search restaurant by name should succeed
 Scenario: search restaurant by description should succeed
 Scenario: search restaurant by phone number should succeed
-Scenario: search restaurant by user should succeed
+Scenario: search restaurant by account should succeed
 Scenario: search restaurant by main offer should succeed
 Scenario: search restaurant by specialties should succeed
 Scenario: search restaurant by street adress should succeed

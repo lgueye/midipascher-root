@@ -29,11 +29,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import fr.midipascher.business.impl.FacadeImpl;
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Persistable;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.validation.ValidationContext;
@@ -201,17 +201,17 @@ public class FacadeImplTest {
 
 		// Given
 		final Long restaurantId = 5L;
-		final Long userId = 5L;
+		final Long accountId = 5L;
 
 		// When
-		User user = Mockito.mock(User.class);
-		Mockito.when(this.baseDao.get(User.class, userId)).thenReturn(user);
-		this.underTest.deleteRestaurant(userId, restaurantId);
+		Account account = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		this.underTest.deleteRestaurant(accountId, restaurantId);
 
 		// Then
-		Mockito.verify(this.baseDao).get(User.class, userId);
-		Mockito.verify(user).removeRestaurant(restaurantId);
-		Mockito.verifyNoMoreInteractions(this.baseDao, user);
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(account).removeRestaurant(restaurantId);
+		Mockito.verifyNoMoreInteractions(this.baseDao, account);
 
 	}
 
@@ -526,7 +526,7 @@ public class FacadeImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void createAccountShouldThrowIllegalArgumentExceptionWithNullInput() {
 		// Given
-		User account = null;
+		Account account = null;
 
 		// When
 		this.underTest.createAccount(account);
@@ -534,30 +534,30 @@ public class FacadeImplTest {
 
 	public void createAccountShouldInvokeBaseDao() {
 		// Given
-		User user = Mockito.mock(User.class);
+		Account account = Mockito.mock(Account.class);
 
 		// When
-		this.underTest.createAccount(user);
+		this.underTest.createAccount(account);
 
-		Mockito.verify(this.baseDao).persist(user);
-		Mockito.verify(user).getId();
-		Mockito.verifyNoMoreInteractions(this.baseDao, user);
+		Mockito.verify(this.baseDao).persist(account);
+		Mockito.verify(account).getId();
+		Mockito.verifyNoMoreInteractions(this.baseDao, account);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void createShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFound() {
 		// Given
-		User user = new User();
+		Account account = new Account();
 
 		// When
 		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(null);
-		this.underTest.createAccount(user);
+		this.underTest.createAccount(account);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void createShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFoundMoreThantOnce() {
 		// Given
-		User user = new User();
+		Account account = new Account();
 		List<Authority> foundAuthorities = new ArrayList<Authority>();
 		foundAuthorities.add(new Authority());
 		foundAuthorities.add(new Authority());
@@ -565,13 +565,13 @@ public class FacadeImplTest {
 
 		// When
 		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(foundAuthorities);
-		this.underTest.createAccount(user);
+		this.underTest.createAccount(account);
 	}
 
 	@Test
 	public void createShouldSucceed() {
 		// Given
-		User user = Mockito.mock(User.class);
+		Account account = Mockito.mock(Account.class);
 		List<Authority> foundAuthorities = new ArrayList<Authority>();
 
 		Authority expectedAuthority = new Authority();
@@ -579,21 +579,21 @@ public class FacadeImplTest {
 
 		// When
 		Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(foundAuthorities);
-		this.underTest.createAccount(user);
+		this.underTest.createAccount(account);
 
 		// Then
 		// Should find by code default Authority
 		Mockito.verify(this.baseDao).findByExample(Matchers.any(Authority.class));
 		// Should clear before adding default Authority
-		Mockito.verify(user).getEmail();
-		Mockito.verify(user).clearAuthorities();
+		Mockito.verify(account).getEmail();
+		Mockito.verify(account).clearAuthorities();
 		// Should add default Authority
-		Mockito.verify(user).addAuthority(expectedAuthority);
-		// Should persist user
-		Mockito.verify(this.baseDao).persist(user);
+		Mockito.verify(account).addAuthority(expectedAuthority);
+		// Should persist account
+		Mockito.verify(this.baseDao).persist(account);
 		// Should return id
-		Mockito.verify(user).getId();
-		Mockito.verifyNoMoreInteractions(this.baseDao, user);
+		Mockito.verify(account).getId();
+		Mockito.verifyNoMoreInteractions(this.baseDao, account);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -608,12 +608,12 @@ public class FacadeImplTest {
 	public void readUserShouldInvokeBaseDao() {
 		// Given
 		Long id = 5L;
-		User expectedUser = Mockito.mock(User.class);
+		Account expectedUser = Mockito.mock(Account.class);
 		// When
-		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(expectedUser);
-		User actualUser = this.underTest.readAccount(id);
+		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(expectedUser);
+		Account actualUser = this.underTest.readAccount(id);
 
-		Mockito.verify(this.baseDao).get(User.class, id);
+		Mockito.verify(this.baseDao).get(Account.class, id);
 		Assert.assertSame(expectedUser, actualUser);
 		Mockito.verifyNoMoreInteractions(this.baseDao);
 	}
@@ -621,84 +621,84 @@ public class FacadeImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void updateAccountShouldThrowIllegalArgumentExceptionWithNullInput() {
 		// Given
-		User user = null;
+		Account account = null;
 
 		// When
-		this.underTest.updateAccount(user);
+		this.underTest.updateAccount(account);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void updateAccountShouldThrowIllegalArgumentExceptionWithNullIdentifier() {
 		// Given
-		User user = new User();
+		Account account = new Account();
 
 		// When
-		this.underTest.updateAccount(user);
+		this.underTest.updateAccount(account);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void updateAccountShouldThrowIllegalStateExceptionWhenNoUserFoundWithGivenId() {
 		// Given
-		User user = new User();
+		Account account = new Account();
 		Long id = 5L;
-		user.setId(id);
-		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(null);
+		account.setId(id);
+		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(null);
 
 		// When
-		this.underTest.updateAccount(user);
+		this.underTest.updateAccount(account);
 	}
 
 	@Test
 	public void updateAccountShouldReadAccountFromRepositoryAndMerge() {
 		// Given
-		User user = new User();
+		Account account = new Account();
 		Long id = 5L;
-		user.setId(id);
-		Mockito.when(this.baseDao.get(User.class, id)).thenReturn(new User());
+		account.setId(id);
+		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(new Account());
 
 		// When
-		this.underTest.updateAccount(user);
-		Mockito.verify(this.baseDao).get(User.class, id);
-		Mockito.verify(this.baseDao).merge(user);
+		this.underTest.updateAccount(account);
+		Mockito.verify(this.baseDao).get(Account.class, id);
+		Mockito.verify(this.baseDao).merge(account);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullUserId() {
-		Long userId = null;
+		Long accountId = null;
 		Restaurant restaurant = new Restaurant();
-		this.underTest.createRestaurant(userId, restaurant);
+		this.underTest.createRestaurant(accountId, restaurant);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
-		Long userId = 5L;
+		Long accountId = 5L;
 		Restaurant restaurant = null;
-		this.underTest.createRestaurant(userId, restaurant);
+		this.underTest.createRestaurant(accountId, restaurant);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNonNullRestaurantId() {
-		Long userId = 5L;
+		Long accountId = 5L;
 		Restaurant restaurant = new Restaurant();
 		restaurant.setId(45L);
-		this.underTest.createRestaurant(userId, restaurant);
+		this.underTest.createRestaurant(accountId, restaurant);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createRestaurantShouldLoadUserThenAddRestaurantToItsRestaurantCollection() {
-		Long userId = 5L;
+		Long accountId = 5L;
 		Restaurant restaurant = Mockito.mock(Restaurant.class);
-		User user = Mockito.mock(User.class);
+		Account account = Mockito.mock(Account.class);
 
-		Mockito.when(this.baseDao.get(User.class, userId)).thenReturn(user);
-		this.underTest.createRestaurant(userId, restaurant);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		this.underTest.createRestaurant(accountId, restaurant);
 
-		Mockito.verify(this.baseDao).get(User.class, userId);
-		Mockito.verify(user).addRestaurant(restaurant);
-		Mockito.verify(this.baseDao).merge(user);
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(account).addRestaurant(restaurant);
+		Mockito.verify(this.baseDao).merge(account);
 		Mockito.verify(restaurant).getId();
 
-		Mockito.verifyNoMoreInteractions(this.baseDao, user, restaurant);
+		Mockito.verifyNoMoreInteractions(this.baseDao, account, restaurant);
 	}
 
 	@Test
@@ -719,13 +719,13 @@ public class FacadeImplTest {
 	public void deleteAccountShouldInvokePersistence() {
 
 		// Given
-		final Long userId = 5L;
+		final Long accountId = 5L;
 
 		// When
-		this.underTest.deleteAccount(userId);
+		this.underTest.deleteAccount(accountId);
 
 		// Then
-		Mockito.verify(this.baseDao).delete(User.class, userId);
+		Mockito.verify(this.baseDao).delete(Account.class, accountId);
 
 	}
 
@@ -733,10 +733,10 @@ public class FacadeImplTest {
 	public void deleteAccountShouldThrowIllegalArgumentExceptionWithNullId() {
 
 		// Given
-		final Long userId = null;
+		final Long accountId = null;
 
 		// When
-		this.underTest.deleteAccount(userId);
+		this.underTest.deleteAccount(accountId);
 
 	}
 
@@ -968,7 +968,7 @@ public class FacadeImplTest {
 
 	public void checkUniqueAccountUIDShouldIgnoreNullInput() {
 		// Variables
-		User account;
+		Account account;
 
 		// Given
 		account = null;
@@ -983,11 +983,11 @@ public class FacadeImplTest {
 
 	public void checkUniqueAccountUIDShouldIgnoreEmptyUID() {
 		// Variables
-		User account;
+		Account account;
 		String email;
 
 		// Given
-		account = new User();
+		account = new Account();
 		email = null;
 		account.setEmail(email);
 
@@ -998,7 +998,7 @@ public class FacadeImplTest {
 		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
 
 		// Given
-		account = new User();
+		account = new Account();
 		email = StringUtils.EMPTY;
 		account.setEmail(email);
 
@@ -1012,31 +1012,31 @@ public class FacadeImplTest {
 
 	public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
 		// Variables
-		User account;
+		Account account;
 		String email;
-		List<User> results;
+		List<Account> results;
 
 		// Given
-		account = new User();
+		account = new Account();
 		email = "BLABLA";
 		account.setEmail(email);
 		results = null;
 
 		// When
-		Mockito.when(this.baseDao.findByExample(Matchers.any(User.class))).thenReturn(results);
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Account.class))).thenReturn(results);
 		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
 
 		// Then
 		Mockito.verifyZeroInteractions(this.validator, this.baseDao, this.messageSource);
 
 		// Given
-		account = new User();
+		account = new Account();
 		email = "BLABLA";
 		account.setEmail(email);
 		results = Collections.emptyList();
 
 		// When
-		Mockito.when(this.baseDao.findByExample(Matchers.any(User.class))).thenReturn(results);
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Account.class))).thenReturn(results);
 		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
 
 		// Then
@@ -1048,14 +1048,14 @@ public class FacadeImplTest {
 	public void checkUniqueAccountUIDShouldThrowBusinessException() {
 
 		// Variables
-		User account;
+		Account account;
 		String email;
-		List<User> results;
+		List<Account> results;
 		String messageCode;
 		String message;
 
 		// Given
-		account = new User();
+		account = new Account();
 		email = "mail@mail.com";
 		account.setEmail(email);
 		results = Arrays.asList(TestUtils.validUser());
@@ -1064,14 +1064,14 @@ public class FacadeImplTest {
 		message = "Email already used";
 
 		// When
-		Mockito.when(this.baseDao.findByExample(Matchers.any(User.class))).thenReturn(results);
+		Mockito.when(this.baseDao.findByExample(Matchers.any(Account.class))).thenReturn(results);
 		Mockito.when(
 				this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
 						Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
 		((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
 
 		// Then
-		Mockito.verify(this.baseDao).findByExample(Matchers.any(User.class));
+		Mockito.verify(this.baseDao).findByExample(Matchers.any(Account.class));
 		Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
 				Matchers.eq(LocaleContextHolder.getLocale()));
 		Mockito.verifyZeroInteractions(this.validator);

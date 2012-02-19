@@ -20,9 +20,9 @@ And the response message should be <message>
 Examples:
 |uid|responseLanguage|message|
 ||en|bad credentials provided|
-|unknown-user|en|bad credentials provided|
+|unknown-account|en|bad credentials provided|
 ||fr|informations de connexion erronées|
-|unknown-user|fr|informations de connexion erronées|
+|unknown-account|fr|informations de connexion erronées|
 
 Scenario: requesting a protected resource with correct uid and wrong password should return 401
 Given I authenticate with bob uid and <password> password

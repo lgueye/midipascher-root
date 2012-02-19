@@ -19,16 +19,16 @@ import fr.midipascher.test.TestUtils;
 /**
  * @author louis.gueye@gmail.com
  */
-public class UserTest {
+public class AccountTest {
 
-	private User	underTest;
+	private Account	underTest;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.underTest = new User();
+		this.underTest = new Account();
 	}
 
 	@Test

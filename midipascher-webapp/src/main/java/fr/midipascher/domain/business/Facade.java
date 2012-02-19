@@ -8,10 +8,10 @@ import java.util.List;
 import javax.validation.ConstraintViolationException;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.User;
 import fr.midipascher.domain.validation.ValidationContext;
 
 /**
@@ -43,12 +43,12 @@ public interface Facade {
 	void deleteFoodSpecialty(Long foodSpecialtyId);
 
 	/**
-	 * @param userId
+	 * @param accountId
 	 *            TODO
 	 * @param restaurantId
 	 * @throws ConstraintViolationException
 	 */
-	void deleteRestaurant(Long userId, Long restaurantId);
+	void deleteRestaurant(Long accountId, Long restaurantId);
 
 	/**
 	 * @param criteria
@@ -97,32 +97,32 @@ public interface Facade {
 	 * @param id
 	 * @return
 	 */
-	User readAccount(Long id);
+	Account readAccount(Long id);
 
 	/**
-	 * @param user
+	 * @param account
 	 * @return
 	 */
-	Long createAccount(User user);
+	Long createAccount(Account account);
 
 	/**
-	 * @param userId
+	 * @param accountId
 	 * @param initializeCollections
 	 * @return
 	 */
-	User readAccount(Long userId, boolean initializeCollections);
+	Account readAccount(Long accountId, boolean initializeCollections);
 
 	/**
-	 * @param user
+	 * @param account
 	 */
-	void updateAccount(User user);
+	void updateAccount(Account account);
 
 	/**
-	 * @param userId
+	 * @param accountId
 	 * @param restaurant
 	 * @return
 	 */
-	Long createRestaurant(Long userId, Restaurant restaurant);
+	Long createRestaurant(Long accountId, Restaurant restaurant);
 
 	/**
 	 * @param restaurantId
@@ -137,9 +137,9 @@ public interface Facade {
 	void inactivateFoodSpecialty(Long foodSpecialtyId);
 
 	/**
-	 * @param userId
+	 * @param accountId
 	 */
-	void deleteAccount(Long userId);
+	void deleteAccount(Long accountId);
 
 	/**
 	 * @param authority

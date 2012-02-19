@@ -40,10 +40,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
 
 import fr.midipacher.TestConstants;
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.User;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.test.TestUtils;
 
@@ -164,9 +164,9 @@ public class FacadeImplTestIT {
 	@Test
 	public void createAccountShouldSucceed() {
 		authenticateAsAdmin();
-		User user = TestUtils.validUser();
-		Long id = this.facade.createAccount(user);
-		User persistedUser = this.facade.readAccount(id, true);
+		Account account = TestUtils.validUser();
+		Long id = this.facade.createAccount(account);
+		Account persistedUser = this.facade.readAccount(id, true);
 		Assert.assertNotNull(persistedUser);
 		// When created associate by default with RMGR authority
 		Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
@@ -177,21 +177,21 @@ public class FacadeImplTestIT {
 	public void updateAccountShouldSucceed() {
 		authenticateAsAdmin();
 		String email;
-		User user;
+		Account account;
 		Long id;
 
-		user = TestUtils.validUser();
+		account = TestUtils.validUser();
 		email = "first@email.org";
-		user.setEmail(email);
-		id = this.facade.createAccount(user);
-		user = this.facade.readAccount(id);
-		Assert.assertEquals(email, user.getEmail());
+		account.setEmail(email);
+		id = this.facade.createAccount(account);
+		account = this.facade.readAccount(id);
+		Assert.assertEquals(email, account.getEmail());
 
 		email = "second@email.org";
-		user.setEmail(email);
-		this.facade.updateAccount(user);
-		user = this.facade.readAccount(id);
-		Assert.assertEquals(email, user.getEmail());
+		account.setEmail(email);
+		this.facade.updateAccount(account);
+		account = this.facade.readAccount(id);
+		Assert.assertEquals(email, account.getEmail());
 	}
 
 	@Test
@@ -200,19 +200,19 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		User user = TestUtils.validUser();
-		Long userId = this.facade.createAccount(user);
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
 		restaurant.getSpecialties().add(foodSpecialty);
-		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
 		assertNotNull(restaurantId);
 		restaurant = this.facade.readRestaurant(restaurantId, true);
 		assertNotNull(restaurant);
 		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
-		user = this.facade.readAccount(userId, true);
-		assertNotNull(userId);
-		assertEquals(1, CollectionUtils.size(user.getRestaurants()));
+		account = this.facade.readAccount(accountId, true);
+		assertNotNull(accountId);
+		assertEquals(1, CollectionUtils.size(account.getRestaurants()));
 	}
 
 	@Test
@@ -223,16 +223,16 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		User user = TestUtils.validUser();
-		Long userId = this.facade.createAccount(user);
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
 		restaurant.getSpecialties().add(foodSpecialty);
-		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
 		assertNotNull(this.facade.readRestaurant(restaurantId));
 
 		// When
-		this.facade.deleteRestaurant(userId, restaurantId);
+		this.facade.deleteRestaurant(accountId, restaurantId);
 
 		// Then
 		assertNull(this.facade.readRestaurant(restaurantId));
@@ -244,13 +244,13 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long userId = this.facade.createAccount(TestUtils.validUser());
-		assertNotNull(this.facade.readAccount(userId));
+		Long accountId = this.facade.createAccount(TestUtils.validUser());
+		assertNotNull(this.facade.readAccount(accountId));
 		// When
-		this.facade.deleteAccount(userId);
+		this.facade.deleteAccount(accountId);
 
 		// Then
-		assertNull(this.facade.readAccount(userId));
+		assertNull(this.facade.readAccount(accountId));
 
 	}
 
@@ -262,18 +262,18 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		User user = TestUtils.validUser();
-		Long userId = this.facade.createAccount(user);
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
 		restaurant.getSpecialties().add(foodSpecialty);
-		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
 
 		// When
-		this.facade.deleteAccount(userId);
+		this.facade.deleteAccount(accountId);
 
 		// Then
-		assertNull(this.facade.readAccount(userId));
+		assertNull(this.facade.readAccount(accountId));
 		assertNull(this.facade.readRestaurant(restaurantId));
 		assertNotNull(this.facade.readFoodSpecialty(foodSpecialtyId));
 
@@ -336,12 +336,12 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		User user = TestUtils.validUser();
-		Long userId = this.facade.createAccount(user);
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
 		restaurant.getSpecialties().add(foodSpecialty);
-		Long restaurantId = this.facade.createRestaurant(userId, restaurant);
+		Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
 		return restaurantId;
 	}
 

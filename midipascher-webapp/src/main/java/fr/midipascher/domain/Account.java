@@ -42,15 +42,15 @@ import fr.midipascher.domain.validation.Update;
  * @author louis.gueye@gmail.com
  */
 @Entity
-@Table(name = User.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { User.COLUMN_NAME_EMAIL }) })
+@Table(name = Account.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { Account.COLUMN_NAME_EMAIL }) })
 @XmlRootElement
-public class User extends AbstractEntity {
+public class Account extends AbstractEntity {
 
-	public static final String	TABLE_NAME						= "users";
-	public static final String	TABLE_NAME_USER_AUTHORITY		= "users_authorities";
-	public static final String	TABLE_NAME_USER_RESTAURANT		= "users_restaurants";
+	public static final String	TABLE_NAME						= "account";
+	public static final String	TABLE_NAME_USER_AUTHORITY		= "accounts_authorities";
+	public static final String	TABLE_NAME_USER_RESTAURANT		= "accounts_restaurants";
 
-	public static final String	COLUMN_NAME_ID					= "user_id";
+	public static final String	COLUMN_NAME_ID					= "account_id";
 	public static final String	COLUMN_NAME_LAST_CONNECTION		= "last_connection";
 	public static final String	COLUMN_NAME_FIRST_NAME			= "first_name";
 	public static final String	COLUMN_NAME_LAST_NAME			= "last_name";
@@ -68,30 +68,30 @@ public class User extends AbstractEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = User.COLUMN_NAME_ID)
+	@Column(name = Account.COLUMN_NAME_ID)
 	@NotNull(message = "{account.id.required}", groups = { Update.class, Delete.class })
 	private Long				id;
 
-	@Column(name = User.COLUMN_NAME_FIRST_NAME)
+	@Column(name = Account.COLUMN_NAME_FIRST_NAME)
 	@NotEmpty(message = "{account.firstName.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_FIRST_NAME_MAX_SIZE, message = "{account.firstName.max.size}", groups = { Create.class,
-			Update.class })
+	@Size(max = Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, message = "{account.firstName.max.size}", groups = {
+			Create.class, Update.class })
 	private String				firstName;
 
-	@Column(name = User.COLUMN_NAME_LAST_NAME)
+	@Column(name = Account.COLUMN_NAME_LAST_NAME)
 	@NotEmpty(message = "{account.lastName.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_LAST_NAME_MAX_SIZE, message = "{account.lastName.max.size}", groups = { Create.class,
-			Update.class })
+	@Size(max = Account.CONSTRAINT_LAST_NAME_MAX_SIZE, message = "{account.lastName.max.size}", groups = {
+			Create.class, Update.class })
 	private String				lastName;
 
 	@NotEmpty(message = "{account.email.required}", groups = { Create.class, Update.class })
 	@Email(message = "{account.email.valid.format.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_EMAIL_MAX_SIZE, message = "{account.email.max.size}", groups = { Create.class,
+	@Size(max = Account.CONSTRAINT_EMAIL_MAX_SIZE, message = "{account.email.max.size}", groups = { Create.class,
 			Update.class })
 	private String				email;
 
 	@NotEmpty(message = "{account.password.required}", groups = { Create.class, Update.class })
-	@Size(max = User.CONSTRAINT_PASSWORD_MAX_SIZE, message = "{account.password.max.size}", groups = { Create.class,
+	@Size(max = Account.CONSTRAINT_PASSWORD_MAX_SIZE, message = "{account.password.max.size}", groups = { Create.class,
 			Update.class })
 	private String				password;
 
@@ -101,13 +101,13 @@ public class User extends AbstractEntity {
 	@JsonSerialize(using = DateTimeSerializer.class)
 	private DateTime			created;
 
-	@Column(name = User.COLUMN_NAME_LAST_CONNECTION)
+	@Column(name = Account.COLUMN_NAME_LAST_CONNECTION)
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	@JsonSerialize(using = DateTimeSerializer.class)
 	private DateTime			lastConnection;
 
 	@ManyToMany
-	@JoinTable(name = User.TABLE_NAME_USER_AUTHORITY, joinColumns = { @JoinColumn(name = User.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Authority.COLUMN_NAME_ID) })
+	@JoinTable(name = Account.TABLE_NAME_USER_AUTHORITY, joinColumns = { @JoinColumn(name = Account.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Authority.COLUMN_NAME_ID) })
 	@Valid
 	@NotEmpty(message = "{account.authorities.required}", groups = { Create.class, Update.class })
 	private Set<Authority>		authorities;
@@ -127,7 +127,7 @@ public class User extends AbstractEntity {
 	 * association is described through an @JoinTable<br/>
 	 */
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinTable(name = User.TABLE_NAME_USER_RESTAURANT, joinColumns = { @JoinColumn(name = User.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) })
+	@JoinTable(name = Account.TABLE_NAME_USER_RESTAURANT, joinColumns = { @JoinColumn(name = Account.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) })
 	@Valid
 	private Set<Restaurant>		restaurants;
 
@@ -136,7 +136,7 @@ public class User extends AbstractEntity {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
-		final User other = (User) obj;
+		final Account other = (Account) obj;
 		if (this.id == null) {
 			if (other.id != null) return false;
 		} else if (!this.id.equals(other.id)) return false;

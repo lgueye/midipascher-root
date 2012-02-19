@@ -2,7 +2,7 @@ Create account scenarii
 
 Meta:
 @refs 5
-@progress wip
+@progress done
 
 
 Narrative:

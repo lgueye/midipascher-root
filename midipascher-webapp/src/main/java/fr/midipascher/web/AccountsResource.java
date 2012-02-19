@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.User;
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.business.Facade;
 
 /**
@@ -44,9 +44,9 @@ public class AccountsResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response create(final User user) throws Throwable {
+	public Response create(final Account account) throws Throwable {
 
-		final Long id = this.facade.createAccount(user);
+		final Long id = this.facade.createAccount(account);
 
 		final URI uri = this.uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
 
@@ -69,7 +69,7 @@ public class AccountsResource {
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
-		final User account = this.facade.readAccount(id, true);
+		final Account account = this.facade.readAccount(id, true);
 
 		if (account == null) return Response.status(Response.Status.NOT_FOUND).build();
 
