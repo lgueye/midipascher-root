@@ -221,6 +221,11 @@ public class FacadeImpl implements Facade {
 				"Illegal call to createRestaurant, restaurant.id should be null");
 
 		final Account account = this.baseDao.get(Account.class, accountId);
+		if (account == null) {
+			LOGGER.error("Illegal call to createRestaurant, Account with id {} was not found", accountId);
+			throw new BusinessException("account.not.found", null, "Illegal call to createRestaurant, Account with id "
+					+ accountId + " was not found");
+		}
 		account.addRestaurant(restaurant);
 		this.baseDao.persist(account);
 		return restaurant.getId();

@@ -143,22 +143,6 @@ public class FacadeImplTest {
 
 	}
 
-	@Test
-	public void createRestaurantShouldInvokePersistence() {
-
-		// Given
-		final Restaurant restaurant = Mockito.mock(Restaurant.class);
-
-		// When
-		this.underTest.createRestaurant(restaurant);
-
-		// Then
-		Mockito.verify(this.baseDao).persist(restaurant);
-
-		Mockito.verify(restaurant).getId();
-
-	}
-
 	// @Test(expected = IllegalArgumentException.class)
 	// public void
 	// createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
@@ -684,19 +668,40 @@ public class FacadeImplTest {
 		this.underTest.createRestaurant(accountId, restaurant);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = BusinessException.class)
+	public void createRestaurantShouldThrowBusinessExceptionWithUnknownUser() {
+
+		Long accountId = 5L;
+		Long restaurantId = null;
+		Restaurant restaurant = Mockito.mock(Restaurant.class);
+		Account account = null;
+
+		Mockito.when(restaurant.getId()).thenReturn(restaurantId);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		this.underTest.createRestaurant(accountId, restaurant);
+
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(restaurant).getId();
+
+		Mockito.verifyNoMoreInteractions(this.baseDao, account, restaurant);
+
+	}
+
+	@Test
 	public void createRestaurantShouldLoadUserThenAddRestaurantToItsRestaurantCollection() {
 		Long accountId = 5L;
+		Long restaurantId = null;
 		Restaurant restaurant = Mockito.mock(Restaurant.class);
 		Account account = Mockito.mock(Account.class);
 
+		Mockito.when(restaurant.getId()).thenReturn(restaurantId);
 		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
 		this.underTest.createRestaurant(accountId, restaurant);
 
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
 		Mockito.verify(account).addRestaurant(restaurant);
-		Mockito.verify(this.baseDao).merge(account);
-		Mockito.verify(restaurant).getId();
+		Mockito.verify(this.baseDao).persist(account);
+		Mockito.verify(restaurant, Mockito.times(2)).getId();
 
 		Mockito.verifyNoMoreInteractions(this.baseDao, account, restaurant);
 	}

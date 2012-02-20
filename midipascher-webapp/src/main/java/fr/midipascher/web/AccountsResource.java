@@ -17,8 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -35,12 +33,13 @@ import fr.midipascher.domain.business.Facade;
 public class AccountsResource {
 
 	@Autowired
-	private Facade				facade;
+	private Facade	facade;
 
 	@Context
-	private UriInfo				uriInfo;
+	private UriInfo	uriInfo;
 
-	private static final Logger	LOGGER	= LoggerFactory.getLogger(AccountsResource.class);
+	// private static final Logger LOGGER =
+	// LoggerFactory.getLogger(AccountsResource.class);
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })

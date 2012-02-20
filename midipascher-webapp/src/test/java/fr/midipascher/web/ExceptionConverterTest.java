@@ -3,6 +3,8 @@
  */
 package fr.midipascher.web;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +22,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.servlet.LocaleResolver;
 
 import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.domain.exceptions.NotFoundException;
 
 /**
  * @author louis.gueye@gmail.com
@@ -67,8 +68,8 @@ public class ExceptionConverterTest {
 	 * .
 	 */
 	@Test
-	public final void resolveHttpStatusShouldMapTo404WithNotFoundException() {
-		Throwable th = new NotFoundException();
+	public final void resolveHttpStatusShouldMapTo404WithBusinessExceptionAndNotFoundMessageCode() {
+		Throwable th = new BusinessException("anything.not.found", null, "default message");
 		int httpStatus = this.underTest.resolveHttpStatus(th);
 		Assert.assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
 	}
@@ -146,12 +147,20 @@ public class ExceptionConverterTest {
 	 */
 	@Test
 	public final void resolveMessageShouldInvokeLocalizedExceptionMessageResolver() {
+		String code = "message.code";
+		Object[] args = new Object[] {};
+		Locale locale = Locale.FRENCH;
+
 		BusinessException th = Mockito.mock(BusinessException.class);
-		String preferredLanguage = "en";
 		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-		Mockito.when(request.getHeader("Accept-Language")).thenReturn(preferredLanguage);
+		Mockito.when(th.getMessageCode()).thenReturn(code);
+		Mockito.when(th.getMessageArgs()).thenReturn(args);
+		Mockito.when(this.localeResolver.resolveLocale(request)).thenReturn(locale);
 		this.underTest.resolveMesage(request, th);
-		Mockito.verify(th).getMessage(preferredLanguage);
+		Mockito.verify(th).getMessageCode();
+		Mockito.verify(th).getMessageArgs();
+		Mockito.verify(this.messageSource).getMessage(code, args, locale);
+		Mockito.verify(this.localeResolver).resolveLocale(request);
 	}
 
 	/**

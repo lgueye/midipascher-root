@@ -3,25 +3,13 @@
  */
 package fr.midipascher.domain.exceptions;
 
-import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import fr.midipascher.domain.Constants;
 
 /**
  * @author louis.gueye@gmail.com
  */
-public class BusinessException extends RuntimeException implements LocalizedException {
+public class BusinessException extends RuntimeException {
 
 	private static final long	serialVersionUID	= 1L;
-	private static final Logger	LOG					= LoggerFactory.getLogger(BusinessException.class);
 
 	private String				messageCode;
 	private Object[]			messageArgs;
@@ -68,50 +56,6 @@ public class BusinessException extends RuntimeException implements LocalizedExce
 	 */
 	public String getDefaultMessage() {
 		return this.defaultMessage;
-	}
-
-	/**
-	 * @see fr.midipascher.domain.exceptions.LocalizedException#getMessage(java.lang.String)
-	 */
-	@Override
-	public String getMessage(String preferredLanguage) {
-
-		if (StringUtils.isEmpty(getMessageCode())) return getDefaultMessage();
-
-		Locale locale = (StringUtils.isEmpty(preferredLanguage)) ? Locale.ENGLISH : new Locale(preferredLanguage);
-
-		ResourceBundle bundle = null;
-
-		try {
-
-			bundle = ResourceBundle.getBundle(Constants.MESSAGES_BUNDLE_NAME, locale);
-
-		} catch (final MissingResourceException e) {
-
-			BusinessException.LOG.debug("Bundle '" + Constants.MESSAGES_BUNDLE_NAME + "' not found for locale '"
-					+ locale.getLanguage() + "'. Using default message");
-
-			return getDefaultMessage();
-
-		}
-
-		String message = null;
-
-		try {
-
-			message = bundle.getString(getMessageCode());
-
-		} catch (final MissingResourceException e) {
-
-			BusinessException.LOG.debug("Message not found for key '" + getMessageCode() + "'. Using default message");
-
-			return getDefaultMessage();
-
-		}
-
-		if (!ArrayUtils.isEmpty(getMessageArgs())) message = MessageFormat.format(message, getMessageArgs());
-
-		return message;
 	}
 
 	/**

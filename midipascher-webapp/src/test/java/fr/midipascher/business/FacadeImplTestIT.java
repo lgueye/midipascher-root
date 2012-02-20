@@ -6,10 +6,12 @@ package fr.midipascher.business;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 
 import javax.sql.DataSource;
 
@@ -25,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -45,6 +48,7 @@ import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.test.TestUtils;
 
 /**
@@ -470,6 +474,28 @@ public class FacadeImplTestIT {
 
 	private void authenticateAsRmgr() {
 		authenticateAs("rmgr", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_RMGR")));
+	}
+
+	@Test
+	public void createRestaurantShouldThrowNotFoundExceptionWithUnknownUser() {
+		authenticateAsRmgr();
+
+		Long accountId;
+		Restaurant restaurant;
+
+		accountId = -1L;
+		restaurant = TestUtils.validRestaurant();
+		LocaleContextHolder.setLocale(Locale.FRENCH);
+
+		try {
+			this.facade.createRestaurant(accountId, restaurant);
+			fail(BusinessException.class.getSimpleName() + " expected");
+		} catch (BusinessException e) {
+			assertEquals("account.not.found", e.getMessageCode());
+		} catch (Throwable th) {
+			fail(BusinessException.class.getSimpleName() + " expected, got = " + th);
+		}
+
 	}
 
 }
