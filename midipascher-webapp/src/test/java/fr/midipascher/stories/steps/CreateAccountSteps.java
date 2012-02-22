@@ -30,9 +30,9 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.ResponseError;
-import fr.midipascher.domain.Account;
 import fr.midipascher.test.TestUtils;
 
 /**
@@ -238,8 +238,6 @@ public class CreateAccountSteps {
 
 	@Given("I delete existing accounts")
 	public void clear() {
-		System.out
-				.println("----------------------------------------------------------------------dfgsdfffffffffffffffffffffffff");
 		this.language = null;
 		this.format = null;
 		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();

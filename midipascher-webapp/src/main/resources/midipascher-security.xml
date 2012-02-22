@@ -28,6 +28,7 @@
         <sec:authentication-provider>
             <sec:user-service>
                 <sec:user name="rmgr" password="secret" authorities="ROLE_RMGR"/>
+                <sec:user name="louis" password="secret" authorities="ROLE_RMGR"/>
                 <sec:user name="admin" password="secret" authorities="ROLE_RMGR,ROLE_ADMIN"/>
             </sec:user-service>
         </sec:authentication-provider>

@@ -25,7 +25,7 @@ public class Address extends AbstractObject implements Serializable {
 	public static final String	COLUMN_NAME_POSTAL_CODE				= "address_postal_code";
 	public static final String	COLUMN_NAME_COUNTRY_CODE			= "address_country_code";
 
-	public static final int		CONSTRAINT_STREET_ADDRESS_MAX_SIZE	= 50;
+	public static final int		CONSTRAINT_STREET_ADDRESS_MAX_SIZE	= 100;
 	public static final int		CONSTRAINT_CITY_MAX_SIZE			= 50;
 	public static final int		CONSTRAINT_POSTAL_CODE_MAX_SIZE		= 10;
 	public static final int		CONSTRAINT_COUNTRY_CODE_MAX_SIZE	= 2;
@@ -65,45 +65,45 @@ public class Address extends AbstractObject implements Serializable {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		final Address other = (Address) obj;
-		if (city == null) {
+		if (this.city == null) {
 			if (other.city != null) return false;
-		} else if (!city.equals(other.city)) return false;
-		if (countryCode == null) {
+		} else if (!this.city.equals(other.city)) return false;
+		if (this.countryCode == null) {
 			if (other.countryCode != null) return false;
-		} else if (!countryCode.equals(other.countryCode)) return false;
-		if (postalCode == null) {
+		} else if (!this.countryCode.equals(other.countryCode)) return false;
+		if (this.postalCode == null) {
 			if (other.postalCode != null) return false;
-		} else if (!postalCode.equals(other.postalCode)) return false;
-		if (streetAddress == null) {
+		} else if (!this.postalCode.equals(other.postalCode)) return false;
+		if (this.streetAddress == null) {
 			if (other.streetAddress != null) return false;
-		} else if (!streetAddress.equals(other.streetAddress)) return false;
+		} else if (!this.streetAddress.equals(other.streetAddress)) return false;
 		return true;
 	}
 
 	public String getCity() {
-		return city;
+		return this.city;
 	}
 
 	public String getCountryCode() {
-		return countryCode;
+		return this.countryCode;
 	}
 
 	public String getPostalCode() {
-		return postalCode;
+		return this.postalCode;
 	}
 
 	public String getStreetAddress() {
-		return streetAddress;
+		return this.streetAddress;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (city == null ? 0 : city.hashCode());
-		result = prime * result + (countryCode == null ? 0 : countryCode.hashCode());
-		result = prime * result + (postalCode == null ? 0 : postalCode.hashCode());
-		result = prime * result + (streetAddress == null ? 0 : streetAddress.hashCode());
+		result = prime * result + (this.city == null ? 0 : this.city.hashCode());
+		result = prime * result + (this.countryCode == null ? 0 : this.countryCode.hashCode());
+		result = prime * result + (this.postalCode == null ? 0 : this.postalCode.hashCode());
+		result = prime * result + (this.streetAddress == null ? 0 : this.streetAddress.hashCode());
 		return result;
 	}
 
