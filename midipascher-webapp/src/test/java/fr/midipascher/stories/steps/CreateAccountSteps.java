@@ -31,7 +31,6 @@ import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
 import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
 
@@ -48,27 +47,7 @@ public class CreateAccountSteps {
 
 	@BeforeStory
 	public void beforeStory() {
-		final String path = "/admin/authorities";
-		final URI uri = URI.create(this.baseEndPoint + path);
-		final String requestContentType = "application/json";
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter("admin", "secret"));
-		final WebResource webResource = jerseyClient.resource(uri);
-
-		final String format = "application/json";
-		final String language = "en";
-
-		final Authority account = new Authority();
-		account.setCode(Authority.RMGR);
-		account.setActive(true);
-		account.setLabel("Restaurant manager role");
-		webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
-				.header("Content-Type", requestContentType).post(ClientResponse.class, account);
-
+		TestUtils.createAuthority();
 	}
 
 	@Then("the message should be \"<message>\"")

@@ -3,15 +3,32 @@
  */
 package fr.midipascher.stories.steps;
 
+import java.net.URI;
+import java.util.ResourceBundle;
+
+import javax.ws.rs.core.MediaType;
+
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.jbehave.core.annotations.BeforeStory;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.junit.Assert;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.api.client.filter.LoggingFilter;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.client.apache4.ApacheHttpClient4;
+import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.domain.Restaurant;
+import fr.midipascher.test.TestUtils;
 
 /**
  * @author louis.gueye@gmail.com
@@ -22,7 +39,9 @@ public class CreateRestaurantSteps {
 	private String			uid;
 	private String			password;
 	private String			preferredLanguage;
-	private Object			preferredFormat;
+	private String			preferredFormat;
+	private final String	baseEndPoint	= ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
+	private String			accountURI;
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -32,7 +51,26 @@ public class CreateRestaurantSteps {
 
 	@When("I send a valid \"create restaurant\" request")
 	public void sendAValidcreateRestaurantRequest() {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		String format = "application/json";
+		String language = "fr";
+		String requestContentType = "application/xml";
+		webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+				.header("Content-Type", requestContentType).post(ClientResponse.class, restaurant);
+	}
+
+	@BeforeStory
+	public void setup() {
+		this.accountURI = TestUtils.createAccount();
 	}
 
 	@Then("the response code should be \"$status\"")

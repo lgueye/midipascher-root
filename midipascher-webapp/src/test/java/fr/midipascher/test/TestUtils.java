@@ -7,11 +7,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -21,16 +24,27 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.api.client.filter.LoggingFilter;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.client.apache4.ApacheHttpClient4;
+import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+
+import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.Account;
 
 /**
  * @author louis.gueye@gmail.com
@@ -39,6 +53,8 @@ public abstract class TestUtils {
 
 	public static final String	STANDARD_CHARSET	= "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBNéèçàù7894561230";
 	private static final String	EMAIL_CHARSET		= "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN";
+	private static final String	baseEndPoint		= ResourceBundle.getBundle("stories-context").getString(
+															"baseEndPoint");
 
 	/**
 	 * @param e
@@ -168,12 +184,59 @@ public abstract class TestUtils {
 		account.setCreated(new DateTime());
 		account.setEmail(RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + "@"
 				+ RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + ".com");
-		account.setFirstName(RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+		account.setFirstName(RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE,
+				TestUtils.STANDARD_CHARSET));
 		account.setLastConnection(new DateTime());
 		account.setLastName(RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
 		account.setLocked(false);
 		account.setPassword(RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.STANDARD_CHARSET));
 		return account;
+	}
+
+	public static String createAccount() {
+
+		createAuthority();
+
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		String uri = "/accounts";
+		final WebResource webResource = jerseyClient.resource(baseEndPoint + uri);
+		String format = "application/json";
+		String language = "fr";
+		String requestContentType = "application/xml";
+		Account account = TestUtils.validUser();
+		ClientResponse response = webResource.accept(MediaType.valueOf(format))
+				.acceptLanguage(new String[] { language }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, account);
+		return response.getLocation().toString();
+
+	}
+
+	public static void createAuthority() {
+		final String path = "/admin/authorities";
+		final URI uri = URI.create(baseEndPoint + path);
+		final String requestContentType = "application/json";
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter("admin", "secret"));
+		final WebResource webResource = jerseyClient.resource(uri);
+
+		final String format = "application/json";
+		final String language = "en";
+
+		final Authority account = new Authority();
+		account.setCode(Authority.RMGR);
+		account.setActive(true);
+		account.setLabel("Restaurant manager role");
+		webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+				.header("Content-Type", requestContentType).post(ClientResponse.class, account);
+
 	}
 
 }

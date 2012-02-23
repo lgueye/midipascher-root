@@ -18,18 +18,17 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import fr.midipascher.domain.Account;
+import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
 
 /**
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = "/accounts")
-@Scope("request")
+@Path(value = "/")
 public class AccountsResource {
 
 	@Autowired
@@ -43,18 +42,34 @@ public class AccountsResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path(value = "/accounts")
 	public Response create(final Account account) throws Throwable {
 
 		final Long id = this.facade.createAccount(account);
 
-		final URI uri = this.uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+		final URI uri = this.uriInfo.getBaseUriBuilder().path("account").path(String.valueOf(id)).build();
+
+		return Response.created(uri).build();
+
+	}
+
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path(value = "/account/{accountId}/restaurants")
+	public Response createRestaurant(@PathParam(value = "accountId") final Long accountId, final Restaurant restaurant)
+			throws Throwable {
+
+		final Long id = this.facade.createRestaurant(accountId, restaurant);
+
+		final URI uri = this.uriInfo.getBaseUriBuilder().path("account").path(accountId.toString()).path("restaurant")
+				.path(String.valueOf(id)).build();
 
 		return Response.created(uri).build();
 
 	}
 
 	@DELETE
-	@Path("{id}")
+	@Path("/account/{id}")
 	public Response delete(@PathParam(value = "id") final Long id) throws Throwable {
 
 		this.facade.deleteAccount(id);
@@ -64,7 +79,7 @@ public class AccountsResource {
 	}
 
 	@GET
-	@Path("{id}")
+	@Path("/account/{id}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
