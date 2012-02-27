@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import javax.sql.DataSource;
+import javax.validation.ConstraintViolationException;
 
 import junit.framework.Assert;
 
@@ -97,6 +98,7 @@ public class FacadeImplTestIT {
 		// Then
 		Assert.assertNotNull(id);
 		Assert.assertEquals(id, foodSpecialty.getId());
+		Assert.assertNotNull(this.facade.readFoodSpecialty(id));
 
 	}
 
@@ -224,7 +226,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		Long foodSpecialtyId = 1L;
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
 		Account account = TestUtils.validUser();
@@ -263,7 +265,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+		Long foodSpecialtyId = 1L;
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
 		Account account = TestUtils.validUser();
@@ -284,7 +286,7 @@ public class FacadeImplTestIT {
 	}
 
 	@Test
-	public void updatingSimplePropertiesShouldSucceedWhenMergingRestaurant() {
+	public void updatingSimplePropertiesShouldSucceedWhenMergingRestaurant() throws Throwable {
 		authenticateAsAdmin();
 
 		// Given
@@ -335,29 +337,37 @@ public class FacadeImplTestIT {
 
 	/**
 	 * @return
+	 * @throws Throwable
 	 */
-	private Long createRestaurant() {
+	private Long createRestaurant() throws Throwable {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
 		Account account = TestUtils.validUser();
 		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
-		restaurant.getSpecialties().clear();
-		restaurant.getSpecialties().add(foodSpecialty);
-		Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
-		return restaurantId;
+		restaurant.clearSpecialties();
+		restaurant.addSpecialty(foodSpecialty);
+		try {
+			Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
+			return restaurantId;
+		} catch (ConstraintViolationException th) {
+			System.out
+					.println("----------------------------------------------------------------------------------------------"
+							+ th.getConstraintViolations().iterator().next().getMessage());
+			throw th;
+		}
 	}
 
 	@Test
-	public void addingSpecialtyShouldSucceedWhenMergingRestaurant() {
+	public void addingSpecialtyShouldSucceedWhenMergingRestaurant() throws Throwable {
 		authenticateAsAdmin();
 
 		// Given
 		Long restaurantId = createRestaurant();
 		assertNotNull(restaurantId);
 		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
-		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
+		assertEquals(1, restaurant.countSpecialties());
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
@@ -368,11 +378,11 @@ public class FacadeImplTestIT {
 		restaurant = this.facade.readRestaurant(restaurantId, true);
 
 		// Then
-		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
+		assertEquals(2, restaurant.countSpecialties());
 	}
 
 	@Test
-	public void removingSpecialtyShouldSucceedWhenMergingRestaurant() {
+	public void removingSpecialtyShouldSucceedWhenMergingRestaurant() throws Throwable {
 		authenticateAsAdmin();
 
 		// Given
@@ -398,7 +408,7 @@ public class FacadeImplTestIT {
 	}
 
 	@Test
-	public void updatingRestaurantSpecialtyShouldNotSucceedWhenMerging() {
+	public void updatingRestaurantSpecialtyShouldNotSucceedWhenMerging() throws Throwable {
 		authenticateAsAdmin();
 
 		// Given

@@ -182,10 +182,32 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
 					</plugin>
-					<!-- Starts an embedded container and deploy the war to that container -->
+					<!-- Starts an embedded container and deploys the war to that container -->
 					<plugin>
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>dbunit-maven-plugin</artifactId>
+						<configuration>
+							<driver>${javax.persistence.jdbc.driver}</driver>
+							<url>${javax.persistence.jdbc.url}</url>
+							<username>${javax.persistence.jdbc.user}</username>
+							<password>${javax.persistence.jdbc.password}</password>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>operation</goal>
+								</goals>
+								<configuration>
+									<type>CLEAN_INSERT</type>
+									<src>src/test/resources/dbunit/acceptance-test-data.xml</src>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 					<!-- Runs the acceptance tests against the running container -->
 					<plugin>

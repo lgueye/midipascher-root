@@ -680,6 +680,7 @@ public class FacadeImplTest {
 		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
 		this.underTest.createRestaurant(accountId, restaurant);
 
+		Mockito.verify(this.baseDao).refresh(restaurant.getSpecialties());
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
 		Mockito.verify(restaurant).getId();
 
@@ -689,22 +690,131 @@ public class FacadeImplTest {
 
 	@Test
 	public void createRestaurantShouldLoadUserThenAddRestaurantToItsRestaurantCollection() {
-		Long accountId = 5L;
+
+		Long accountId;
 		Long restaurantId = null;
 		Restaurant restaurant = Mockito.mock(Restaurant.class);
 		Account account = Mockito.mock(Account.class);
+		Set<FoodSpecialty> specialties;
+		FoodSpecialty sp0;
+		FoodSpecialty sp1;
+		Long id0;
+
+		accountId = 5L;
+		restaurantId = null;
+		restaurant = Mockito.mock(Restaurant.class);
+		account = Mockito.mock(Account.class);
+		restaurant = Mockito.mock(Restaurant.class);
+		sp0 = Mockito.mock(FoodSpecialty.class);
+		sp1 = Mockito.mock(FoodSpecialty.class);
+		id0 = 5L;
+
+		Mockito.when(sp0.getId()).thenReturn(id0);
+		specialties = new HashSet<FoodSpecialty>(Arrays.asList(sp0));
+		Mockito.when(restaurant.getSpecialties()).thenReturn(specialties);
+		Mockito.when((this.baseDao).get(FoodSpecialty.class, id0)).thenReturn(sp1);
 
 		Mockito.when(restaurant.getId()).thenReturn(restaurantId);
+		Mockito.when(restaurant.getSpecialties()).thenReturn(specialties);
 		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
 		this.underTest.createRestaurant(accountId, restaurant);
 
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		// Mockito.verify(restaurant).getSpecialties();
+		// Mockito.verify(restaurant).clearSpecialties();
+		// Mockito.verify(this.baseDao).get(FoodSpecialty.class, id0);
+		// Mockito.verify(restaurant).addSpecialty(sp1);
+
 		Mockito.verify(account).addRestaurant(restaurant);
-		Mockito.verify(this.baseDao).persist(account);
+		Mockito.verify(this.baseDao).persist(restaurant);
 		Mockito.verify(restaurant, Mockito.times(2)).getId();
+		// Mockito.verify(restaurant).countSpecialties();
 
 		Mockito.verifyNoMoreInteractions(this.baseDao, account, restaurant);
+
 	}
+
+	//
+	// @Test
+	// public void attachPersitentFoodSpecialtiesShouldAddSpecialties() {
+	//
+	// // Variables
+	// Restaurant detachedRestaurant;
+	// Set<FoodSpecialty> specialties;
+	// FoodSpecialty sp0;
+	// FoodSpecialty sp1;
+	// Long id0;
+	// Long id1;
+	// FoodSpecialty sp2;
+	//
+	// // Given
+	// detachedRestaurant = Mockito.mock(Restaurant.class);
+	// sp0 = Mockito.mock(FoodSpecialty.class);
+	// sp1 = Mockito.mock(FoodSpecialty.class);
+	// sp2 = Mockito.mock(FoodSpecialty.class);
+	// id0 = 5L;
+	// id1 = 75L;
+	// Mockito.when(sp0.getId()).thenReturn(id0);
+	// Mockito.when(sp1.getId()).thenReturn(id1);
+	// specialties = new HashSet<FoodSpecialty>(Arrays.asList(sp0, sp1));
+	// Mockito.when(detachedRestaurant.getSpecialties()).thenReturn(specialties);
+	// Mockito.when((this.baseDao).get(FoodSpecialty.class,
+	// id0)).thenReturn(sp2);
+	// Mockito.when((this.baseDao).get(FoodSpecialty.class,
+	// id1)).thenReturn(null);
+	//
+	// // When
+	// ((FacadeImpl)
+	// this.underTest).attachPersistentFoodSpecialties(detachedRestaurant);
+	//
+	// // Then
+	// Mockito.verify(detachedRestaurant).getSpecialties();
+	// Mockito.verify(detachedRestaurant).clearSpecialties();
+	// Mockito.verify(this.baseDao).get(FoodSpecialty.class, id0);
+	// Mockito.verify(this.baseDao).get(FoodSpecialty.class, id1);
+	// Mockito.verify(detachedRestaurant).addSpecialty(sp2);
+	// Mockito.verify(detachedRestaurant).countSpecialties();
+	// Mockito.verifyNoMoreInteractions(detachedRestaurant);
+	// Mockito.verifyNoMoreInteractions(this.baseDao);
+	//
+	// }
+	//
+	// @Test
+	// public void attachPersitentFoodSpecialtiesShouldNotAddSpecialties() {
+	//
+	// // Variables
+	// Restaurant detachedRestaurant;
+	// Set<FoodSpecialty> specialties;
+	//
+	// // Given
+	// detachedRestaurant = Mockito.mock(Restaurant.class);
+	// specialties = null;
+	// Mockito.when(detachedRestaurant.getSpecialties()).thenReturn(specialties);
+	//
+	// // When
+	// ((FacadeImpl)
+	// this.underTest).attachPersistentFoodSpecialties(detachedRestaurant);
+	//
+	// // Then
+	// Mockito.verify(detachedRestaurant).getSpecialties();
+	// Mockito.verifyNoMoreInteractions(detachedRestaurant);
+	//
+	// // Given
+	// Mockito.reset(detachedRestaurant);
+	// specialties = new HashSet<FoodSpecialty>();
+	// Mockito.when(detachedRestaurant.getSpecialties()).thenReturn(specialties);
+	//
+	// // When
+	// ((FacadeImpl)
+	// this.underTest).attachPersistentFoodSpecialties(detachedRestaurant);
+	//
+	// // Then
+	// Mockito.verify(detachedRestaurant).getSpecialties();
+	// Mockito.verifyNoMoreInteractions(detachedRestaurant);
+	// Mockito.verifyZeroInteractions(this.baseDao);
+	//
+	// }
 
 	@Test
 	public void inactivatFoodSpecialtyShouldSetActiveToFalse() {

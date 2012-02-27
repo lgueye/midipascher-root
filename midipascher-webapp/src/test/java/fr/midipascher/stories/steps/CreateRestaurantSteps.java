@@ -26,6 +26,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
+import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.test.TestUtils;
@@ -61,9 +62,20 @@ public class CreateRestaurantSteps {
 		final URI uri = URI.create(path);
 		final WebResource webResource = jerseyClient.resource(uri);
 		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
 		String format = "application/json";
 		String language = "fr";
 		String requestContentType = "application/xml";
+		ClientResponse myResponse = jerseyClient.resource(this.baseEndPoint + "/foodspecialty/1")
+				.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+				.header("Content-Type", requestContentType).get(ClientResponse.class);
+		Assert.assertNotNull(myResponse);
+		FoodSpecialty entity = myResponse.getEntity(FoodSpecialty.class);
+		Assert.assertNotNull(entity);
+
 		webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
 				.header("Content-Type", requestContentType).post(ClientResponse.class, restaurant);
 	}

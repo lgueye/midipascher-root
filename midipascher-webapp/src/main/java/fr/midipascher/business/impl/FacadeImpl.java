@@ -216,20 +216,75 @@ public class FacadeImpl implements Facade {
 	public Long createRestaurant(final Long accountId, final Restaurant restaurant) {
 
 		Preconditions.checkArgument(accountId != null, "Illegal call to createRestaurant, accountId is required");
+
 		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
+
 		Preconditions.checkArgument(restaurant.getId() == null,
 				"Illegal call to createRestaurant, restaurant.id should be null");
 
 		final Account account = this.baseDao.get(Account.class, accountId);
+
 		if (account == null) {
 			LOGGER.error("Illegal call to createRestaurant, Account with id {} was not found", accountId);
 			throw new BusinessException("account.not.found", null, "Illegal call to createRestaurant, Account with id "
 					+ accountId + " was not found");
 		}
+
+		this.baseDao.persist(restaurant);
+
 		account.addRestaurant(restaurant);
-		this.baseDao.persist(account);
+
 		return restaurant.getId();
+
 	}
+
+	// public void attachPersistentFoodSpecialties(final Restaurant
+	// detachedRestaurant) {
+	//
+	// Set<FoodSpecialty> specialties = detachedRestaurant.getSpecialties();
+	//
+	// if (CollectionUtils.isEmpty(specialties)) return;
+	//
+	// Collection<Long> ids = Collections2.transform(specialties, new
+	// Function<FoodSpecialty, Long>() {
+	//
+	// /**
+	// * @see com.google.common.base.Function#apply(java.lang.Object)
+	// */
+	// @Override
+	// public Long apply(FoodSpecialty input) {
+	// if (input == null) return null;
+	// return input.getId();
+	// }
+	//
+	// });
+	// LOGGER.warn("{} ids, after transforming input", ids.size());
+	//
+	// // Remove null ids
+	// ids = Collections2.filter(ids, new Predicate<Long>() {
+	//
+	// /**
+	// * @see com.google.common.base.Predicate#apply(java.lang.Object)
+	// */
+	// @Override
+	// public boolean apply(Long input) {
+	// return (input != null);
+	// }
+	//
+	// });
+	// LOGGER.warn("{} ids, after null filtering", ids.size());
+	//
+	// detachedRestaurant.clearSpecialties();
+	//
+	// for ( Long id : ids ) {
+	// FoodSpecialty foodSpecialty = readFoodSpecialty(id);
+	// if (foodSpecialty != null)
+	// detachedRestaurant.addSpecialty(foodSpecialty);
+	// }
+	//
+	// LOGGER.warn("{} specialties, after loading from database",
+	// detachedRestaurant.countSpecialties());
+	// }
 
 	/**
 	 * @see fr.midipascher.domain.business.Facade#createRestaurant(fr.midipascher.domain.Restaurant)
@@ -241,6 +296,7 @@ public class FacadeImpl implements Facade {
 
 		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
 
+		this.baseDao.refresh(restaurant.getSpecialties());
 		this.baseDao.persist(restaurant);
 
 		return restaurant.getId();

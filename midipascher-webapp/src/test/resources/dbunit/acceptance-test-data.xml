@@ -1,0 +1,13 @@
+<dataset>
+	<authority authority_id="1" code="ADM" label="Administrator" active="1"/>
+	<authority authority_id="2" code="RMGR" label="Restaurant manager" active="1"/>
+
+	<food_specialty food_specialty_id="1" code="SDW" label="Sandwich" active="1"/>
+	<food_specialty food_specialty_id="2" code="SLD" label="Salade" active="1"/>
+	<food_specialty food_specialty_id="3" code="BLG" label="Boulangerie" active="1"/>
+	<food_specialty food_specialty_id="4" code="CHN" label="Chinois" active="1"/>
+	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
+	 	
+	<accounts_authorities authority_id="1" account_id="1"/>
+
+</dataset>
