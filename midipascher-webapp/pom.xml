@@ -30,6 +30,11 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.dbunit</groupId>
 			<artifactId>dbunit</artifactId>
 		</dependency>
@@ -177,6 +182,51 @@
 				</testResources>
 
 				<plugins>
+					<!-- Starts an H2 tcp server -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<dependencies>
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>${h2.version}</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<!-- start server before integration tests -->
+								<id>start-database</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<includePluginDependencies>true</includePluginDependencies>
+									<mainClass>org.h2.tools.Server</mainClass>
+									<arguments>
+										<argument>-tcp</argument>
+										<argument>-tcpDaemon</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<!-- stop server after integration tests -->
+								<id>stop-database</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<mainClass>org.h2.tools.Server</mainClass>
+									<arguments>
+										<argument>-tcpShutdownForce</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<!-- Runs tests that end with TestIT (database) tests -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -198,11 +248,12 @@
 						</configuration>
 						<executions>
 							<execution>
-								<phase>pre-integration-test</phase>
+								<phase>integration-test</phase>
 								<goals>
 									<goal>operation</goal>
 								</goals>
 								<configuration>
+									<format>flat</format>
 									<type>CLEAN_INSERT</type>
 									<src>src/test/resources/dbunit/acceptance-test-data.xml</src>
 								</configuration>

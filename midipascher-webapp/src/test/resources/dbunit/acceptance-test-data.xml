@@ -7,7 +7,5 @@
 	<food_specialty food_specialty_id="3" code="BLG" label="Boulangerie" active="1"/>
 	<food_specialty food_specialty_id="4" code="CHN" label="Chinois" active="1"/>
 	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
-	 	
-	<accounts_authorities authority_id="1" account_id="1"/>
 
 </dataset>

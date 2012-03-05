@@ -43,6 +43,7 @@
 		<validation-api.version>1.0.0.GA</validation-api.version>
 		<hibernate-validator-annotation-processor>4.2.0.Final</hibernate-validator-annotation-processor>
 		<joda-time-hibernate.version>1.3</joda-time-hibernate.version>
+		<mysql-connector-java.version>5.1.18</mysql-connector-java.version>
 
 		<!-- CONTAINER -->
 		<spring.version>3.1.1.RELEASE</spring.version>
@@ -437,6 +438,12 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-connector-java.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.dbunit</groupId>
 				<artifactId>dbunit</artifactId>
 				<version>${dbunit.version}</version>
@@ -572,9 +579,7 @@
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>${cglib.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -916,7 +921,7 @@
 
 				<!-- persistence properties -->
 				<javax.persistence.jdbc.driver>org.h2.Driver</javax.persistence.jdbc.driver>
-				<javax.persistence.jdbc.url>jdbc:h2:mem:midipascher-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=true;MVCC=true</javax.persistence.jdbc.url>
+				<javax.persistence.jdbc.url>jdbc:h2:tcp://localhost:9092/midipascher</javax.persistence.jdbc.url>
 				<javax.persistence.jdbc.user>sa</javax.persistence.jdbc.user>
 				<javax.persistence.jdbc.password></javax.persistence.jdbc.password>
 				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
