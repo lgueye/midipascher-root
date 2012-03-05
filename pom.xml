@@ -62,7 +62,9 @@
 		<!-- TEST -->
 		<junit.version>4.10</junit.version>
 		<mockito.version>1.9.0</mockito.version>
-		<h2.version>1.3.164</h2.version>
+		<!-- <h2.version>1.3.164</h2.version> -->
+		<mysql-connector-mxj.version>5.0.12</mysql-connector-mxj.version>
+		<mysql-connector-java.version>5.1.18</mysql-connector-java.version>
 		<dbunit.version>2.4.8</dbunit.version>
 		<jetty.version>6.1.26</jetty.version>
 		<groovy.version>1.8.3</groovy.version>
@@ -430,11 +432,25 @@
 				<version>${commons-logging.version}</version>
 				<scope>test</scope>
 			</dependency>
+			<!-- <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
+				<version>${h2.version}</version> <scope>test</scope> </dependency> -->
 			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<version>${h2.version}</version>
-				<scope>test</scope>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-mxj</artifactId>
+				<version>${mysql-connector-mxj.version}</version>
+				<scope>runtime</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql-connector-java.version}</version>
+				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.dbunit</groupId>
@@ -572,9 +588,7 @@
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>${cglib.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -684,10 +698,12 @@
 							<artifactId>spring-tx</artifactId>
 							<version>${spring.version}</version>
 						</dependency>
+						<!-- <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
+							<version>${h2.version}</version> </dependency> -->
 						<dependency>
-							<groupId>com.h2database</groupId>
-							<artifactId>h2</artifactId>
-							<version>${h2.version}</version>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-mxj</artifactId>
+							<version>${mysql-connector-mxj.version}</version>
 						</dependency>
 						<dependency>
 							<groupId>commons-dbcp</groupId>
@@ -888,10 +904,12 @@
 							<version>${dbunit.version}</version>
 						</dependency>
 						<dependency>
-							<groupId>com.h2database</groupId>
-							<artifactId>h2</artifactId>
-							<version>${h2.version}</version>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-mxj</artifactId>
+							<version>${mysql-connector-mxj.version}</version>
 						</dependency>
+						<!-- <dependency> <groupId>com.h2database</groupId> <artifactId>h2</artifactId> 
+							<version>${h2.version}</version> </dependency> -->
 					</dependencies>
 				</plugin>
 			</plugins>
@@ -915,12 +933,12 @@
 				<fr.midipascher.log.level>debug</fr.midipascher.log.level>
 
 				<!-- persistence properties -->
-				<javax.persistence.jdbc.driver>org.h2.Driver</javax.persistence.jdbc.driver>
-				<javax.persistence.jdbc.url>jdbc:h2:mem:midipascher-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=true;MVCC=true</javax.persistence.jdbc.url>
-				<javax.persistence.jdbc.user>sa</javax.persistence.jdbc.user>
+				<javax.persistence.jdbc.driver>com.mysql.jdbc.Driver</javax.persistence.jdbc.driver>
+				<javax.persistence.jdbc.url>jdbc:mysql:mxj://localhost:3336/midipascher?server.basedir=${project.build.directory}&amp;createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF8</javax.persistence.jdbc.url>
+				<javax.persistence.jdbc.user>root</javax.persistence.jdbc.user>
 				<javax.persistence.jdbc.password></javax.persistence.jdbc.password>
 				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
-				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+				<hibernate.dialect>org.hibernate.dialect.MySQLInnoDBDialect</hibernate.dialect>
 				<hibernate.show_sql>true</hibernate.show_sql>
 
 				<!-- container properties -->
