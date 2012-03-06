@@ -247,6 +247,19 @@
 						</configuration>
 						<executions>
 							<execution>
+								<id>clean-integration-tests</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>operation</goal>
+								</goals>
+								<configuration>
+									<format>flat</format>
+									<type>DELETE_ALL</type>
+									<src>src/test/resources/dbunit/persistence-test-data.xml</src>
+								</configuration>
+							</execution>
+							<execution>
+								<id>insert-acceptance-tests</id>
 								<phase>integration-test</phase>
 								<goals>
 									<goal>operation</goal>
