@@ -29,80 +29,81 @@ import fr.midipascher.persistence.RestaurantDao;
 @Repository(RestaurantDao.BEAN_ID)
 public class RestaurantDaoImpl implements RestaurantDao {
 
-	@PersistenceContext(unitName = JpaConstants.PERSISTANCE_UNIT_NAME)
-	private EntityManager	entityManager;
+    @PersistenceContext(unitName = JpaConstants.PERSISTANCE_UNIT_NAME)
+    private EntityManager entityManager;
 
-	/**
-	 * @see fr.midipascher.persistence.RestaurantDao#findByExample(fr.midipascher.domain.Restaurant)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Restaurant> findByExample(final Restaurant exampleInstance) {
+    /**
+     * @see fr.midipascher.persistence.RestaurantDao#findByExample(fr.midipascher.domain.Restaurant)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Restaurant> findByExample(final Restaurant exampleInstance) {
 
-		final Session session = (Session) this.entityManager.getDelegate();
+        final Session session = (Session) entityManager.getDelegate();
 
-		final Example example = Example.create(exampleInstance).excludeZeroes() // exclude
-																				// zero
-																				// valued
-																				// properties
-				.ignoreCase() // perform case insensitive string comparisons
-				.enableLike(MatchMode.ANYWHERE); // use like for string
-													// comparisons
+        final Example example = Example.create(exampleInstance).excludeZeroes() // exclude
+                                                                                // zero
+                                                                                // valued
+                                                                                // properties
+                .ignoreCase() // perform case insensitive string comparisons
+                .enableLike(MatchMode.ANYWHERE); // use like for string
+                                                 // comparisons
 
-		final Criteria restaurantCriteria = session.createCriteria(exampleInstance.getClass());
+        final Criteria restaurantCriteria = session.createCriteria(exampleInstance.getClass());
 
-		restaurantCriteria.add(example);
+        restaurantCriteria.add(example);
 
-		/**
-		 * Matches row against collection elements<br/>
-		 * If the row is associated with ANY of the provided collection's
-		 * element it is included<br/>
-		 * The match is based on and EXACT match of an element : all (except
-		 * null one) provideded properties must match<br/>
-		 * Example :<br/>
-		 * Provided specialty = [id=null, code='CR', label='my label',
-		 * active=true]<br/>
-		 * Persisted specialty = [id=1, code='CR', label='my label',
-		 * active=true] associated to Restaurant 1<br/>
-		 * Persisted specialty = [id=2, code='CR', label='label', active=true]
-		 * associated to Restaurant 2<br/>
-		 * Persisted specialty = [id=3, code='CR', label='my label',
-		 * active=false] associated to Restaurant 3<br/>
-		 * Persisted specialty = [id=null, code=null, label='my label',
-		 * active=true] associated to Restaurant 4<br/>
-		 * Only restaurant 1 will match<br/>
-		 */
-		if (!CollectionUtils.isEmpty(exampleInstance.getSpecialties())) {
+        /**
+         * Matches row against collection elements<br/>
+         * If the row is associated with ANY of the provided collection's element it is included<br/>
+         * The match is based on and EXACT match of an element : all (except null one) provideded properties must match<br/>
+         * Example :<br/>
+         * Provided specialty = [id=null, code='CR', label='my label', active=true]<br/>
+         * Persisted specialty = [id=1, code='CR', label='my label', active=true] associated to Restaurant 1<br/>
+         * Persisted specialty = [id=2, code='CR', label='label', active=true] associated to Restaurant 2<br/>
+         * Persisted specialty = [id=3, code='CR', label='my label', active=false] associated to Restaurant 3<br/>
+         * Persisted specialty = [id=null, code=null, label='my label', active=true] associated to Restaurant 4<br/>
+         * Only restaurant 1 will match<br/>
+         */
+        if (!CollectionUtils.isEmpty(exampleInstance.getSpecialties())) {
 
-			restaurantCriteria.createAlias("specialties", "sp", CriteriaSpecification.INNER_JOIN);
+            restaurantCriteria.createAlias("specialties", "sp", CriteriaSpecification.INNER_JOIN);
 
-			for ( final FoodSpecialty specialty : exampleInstance.getSpecialties() ) {
+            for (final FoodSpecialty specialty : exampleInstance.getSpecialties()) {
 
-				if (specialty == null) continue;
+                if (specialty == null) {
+                    continue;
+                }
 
-				final String code = specialty.getCode();
+                final String code = specialty.getCode();
 
-				if (StringUtils.isNotEmpty(code)) restaurantCriteria.add(Restrictions.eq("sp.code", code));
+                if (StringUtils.isNotEmpty(code)) {
+                    restaurantCriteria.add(Restrictions.eq("sp.code", code).ignoreCase());
+                }
 
-				final String label = specialty.getLabel();
+                final String label = specialty.getLabel();
 
-				if (StringUtils.isNotEmpty(label)) restaurantCriteria.add(Restrictions.eq("sp.label", label));
+                if (StringUtils.isNotEmpty(label)) {
+                    restaurantCriteria.add(Restrictions.eq("sp.label", label).ignoreCase());
+                }
 
-				final Long id = specialty.getId();
+                final Long id = specialty.getId();
 
-				if (id != null && id > 0) restaurantCriteria.add(Restrictions.eq("sp.id", id));
+                if (id != null && id > 0) {
+                    restaurantCriteria.add(Restrictions.eq("sp.id", id));
+                }
 
-				final boolean active = specialty.isActive();
+                final boolean active = specialty.isActive();
 
-				restaurantCriteria.add(Restrictions.eq("sp.active", active));
+                restaurantCriteria.add(Restrictions.eq("sp.active", active));
 
-			}
+            }
 
-		}
+        }
 
-		restaurantCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        restaurantCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-		return restaurantCriteria.list();
+        return restaurantCriteria.list();
 
-	}
+    }
 }
