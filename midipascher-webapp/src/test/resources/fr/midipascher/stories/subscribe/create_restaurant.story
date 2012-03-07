@@ -19,7 +19,7 @@ Scenario: create restaurant with wrong owner should fail
 Given I accept "en" language
 And I accept "application/json" format
 When I send a "create restaurant" request with wrong account
-Then the response code should be "400"
+Then the response code should be "404"
 And the message should be "<message>"
 Examples:
 |message|

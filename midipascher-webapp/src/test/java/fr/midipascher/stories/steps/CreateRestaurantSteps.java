@@ -69,14 +69,7 @@ public class CreateRestaurantSteps {
 		String format = "application/json";
 		String language = "fr";
 		String requestContentType = "application/xml";
-		ClientResponse myResponse = jerseyClient.resource(this.baseEndPoint + "/foodspecialty/1")
-				.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
-				.header("Content-Type", requestContentType).get(ClientResponse.class);
-		Assert.assertNotNull(myResponse);
-		FoodSpecialty entity = myResponse.getEntity(FoodSpecialty.class);
-		Assert.assertNotNull(entity);
-
-		webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
+		this.response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
 				.header("Content-Type", requestContentType).post(ClientResponse.class, restaurant);
 	}
 
@@ -92,7 +85,17 @@ public class CreateRestaurantSteps {
 
 	@Then("I should be able to read the new resource")
 	public void readTheNewResource() {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		// jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid,
+		// this.password));
+		final WebResource webResource = jerseyClient.resource(this.response.getLocation());
+		ClientResponse response = webResource.accept(MediaType.valueOf("application/json"))
+				.acceptLanguage(new String[] { "fr" }).get(ClientResponse.class);
+		Assert.assertEquals(200, response.getStatus());
 	}
 
 	@Given("I accept \"$preferredLanguage\" language")
@@ -112,7 +115,24 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong account")
 	public void sendAcreateRestaurantRequestWithWrongAccount() {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.baseEndPoint + "/account/-1/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong name \"<wrong_name>\"")

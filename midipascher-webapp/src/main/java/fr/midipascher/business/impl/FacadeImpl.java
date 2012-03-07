@@ -454,7 +454,12 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Restaurant readRestaurant(final Long restaurantId, final boolean initializeCollections) {
+	public Restaurant readRestaurant(final Long accountId, final Long restaurantId, final boolean initializeCollections) {
+
+		final Account account = readAccount(accountId);
+
+		if (account == null || account.isLocked()) throw new BusinessException("valid.account.required", null,
+				"No account with id '" + accountId + "' was found or account was locked");
 
 		final Restaurant restaurant = readRestaurant(restaurantId);
 

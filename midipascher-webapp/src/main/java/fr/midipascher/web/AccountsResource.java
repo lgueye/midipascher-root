@@ -68,6 +68,20 @@ public class AccountsResource {
 
 	}
 
+	@GET
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
+	public Response getRestaurant(@PathParam(value = "accountId") final Long accountId,
+			@PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
+
+		final Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
+
+		if (restaurant == null) return Response.status(Response.Status.NOT_FOUND).build();
+
+		return Response.ok(restaurant).build();
+
+	}
+
 	@DELETE
 	@Path("/account/{id}")
 	public Response delete(@PathParam(value = "id") final Long id) throws Throwable {

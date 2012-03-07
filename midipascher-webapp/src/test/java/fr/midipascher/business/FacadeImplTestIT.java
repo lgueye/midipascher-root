@@ -213,7 +213,7 @@ public class FacadeImplTestIT {
 		restaurant.getSpecialties().add(foodSpecialty);
 		Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
 		assertNotNull(restaurantId);
-		restaurant = this.facade.readRestaurant(restaurantId, true);
+		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 		assertNotNull(restaurant);
 		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
 		account = this.facade.readAccount(accountId, true);
@@ -290,9 +290,11 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long restaurantId = createRestaurant();
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
+		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
-		Restaurant restaurant = this.facade.readRestaurant(restaurantId);
+		Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		String city = "new city";
 		String countryCode = "fr";
@@ -339,12 +341,10 @@ public class FacadeImplTestIT {
 	 * @return
 	 * @throws Throwable
 	 */
-	private Long createRestaurant() throws Throwable {
+	private Long createRestaurant(Long accountId) throws Throwable {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		Account account = TestUtils.validUser();
-		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		restaurant.addSpecialty(foodSpecialty);
@@ -364,9 +364,11 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long restaurantId = createRestaurant();
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
+		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
-		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
+		Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 		assertEquals(1, restaurant.countSpecialties());
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
@@ -375,7 +377,7 @@ public class FacadeImplTestIT {
 
 		// When
 		this.facade.updateRestaurant(restaurant);
-		restaurant = this.facade.readRestaurant(restaurantId, true);
+		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		// Then
 		assertEquals(2, restaurant.countSpecialties());
@@ -386,22 +388,25 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long restaurantId = createRestaurant();
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
+		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
-		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
+		Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
+
 		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
 		restaurant.addSpecialty(foodSpecialty);
 		this.facade.updateRestaurant(restaurant);
-		restaurant = this.facade.readRestaurant(restaurantId, true);
+		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
 		restaurant.getSpecialties().remove(foodSpecialty);
 
 		// When
 		this.facade.updateRestaurant(restaurant);
-		restaurant = this.facade.readRestaurant(restaurantId, true);
+		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		// Then
 		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
@@ -412,9 +417,12 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long restaurantId = createRestaurant();
+		Account account = TestUtils.validUser();
+		Long accountId = this.facade.createAccount(account);
+		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
-		Restaurant restaurant = this.facade.readRestaurant(restaurantId, true);
+		Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
+
 		assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
@@ -423,7 +431,7 @@ public class FacadeImplTestIT {
 
 		// When
 		this.facade.updateRestaurant(restaurant);
-		restaurant = this.facade.readRestaurant(restaurantId, true);
+		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
 		String newLabel = "new Label";
@@ -433,7 +441,7 @@ public class FacadeImplTestIT {
 
 		// When
 		this.facade.updateRestaurant(restaurant);
-		restaurant = this.facade.readRestaurant(restaurantId, true);
+		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		for ( FoodSpecialty specialty : restaurant.getSpecialties() )
 			if (specialty.equals(foodSpecialty)) assertEquals(label, specialty.getLabel());

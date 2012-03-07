@@ -125,11 +125,12 @@ public interface Facade {
 	Long createRestaurant(Long accountId, Restaurant restaurant);
 
 	/**
+	 * @param accountId
 	 * @param restaurantId
 	 * @param initializeCollections
 	 * @return
 	 */
-	Restaurant readRestaurant(Long restaurantId, boolean initializeCollections);
+	Restaurant readRestaurant(Long accountId, Long restaurantId, boolean initializeCollections);
 
 	/**
 	 * @param foodSpecialtyId
