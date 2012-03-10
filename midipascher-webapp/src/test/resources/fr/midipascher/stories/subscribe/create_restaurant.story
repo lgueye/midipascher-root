@@ -46,7 +46,6 @@ Then the response code should be "400"
 And the message should be "<message>"
 Examples:
 |wrong_description|message|
-||Description is required|
 |dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd1|Description max length is 200|
 
 Scenario: create restaurant with wrong phone number should fail
@@ -70,7 +69,6 @@ Then the response code should be "400"
 And the message should be "<message>"
 Examples:
 |wrong_main_offer|message|
-||Main offer is required|
 |dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd1|Main offer max length is 200|
 
 Scenario: create restaurant with wrong specialties should fail
@@ -97,7 +95,7 @@ And the message should be "<message>"
 Examples:
 |wrong_city|message|
 ||City is required|
-|sssssssssssssssssssssssssssssssssssssssssssssssss1|city max length is 50|
+|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1|City max length is 50|
 
 Scenario: create restaurant with wrong postal code should fail
 Given I provide  "louis" uid and "secret" password
@@ -120,5 +118,5 @@ Then the response code should be "400"
 And the message should be "<message>"
 Examples:
 |wrong_country_code|message|
-||Country code is required|
-|FRA|Country code max length is 2|
+||Country code exact length is 2|
+|FRA|Country code exact length is 2|

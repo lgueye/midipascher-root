@@ -137,43 +137,187 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong name \"<wrong_name>\"")
 	public void sendAcreateRestaurantRequestWithWrongName(@Named("wrong_name") String wrongName) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setName(wrongName);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong description \"<wrong_description>\"")
 	public void sendAcreateRestaurantRequestWithWrongDescription(@Named("wrong_description") String wrongDescription) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setDescription(wrongDescription);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong phone number \"<wrong_phone_number>\"")
 	public void sendAcreateRestaurantRequestWithWrongPhoneNumber(@Named("wrong_phone_number") String wrongPhoneNumber) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setPhoneNumber(wrongPhoneNumber);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong main offer \"<wrong_main_offer>\"")
 	public void sendAcreateRestaurantRequestWithWrongMainOffer(@Named("wrong_main_offer") String wrongMainOffer) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.setMainOffer(wrongMainOffer);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong street address \"<wrong_street_address>\"")
 	public void sendAcreateRestaurantRequestWithWrongStreetAddress(
 			@Named("wrong_street_address") String wrongStreetAddress) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getAddress().setStreetAddress(wrongStreetAddress);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong city \"<wrong_city>\"")
 	public void sendAcreateRestaurantRequestWithWrongCity(@Named("wrong_city") String wrongCity) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getAddress().setCity(wrongCity);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong postal code \"<wrong_postal_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongPostalCode(@Named("wrong_postal_code") String wrongPostalCode) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getAddress().setPostalCode(wrongPostalCode);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong country code \"<wrong_country_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongCountryCode(@Named("wrong_country_code") String wrongCountryCode) {
-		// PENDING
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.addFilter(new LoggingFilter());
+		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
+		final String path = this.accountURI + "/restaurants";
+		final URI uri = URI.create(path);
+		final WebResource webResource = jerseyClient.resource(uri);
+		Restaurant restaurant = TestUtils.validRestaurant();
+		restaurant.getAddress().setCountryCode(wrongCountryCode);
+		restaurant.clearSpecialties();
+		FoodSpecialty foodSpecialty = new FoodSpecialty();
+		foodSpecialty.setId(1L);
+		restaurant.addSpecialty(foodSpecialty);
+		String requestContentType = "application/xml";
+		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
+				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
+				.post(ClientResponse.class, restaurant);
 	}
 
 }

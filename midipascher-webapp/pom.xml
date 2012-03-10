@@ -218,9 +218,11 @@
 									<goal>java</goal>
 								</goals>
 								<configuration>
+									<includePluginDependencies>true</includePluginDependencies>
 									<mainClass>org.h2.tools.Server</mainClass>
 									<arguments>
-										<argument>-tcpShutdownForce</argument>
+										<argument>-tcpShutdown</argument>
+										<argument>tcp://localhost:9092</argument>
 									</arguments>
 								</configuration>
 							</execution>

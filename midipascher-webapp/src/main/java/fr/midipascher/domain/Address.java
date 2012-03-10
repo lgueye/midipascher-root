@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -54,7 +55,7 @@ public class Address extends AbstractObject implements Serializable {
 	private String				postalCode;
 
 	@Column(name = Address.COLUMN_NAME_COUNTRY_CODE)
-	@NotEmpty(message = "{address.countryCode.required}", groups = { Create.class, Update.class })
+	@NotNull(message = "{address.countryCode.required}", groups = { Create.class, Update.class })
 	@Size(min = Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, max = Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, message = "{address.countryCode.exact.size}", groups = {
 			Create.class, Update.class })
 	private String				countryCode;

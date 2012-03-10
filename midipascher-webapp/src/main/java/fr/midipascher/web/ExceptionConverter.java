@@ -63,7 +63,7 @@ public class ExceptionConverter {
 	 */
 	public int resolveHttpStatus(final Throwable th) {
 		if (th == null) return HttpServletResponse.SC_OK;
-		th.printStackTrace();
+		// th.printStackTrace();
 
 		if (th instanceof AuthenticationException) return HttpServletResponse.SC_UNAUTHORIZED;
 
