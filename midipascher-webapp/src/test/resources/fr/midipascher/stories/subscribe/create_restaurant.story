@@ -2,7 +2,7 @@ Create restaurant stories
 
 Meta:
 @refs 6
-@progress wip
+@progress done
 
 Narrative:
 Given I provide a create restaurant request

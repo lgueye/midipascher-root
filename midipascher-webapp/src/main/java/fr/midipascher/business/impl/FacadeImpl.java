@@ -287,23 +287,6 @@ public class FacadeImpl implements Facade {
 	// }
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#createRestaurant(fr.midipascher.domain.Restaurant)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public Long createRestaurant(final Restaurant restaurant) {
-
-		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
-
-		this.baseDao.refresh(restaurant.getSpecialties());
-		this.baseDao.persist(restaurant);
-
-		return restaurant.getId();
-
-	}
-
-	/**
 	 * @see fr.midipascher.domain.business.Facade#deleteAccount(java.lang.Long)
 	 */
 	@Override
@@ -386,11 +369,7 @@ public class FacadeImpl implements Facade {
 
 	}
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readAccount(java.lang.Long)
-	 */
-	@Override
-	public Account readAccount(final Long id) {
+	protected Account readAccount(final Long id) {
 
 		Preconditions.checkArgument(id != null, "Illegal call to readUser, id is required");
 
@@ -435,17 +414,10 @@ public class FacadeImpl implements Facade {
 
 	}
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long)
-	 */
-	@Override
-	public Restaurant readRestaurant(final Long restaurantId) {
-
+	protected Restaurant readRestaurant(final Long restaurantId) {
 		Preconditions.checkArgument(restaurantId != null,
 				"Illegal call to readRestaurant, restaurant identifier is required");
-
 		return this.baseDao.get(Restaurant.class, restaurantId);
-
 	}
 
 	/**

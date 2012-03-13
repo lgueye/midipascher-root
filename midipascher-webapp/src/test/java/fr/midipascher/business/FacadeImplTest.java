@@ -281,9 +281,13 @@ public class FacadeImplTest {
 
 		// Given
 		final Long restaurantId = 5L;
+		final Long accountId = 5L;
+		Account account;
 
 		// When
-		this.underTest.readRestaurant(restaurantId);
+		account = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		this.underTest.readRestaurant(accountId, restaurantId, false);
 
 		// Then
 		Mockito.verify(this.baseDao).get(Restaurant.class, restaurantId);
@@ -295,9 +299,15 @@ public class FacadeImplTest {
 
 		// Given
 		final Long restaurantId = null;
+		final Long accountId = 5L;
+		Account account;
 
 		// When
-		this.underTest.readRestaurant(restaurantId);
+		account = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.readRestaurant(accountId, restaurantId, false);
 
 	}
 
@@ -586,7 +596,7 @@ public class FacadeImplTest {
 		Long id = null;
 
 		// When
-		this.underTest.readAccount(id);
+		this.underTest.readAccount(id, false);
 	}
 
 	public void readUserShouldInvokeBaseDao() {
@@ -595,7 +605,7 @@ public class FacadeImplTest {
 		Account expectedUser = Mockito.mock(Account.class);
 		// When
 		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(expectedUser);
-		Account actualUser = this.underTest.readAccount(id);
+		Account actualUser = this.underTest.readAccount(id, false);
 
 		Mockito.verify(this.baseDao).get(Account.class, id);
 		Assert.assertSame(expectedUser, actualUser);

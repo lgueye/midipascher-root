@@ -30,11 +30,18 @@ public interface Facade {
 	Long createFoodSpecialty(FoodSpecialty foodSpecialty);
 
 	/**
+	 * @param accountId
+	 * @param restaurant
+	 * @return
+	 */
+	Long createRestaurant(final Long accountId, final Restaurant restaurant);
+
+	/**
 	 * @param restaurant
 	 * @return
 	 * @throws ConstraintViolationException
+	 *             Long createRestaurant(Restaurant restaurant);
 	 */
-	Long createRestaurant(Restaurant restaurant);
 
 	/**
 	 * @param foodSpecialtyId
@@ -69,9 +76,8 @@ public interface Facade {
 
 	/**
 	 * @param restaurantId
-	 * @return
+	 * @return Restaurant readRestaurant(Long restaurantId);
 	 */
-	Restaurant readRestaurant(Long restaurantId);
 
 	/**
 	 * @param foodSpecialty
@@ -95,9 +101,8 @@ public interface Facade {
 
 	/**
 	 * @param id
-	 * @return
+	 * @return Account readAccount(Long id);
 	 */
-	Account readAccount(Long id);
 
 	/**
 	 * @param account
@@ -116,13 +121,6 @@ public interface Facade {
 	 * @param account
 	 */
 	void updateAccount(Account account);
-
-	/**
-	 * @param accountId
-	 * @param restaurant
-	 * @return
-	 */
-	Long createRestaurant(Long accountId, Restaurant restaurant);
 
 	/**
 	 * @param accountId

@@ -43,6 +43,13 @@ public class CreateRestaurantSteps {
 	private String			preferredFormat;
 	private final String	baseEndPoint	= ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
 	private String			accountURI;
+	private static Client	jerseyClient;
+	static {
+		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+		jerseyClient = ApacheHttpClient4.create(config);
+	}
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -52,10 +59,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a valid \"create restaurant\" request")
 	public void sendAValidcreateRestaurantRequest() {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -85,13 +89,6 @@ public class CreateRestaurantSteps {
 
 	@Then("I should be able to read the new resource")
 	public void readTheNewResource() {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
-		jerseyClient.addFilter(new LoggingFilter());
-		// jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid,
-		// this.password));
 		final WebResource webResource = jerseyClient.resource(this.response.getLocation());
 		ClientResponse response = webResource.accept(MediaType.valueOf("application/json"))
 				.acceptLanguage(new String[] { "fr" }).get(ClientResponse.class);
@@ -115,10 +112,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong account")
 	public void sendAcreateRestaurantRequestWithWrongAccount() {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.baseEndPoint + "/account/-1/restaurants";
@@ -137,10 +131,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong name \"<wrong_name>\"")
 	public void sendAcreateRestaurantRequestWithWrongName(@Named("wrong_name") String wrongName) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -160,10 +151,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong description \"<wrong_description>\"")
 	public void sendAcreateRestaurantRequestWithWrongDescription(@Named("wrong_description") String wrongDescription) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -183,10 +171,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong phone number \"<wrong_phone_number>\"")
 	public void sendAcreateRestaurantRequestWithWrongPhoneNumber(@Named("wrong_phone_number") String wrongPhoneNumber) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -206,10 +191,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong main offer \"<wrong_main_offer>\"")
 	public void sendAcreateRestaurantRequestWithWrongMainOffer(@Named("wrong_main_offer") String wrongMainOffer) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -230,10 +212,7 @@ public class CreateRestaurantSteps {
 	@When("I send a \"create restaurant\" request with wrong street address \"<wrong_street_address>\"")
 	public void sendAcreateRestaurantRequestWithWrongStreetAddress(
 			@Named("wrong_street_address") String wrongStreetAddress) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -253,10 +232,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong city \"<wrong_city>\"")
 	public void sendAcreateRestaurantRequestWithWrongCity(@Named("wrong_city") String wrongCity) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -276,10 +252,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong postal code \"<wrong_postal_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongPostalCode(@Named("wrong_postal_code") String wrongPostalCode) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
@@ -299,10 +272,7 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong country code \"<wrong_country_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongCountryCode(@Named("wrong_country_code") String wrongCountryCode) {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		final Client jerseyClient = ApacheHttpClient4.create(config);
+		jerseyClient.removeAllFilters();
 		jerseyClient.addFilter(new LoggingFilter());
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
 		final String path = this.accountURI + "/restaurants";
