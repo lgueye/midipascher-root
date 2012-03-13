@@ -206,37 +206,43 @@ public class FacadeImpl implements Facade {
 
 	}
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#createRestaurant(java.lang.Long,
-	 *      fr.midipascher.domain.Restaurant)
-	 */
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public Long createRestaurant(final Long accountId, final Restaurant restaurant) {
-
-		Preconditions.checkArgument(accountId != null, "Illegal call to createRestaurant, accountId is required");
-
-		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
-
-		Preconditions.checkArgument(restaurant.getId() == null,
-				"Illegal call to createRestaurant, restaurant.id should be null");
-
-		final Account account = this.baseDao.get(Account.class, accountId);
-
-		if (account == null) {
-			LOGGER.error("Illegal call to createRestaurant, Account with id {} was not found", accountId);
-			throw new BusinessException("account.not.found", null, "Illegal call to createRestaurant, Account with id "
-					+ accountId + " was not found");
-		}
-
-		this.baseDao.persist(restaurant);
-
-		account.addRestaurant(restaurant);
-
-		return restaurant.getId();
-
-	}
+	// /**
+	// * @see
+	// fr.midipascher.domain.business.Facade#createRestaurant(java.lang.Long,
+	// * fr.midipascher.domain.Restaurant)
+	// */
+	// @Override
+	// @Transactional(propagation = Propagation.REQUIRED)
+	// @RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	// public Long createRestaurant(final Long accountId, final Restaurant
+	// restaurant) {
+	//
+	// Preconditions.checkArgument(accountId != null,
+	// "Illegal call to createRestaurant, accountId is required");
+	//
+	// Preconditions.checkArgument(restaurant != null,
+	// "Illegal call to createRestaurant, restaurant is required");
+	//
+	// Preconditions.checkArgument(restaurant.getId() == null,
+	// "Illegal call to createRestaurant, restaurant.id should be null");
+	//
+	// final Account account = this.baseDao.get(Account.class, accountId);
+	//
+	// if (account == null) {
+	// LOGGER.error("Illegal call to createRestaurant, Account with id {} was not found",
+	// accountId);
+	// throw new BusinessException("account.not.found", null,
+	// "Illegal call to createRestaurant, Account with id "
+	// + accountId + " was not found");
+	// }
+	//
+	// this.baseDao.persist(restaurant);
+	//
+	// account.addRestaurant(restaurant);
+	//
+	// return restaurant.getId();
+	//
+	// }
 
 	// public void attachPersistentFoodSpecialties(final Restaurant
 	// detachedRestaurant) {
