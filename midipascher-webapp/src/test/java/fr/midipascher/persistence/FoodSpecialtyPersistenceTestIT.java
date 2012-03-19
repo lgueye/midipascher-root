@@ -32,7 +32,7 @@ public class FoodSpecialtyPersistenceTestIT extends BasePersistenceTestIT {
 		if (CollectionUtils.isEmpty(result) && ids == null) return;
 
 		final Set<Long> foodSpecialtyIds = new HashSet<Long>();
-		for (final FoodSpecialty foodSpecialty : result)
+		for ( final FoodSpecialty foodSpecialty : result )
 			foodSpecialtyIds.add(foodSpecialty.getId());
 
 		Assert.assertTrue(foodSpecialtyIds.containsAll(ids));

@@ -118,7 +118,7 @@ public class AuthorizationSteps {
 
 		this.resources.clear();
 
-		for (int i = 0; i < 2; i++) {
+		for ( int i = 0; i < 2; i++ ) {
 
 			final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 			final String path = "/foodspecialty";
@@ -140,7 +140,7 @@ public class AuthorizationSteps {
 
 	@AfterStory
 	public void tearDown() {
-		for (final String resource : this.resources) {
+		for ( final String resource : this.resources ) {
 			final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
 			final Client jerseyClient = ApacheHttpClient4.create(config);
 			final WebResource webResource = jerseyClient.resource(resource);

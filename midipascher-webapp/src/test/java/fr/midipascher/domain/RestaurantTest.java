@@ -16,73 +16,73 @@ import org.junit.Test;
  */
 public class RestaurantTest {
 
-    private Restaurant underTest;
+	private Restaurant	underTest;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void addSpecialtyWillThrowIllegalArgumentExceptionWithNullInput() {
-        // Given
-        final FoodSpecialty specialty = null;
+	@Test(expected = IllegalArgumentException.class)
+	public void addSpecialtyWillThrowIllegalArgumentExceptionWithNullInput() {
+		// Given
+		final FoodSpecialty specialty = null;
 
-        // When
-        underTest.addSpecialty(specialty);
-    }
+		// When
+		underTest.addSpecialty(specialty);
+	}
 
-    @Test
-    public void addSpecialtyWontFailWithNullSet() {
-        // Given
-        final FoodSpecialty specialty = new FoodSpecialty();
+	@Test
+	public void addSpecialtyWontFailWithNullSet() {
+		// Given
+		final FoodSpecialty specialty = new FoodSpecialty();
 
-        final int countSpecialties = underTest.countSpecialties();
-        // When
-        underTest.addSpecialty(specialty);
+		final int countSpecialties = underTest.countSpecialties();
+		// When
+		underTest.addSpecialty(specialty);
 
-        Assert.assertEquals(countSpecialties + 1, underTest.countSpecialties());
+		Assert.assertEquals(countSpecialties + 1, underTest.countSpecialties());
 
-    }
+	}
 
-    @Test
-    public void clearSpecialtiesWillIgnoreIfNullSpecialties() {
-        underTest.setSpecialties(null);
-        underTest.clearSpecialties();
-        Assert.assertNull(underTest.getSpecialties());
-    }
+	@Test
+	public void clearSpecialtiesWillIgnoreIfNullSpecialties() {
+		underTest.setSpecialties(null);
+		underTest.clearSpecialties();
+		Assert.assertNull(underTest.getSpecialties());
+	}
 
-    @Test
-    public void clearSpecialtiesWillSucceed() {
-        final Set<FoodSpecialty> specialties = new HashSet<FoodSpecialty>();
-        specialties.add(new FoodSpecialty());
-        underTest.setSpecialties(specialties);
-        underTest.clearSpecialties();
-        Assert.assertNotNull(underTest.getSpecialties());
-        Assert.assertTrue(CollectionUtils.sizeIsEmpty(underTest.getSpecialties()));
-    }
+	@Test
+	public void clearSpecialtiesWillSucceed() {
+		final Set<FoodSpecialty> specialties = new HashSet<FoodSpecialty>();
+		specialties.add(new FoodSpecialty());
+		underTest.setSpecialties(specialties);
+		underTest.clearSpecialties();
+		Assert.assertNotNull(underTest.getSpecialties());
+		Assert.assertTrue(CollectionUtils.sizeIsEmpty(underTest.getSpecialties()));
+	}
 
-    @Test
-    public void countSpecialtiesShouldReturnSetSize() {
-        final Set<FoodSpecialty> authorities = new HashSet<FoodSpecialty>();
-        underTest.setSpecialties(authorities);
-        Assert.assertEquals(0, underTest.countSpecialties());
-        underTest.addSpecialty(new FoodSpecialty());
-        Assert.assertEquals(1, underTest.countSpecialties());
-    }
+	@Test
+	public void countSpecialtiesShouldReturnSetSize() {
+		final Set<FoodSpecialty> authorities = new HashSet<FoodSpecialty>();
+		underTest.setSpecialties(authorities);
+		Assert.assertEquals(0, underTest.countSpecialties());
+		underTest.addSpecialty(new FoodSpecialty());
+		Assert.assertEquals(1, underTest.countSpecialties());
+	}
 
-    @Test
-    public void countSpecialtiesShouldReturnZeroWithEmptySet() {
-        underTest.setSpecialties(new HashSet<FoodSpecialty>());
-        Assert.assertEquals(0, underTest.countSpecialties());
-    }
+	@Test
+	public void countSpecialtiesShouldReturnZeroWithEmptySet() {
+		underTest.setSpecialties(new HashSet<FoodSpecialty>());
+		Assert.assertEquals(0, underTest.countSpecialties());
+	}
 
-    @Test
-    public void countSpecialtiesShouldReturnZeroWithNullSet() {
-        Assert.assertEquals(0, underTest.countSpecialties());
-    }
+	@Test
+	public void countSpecialtiesShouldReturnZeroWithNullSet() {
+		Assert.assertEquals(0, underTest.countSpecialties());
+	}
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        underTest = new Restaurant();
-    }
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		underTest = new Restaurant();
+	}
 
 }

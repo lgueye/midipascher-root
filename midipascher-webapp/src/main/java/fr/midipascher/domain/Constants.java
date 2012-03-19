@@ -12,6 +12,7 @@ import java.util.Locale;
  */
 public class Constants {
 	public static final String			MESSAGES_BUNDLE_NAME	= "messages";
-	public static final List<String>	SUPPORTED_LOCALES		= Arrays.asList("fr", "en");
 	public static final Locale			DEFAULT_LOCALE			= Locale.ENGLISH;
+	public static final List<String>	SUPPORTED_LOCALES		= Arrays.asList(Locale.FRENCH.getLanguage(),
+																		DEFAULT_LOCALE.getLanguage());
 }

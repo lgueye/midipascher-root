@@ -17,7 +17,6 @@ import org.jbehave.core.steps.InstanceStepsFactory;
 
 import fr.midipascher.stories.steps.ContentNegotiationSteps;
 
-
 /**
  * @author louis.gueye@gmail.com
  */

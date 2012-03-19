@@ -3,7 +3,6 @@
  */
 package fr.midipascher.domain.exceptions;
 
-
 /**
  * @author louis.gueye@gmail.com
  */

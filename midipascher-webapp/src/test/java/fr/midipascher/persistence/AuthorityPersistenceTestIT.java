@@ -32,7 +32,7 @@ public class AuthorityPersistenceTestIT extends BasePersistenceTestIT {
 		if (CollectionUtils.isEmpty(result) && ids == null) return;
 
 		final Set<Long> authorityIds = new HashSet<Long>();
-		for (final Authority authority : result)
+		for ( final Authority authority : result )
 			authorityIds.add(authority.getId());
 
 		Assert.assertTrue(authorityIds.containsAll(ids));

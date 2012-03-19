@@ -12,12 +12,12 @@ import fr.midipascher.domain.Restaurant;
  */
 public interface RestaurantDao {
 
-    String BEAN_ID = "restaurantDao";
+	String	BEAN_ID	= "restaurantDao";
 
-    /**
-     * @param exampleInstance
-     * @return
-     */
-    List<Restaurant> findByExample(final Restaurant exampleInstance);
+	/**
+	 * @param exampleInstance
+	 * @return
+	 */
+	List<Restaurant> findByExample(final Restaurant exampleInstance);
 
 }

@@ -4,7 +4,7 @@
 package fr.midipascher.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +40,10 @@ public class PlainTextBasicAuthenticationEntryPoint extends BasicAuthenticationE
 			final AuthenticationException authException) throws IOException, ServletException {
 		response.addHeader("WWW-Authenticate", "Basic realm=\"" + getRealmName() + "\"");
 		response.setStatus(this.exceptionConverter.resolveHttpStatus(authException));
-		final PrintWriter writer = response.getWriter();
+		response.setContentType("text/html");
+		OutputStream os = response.getOutputStream();
 		final String i18nMessage = this.exceptionConverter.resolveMesage(request, authException);
-		writer.println(i18nMessage);
+		os.write(i18nMessage.getBytes("UTF-8"));
 	}
 
 }
