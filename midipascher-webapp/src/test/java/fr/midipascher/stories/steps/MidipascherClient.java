@@ -48,6 +48,13 @@ public class MidipascherClient {
 
 	}
 
+	public static <T> ClientResponse createEntity(T body, String relativePath, String requestFormat,
+			String responseFormat, String responseLanguage) {
+		final URI uri = URI.create(baseEndPoint + relativePath);
+		return jerseyClient.resource(uri).type(requestFormat).accept(responseFormat).acceptLanguage(responseLanguage)
+				.post(ClientResponse.class, body);
+	}
+
 	public static void expectedCode(int expected, int actual) {
 		Assert.assertEquals(expected, actual);
 	}
