@@ -48,6 +48,12 @@ public class MidipascherClient {
 
 	}
 
+	public static ClientResponse readLocation(URI location, String responseFormat, String responseLanguage) {
+		return jerseyClient.resource(location).accept(responseFormat).acceptLanguage(responseLanguage)
+				.get(ClientResponse.class);
+
+	}
+
 	public static <T> ClientResponse createEntity(T body, String relativePath, String requestFormat,
 			String responseFormat, String responseLanguage) {
 		final URI uri = URI.create(baseEndPoint + relativePath);
@@ -61,5 +67,19 @@ public class MidipascherClient {
 
 	public static void expectedMessage(String expected, String actual) {
 		Assert.assertEquals(expected, actual);
+	}
+
+	/**
+	 * @param path
+	 * @param queryString
+	 * @param requestContentType
+	 * @param responseContentType
+	 * @return
+	 */
+	public static ClientResponse findEntityByCriteria(String relativePath, String queryString, String requestFormat,
+			String responseFormat, String responseLanguage) {
+		final URI uri = URI.create(baseEndPoint + relativePath);
+		return jerseyClient.resource(uri).type(requestFormat).accept(responseFormat).acceptLanguage(responseLanguage)
+				.post(ClientResponse.class, queryString);
 	}
 }

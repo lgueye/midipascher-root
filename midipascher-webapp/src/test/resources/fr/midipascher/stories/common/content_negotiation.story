@@ -10,9 +10,9 @@ As a client
 I want to specify a content type and get that content
 
 Scenario: response content negotiation should succeed
-Given I receive <responseContentType> data
+Given I receive "<responseContentType>" data
 When I send a search request
-Then I should get a successful response
+Then the response code should be "200"
 
 Examples:
 |responseContentType|
@@ -20,19 +20,18 @@ Examples:
 |application/json|
 
 Scenario: response content negotiation should fail
-Given I receive <responseContentType> data
+Given I receive "<responseContentType>" data
 When I send a search request
-Then I should get an unsuccessful response
-And the response code should be 406
+Then the response code should be "406"
 
 Examples:
 |responseContentType|
 |application/octet-stream|
 
 Scenario: request content negotiation should succeed
-Given I send <requestContentType> data
+Given I send "<requestContentType>" data
 When I send a create request
-Then I should get a successful response
+Then the response code should be "201"
 And I should get my newly created resource
 
 Examples:

@@ -3,7 +3,6 @@
  */
 package fr.midipascher.stories.steps;
 
-import org.jbehave.core.annotations.Aliases;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -19,9 +18,7 @@ public class AuthenticationSteps {
 	private String			responseLanguage;
 	private ClientResponse	response;
 
-	@Given("I authenticate with \"<uid>\" uid and \"$password\" password")
-	@Aliases(values = { "I authenticate with \"$uid\" uid and \"<password>\" password",
-			"I authenticate with \"$uid\" uid and \"$password\" password" })
+	@Given("I authenticate with \"<uid>\" uid and \"<password>\" password")
 	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
 		MidipascherClient.setCredentials(uid, password);
 	}

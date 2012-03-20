@@ -42,7 +42,7 @@ public class ResponseError extends AbstractObject {
 	 * @param message
 	 *            the message to set
 	 */
-	private void setMessage(String message) {
+	public void setMessage(String message) {
 		this.message = message;
 	}
 
@@ -57,7 +57,7 @@ public class ResponseError extends AbstractObject {
 	 * @param httpStatus
 	 *            the httpStatus to set
 	 */
-	private void setHttpStatus(int httpStatus) {
+	public void setHttpStatus(int httpStatus) {
 		this.httpStatus = httpStatus;
 	}
 
