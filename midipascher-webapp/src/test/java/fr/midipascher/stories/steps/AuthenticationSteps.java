@@ -8,7 +8,6 @@ import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
-import org.junit.Assert;
 
 import com.sun.jersey.api.client.ClientResponse;
 
@@ -17,7 +16,7 @@ import com.sun.jersey.api.client.ClientResponse;
  */
 public class AuthenticationSteps {
 
-	private String			responseLanguage	= "en";
+	private String			responseLanguage;
 	private ClientResponse	response;
 
 	@Given("I authenticate with <uid> uid and $password password")
@@ -40,13 +39,13 @@ public class AuthenticationSteps {
 
 	@Then("the response code should be $statusCode")
 	public void expectStatusCode(@Named("statusCode") final int statusCode) {
-		Assert.assertEquals(statusCode, this.response.getStatus());
+		MidipascherClient.expectedCode(statusCode, this.response.getStatus());
 	}
 
 	@Then("the response message should be <message>")
 	public void expectResponseMessage(@Named("message") final String responseMessage) {
 		String error = this.response.getEntity(String.class);
-		Assert.assertEquals(responseMessage, error.trim());
+		MidipascherClient.expectedMessage(responseMessage, error);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.net.URI;
 import java.util.ResourceBundle;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.junit.Assert;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -47,4 +48,11 @@ public class MidipascherClient {
 
 	}
 
+	public static void expectedCode(int expected, int actual) {
+		Assert.assertEquals(expected, actual);
+	}
+
+	public static void expectedMessage(String expected, String actual) {
+		Assert.assertEquals(expected, actual);
+	}
 }
