@@ -4,13 +4,16 @@
 package fr.midipascher.stories.steps;
 
 import java.net.URI;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.junit.Assert;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.client.filter.LoggingFilter;
@@ -81,5 +84,16 @@ public class MidipascherClient {
 		final URI uri = URI.create(baseEndPoint + relativePath);
 		return jerseyClient.resource(uri).type(requestFormat).accept(responseFormat).acceptLanguage(responseLanguage)
 				.post(ClientResponse.class, queryString);
+	}
+
+	/**
+	 * @param resources
+	 */
+	public static void deleteResources(List<String> resources) {
+		if (CollectionUtils.isEmpty(resources)) return;
+		for ( final String resource : resources ) {
+			final WebResource webResource = jerseyClient.resource(resource);
+			webResource.delete();
+		}
 	}
 }

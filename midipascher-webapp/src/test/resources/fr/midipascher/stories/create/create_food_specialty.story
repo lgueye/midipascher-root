@@ -2,7 +2,7 @@ Create food specialties stories
 
 Meta:
 @refs 4
-@progress done
+@progress wip
 
 Narrative:
 Given I provide a create food specialty request
@@ -27,21 +27,17 @@ Examples:
 |Accès refusé|
 
 Scenario: create food specialty with wrong code should fail
-Given existing food specialties:
-|code|label|active|
-|EXISTS|An existing food specialty|true|
-And I authenticate with "admin" uid and "secret" password
+Given I authenticate with "admin" uid and "secret" password
 And I accept "en" language
 And I accept "application/json" format
 When I send a "create food specialty" request with wrong code "<wrong_code>"
 Then the response code should be "400"
 And the message should be "<message>"
-Then delete existing food specialties
 Examples:
 |wrong_code|message|
 ||Code is required|
 |dlfjyyprpmz|Code max length is 10|
-|EXISTS|Code "EXISTS" already used|
+|SDW|Code "SDW" already used|
 
 Scenario: create food specialty with wrong label should fail
 Given I authenticate with "admin" uid and "secret" password
