@@ -3,28 +3,13 @@
  */
 package fr.midipascher.stories.steps;
 
-import java.net.URI;
-import java.util.ResourceBundle;
-
-import javax.ws.rs.core.MediaType;
-
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.jbehave.core.annotations.BeforeStory;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.junit.Assert;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.api.client.filter.LoggingFilter;
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.client.apache4.ApacheHttpClient4;
-import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
@@ -37,34 +22,18 @@ import fr.midipascher.test.TestUtils;
 public class CreateRestaurantSteps {
 
 	private ClientResponse	response;
-	private String			uid;
-	private String			password;
 	private String			preferredLanguage;
 	private String			preferredFormat;
-	private final String	baseEndPoint	= ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
-	private String			accountURI;
-	private static Client	jerseyClient;
-	static {
-		final DefaultClientConfig config = new DefaultApacheHttpClient4Config();
-		config.getClasses().add(JacksonJsonProvider.class);
-		config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-		jerseyClient = ApacheHttpClient4.create(config);
-	}
+	private final String	accountURI	= "/account/2";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
-		this.uid = uid;
-		this.password = password;
+		MidipascherClient.setCredentials(uid, password);
 	}
 
 	@When("I send a valid \"create restaurant\" request")
 	public void sendAValidcreateRestaurantRequest() {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
@@ -73,13 +42,7 @@ public class CreateRestaurantSteps {
 		String format = "application/json";
 		String language = "fr";
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(format)).acceptLanguage(new String[] { language })
-				.header("Content-Type", requestContentType).post(ClientResponse.class, restaurant);
-	}
-
-	@BeforeStory
-	public void setup() {
-		this.accountURI = TestUtils.createAccount();
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@Then("the response code should be \"$status\"")
@@ -89,10 +52,11 @@ public class CreateRestaurantSteps {
 
 	@Then("I should be able to read the new resource")
 	public void readTheNewResource() {
-		final WebResource webResource = jerseyClient.resource(this.response.getLocation());
-		ClientResponse response = webResource.accept(MediaType.valueOf("application/json"))
-				.acceptLanguage(new String[] { "fr" }).get(ClientResponse.class);
-		Assert.assertEquals(200, response.getStatus());
+		String responseFormat = "application/json";
+		String responseLanguage = "en";
+		this.response = MidipascherClient.readLocation(this.response.getLocation(), responseFormat, responseLanguage);
+		Assert.assertEquals(200, this.response.getStatus());
+		Assert.assertNotNull(this.response.getEntity(Restaurant.class));
 	}
 
 	@Given("I accept \"$preferredLanguage\" language")
@@ -112,182 +76,137 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong account")
 	public void sendAcreateRestaurantRequestWithWrongAccount() {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.baseEndPoint + "/account/-1/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = "/account/-1/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong name \"<wrong_name>\"")
 	public void sendAcreateRestaurantRequestWithWrongName(@Named("wrong_name") String wrongName) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setName(wrongName);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong description \"<wrong_description>\"")
 	public void sendAcreateRestaurantRequestWithWrongDescription(@Named("wrong_description") String wrongDescription) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setDescription(wrongDescription);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong phone number \"<wrong_phone_number>\"")
 	public void sendAcreateRestaurantRequestWithWrongPhoneNumber(@Named("wrong_phone_number") String wrongPhoneNumber) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setPhoneNumber(wrongPhoneNumber);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong main offer \"<wrong_main_offer>\"")
 	public void sendAcreateRestaurantRequestWithWrongMainOffer(@Named("wrong_main_offer") String wrongMainOffer) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setMainOffer(wrongMainOffer);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong street address \"<wrong_street_address>\"")
 	public void sendAcreateRestaurantRequestWithWrongStreetAddress(
 			@Named("wrong_street_address") String wrongStreetAddress) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setStreetAddress(wrongStreetAddress);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong city \"<wrong_city>\"")
 	public void sendAcreateRestaurantRequestWithWrongCity(@Named("wrong_city") String wrongCity) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setCity(wrongCity);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong postal code \"<wrong_postal_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongPostalCode(@Named("wrong_postal_code") String wrongPostalCode) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setPostalCode(wrongPostalCode);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong country code \"<wrong_country_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongCountryCode(@Named("wrong_country_code") String wrongCountryCode) {
-		jerseyClient.removeAllFilters();
-		jerseyClient.addFilter(new LoggingFilter());
-		jerseyClient.addFilter(new HTTPBasicAuthFilter(this.uid, this.password));
-		final String path = this.accountURI + "/restaurants";
-		final URI uri = URI.create(path);
-		final WebResource webResource = jerseyClient.resource(uri);
+		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setCountryCode(wrongCountryCode);
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
 		foodSpecialty.setId(1L);
 		restaurant.addSpecialty(foodSpecialty);
+		String format = this.preferredFormat;
+		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = webResource.accept(MediaType.valueOf(this.preferredFormat))
-				.acceptLanguage(new String[] { this.preferredLanguage }).header("Content-Type", requestContentType)
-				.post(ClientResponse.class, restaurant);
+		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
 	}
 
 }

@@ -12,7 +12,6 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.Account;
-import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
 
@@ -36,7 +35,7 @@ public class CreateAccountSteps {
 		String responseLanguage = "en";
 		this.response = MidipascherClient.readLocation(this.response.getLocation(), responseFormat, responseLanguage);
 		Assert.assertEquals(200, this.response.getStatus());
-		Assert.assertNotNull(this.response.getEntity(FoodSpecialty.class));
+		Assert.assertNotNull(this.response.getEntity(Account.class));
 	}
 
 	@Then("the response code should be \"$statusCode\"")
