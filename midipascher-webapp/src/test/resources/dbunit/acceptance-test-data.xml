@@ -9,4 +9,6 @@
 	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
 
 	<account account_id="1" first_name="first_name" last_name="last_name" email="exists@mail.com" password="password" locked="0"/>
+	<account account_id="2" first_name="first_name" last_name="last_name" email="louis@mail.com" password="secret" locked="0"/>
+	<accounts_authorities account_id="2" authority_id="2"/>
 </dataset>
