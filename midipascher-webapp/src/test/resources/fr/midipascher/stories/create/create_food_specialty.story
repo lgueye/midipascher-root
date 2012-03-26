@@ -2,7 +2,7 @@ Create food specialties stories
 
 Meta:
 @refs 4
-@progress wip
+@progress done
 
 Narrative:
 Given I provide a create food specialty request

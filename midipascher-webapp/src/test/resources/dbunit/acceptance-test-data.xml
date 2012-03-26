@@ -8,4 +8,5 @@
 	<food_specialty food_specialty_id="4" code="CHN" label="Chinois" active="1"/>
 	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
 
+	<account account_id="1" first_name="first_name" last_name="last_name" email="exists@mail.com" password="password" locked="0"/>
 </dataset>
