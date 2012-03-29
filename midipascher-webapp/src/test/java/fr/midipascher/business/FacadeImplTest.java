@@ -236,27 +236,18 @@ public class FacadeImplTest {
 	}
 
 	@Test
-	public void getFoodSpecialtyShouldInvokePersistence() {
+	public void readFoodSpecialtyShouldInvokePersistence() {
 
 		// Given
 		final Long foodSpecialtyId = 5L;
+		FoodSpecialty foodSpecialty = Mockito.mock(FoodSpecialty.class);
+		Mockito.when(this.baseDao.get(FoodSpecialty.class, foodSpecialtyId)).thenReturn(foodSpecialty);
 
 		// When
 		this.underTest.readFoodSpecialty(foodSpecialtyId);
 
 		// Then
 		Mockito.verify(this.baseDao).get(FoodSpecialty.class, foodSpecialtyId);
-
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void getFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
-
-		// Given
-		final Long foodSpecialtyId = null;
-
-		// When
-		this.underTest.readFoodSpecialty(foodSpecialtyId);
 
 	}
 
@@ -1201,6 +1192,28 @@ public class FacadeImplTest {
 				Matchers.eq(LocaleContextHolder.getLocale()));
 		Mockito.verifyZeroInteractions(this.validator);
 		Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void readFoodSpecialtyShouldThrowBusinessExceptionWhithNullId() {
+		this.underTest.readFoodSpecialty(null);
+	}
+
+	@Test(expected = BusinessException.class)
+	public void readFoodSpecialtyShouldThrowBusinessExceptionWhenNotFound() {
+
+		// Given
+		final Long foodSpecialtyId = 5L;
+		FoodSpecialty foodSpecialty = null;
+		Mockito.when(this.baseDao.get(FoodSpecialty.class, foodSpecialtyId)).thenReturn(foodSpecialty);
+
+		// When
+		this.underTest.readFoodSpecialty(foodSpecialtyId);
+
+		// Then
+		Mockito.verify(this.baseDao).get(FoodSpecialty.class, foodSpecialtyId);
+		Mockito.verifyNoMoreInteractions(this.baseDao);
 
 	}
 }

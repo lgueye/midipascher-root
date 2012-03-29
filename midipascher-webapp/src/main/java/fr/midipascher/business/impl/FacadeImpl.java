@@ -407,10 +407,21 @@ public class FacadeImpl implements Facade {
 	@Override
 	public FoodSpecialty readFoodSpecialty(final Long foodSpecialtyId) {
 
-		Preconditions.checkArgument(foodSpecialtyId != null,
-				"Illegal call to readFoodSpecialty, foodSpecialtyId is required");
+		if (foodSpecialtyId == null) {
+			String message = "FoodSpecialty id was null";
+			LOGGER.error(message);
+			throw new BusinessException("foodSpecialty.not.found", new Object[] { foodSpecialtyId }, message);
+		}
 
-		return this.baseDao.get(FoodSpecialty.class, foodSpecialtyId);
+		FoodSpecialty foodSpecialty = this.baseDao.get(FoodSpecialty.class, foodSpecialtyId);
+
+		if (foodSpecialty == null) {
+			String message = "FoodSpecialty id was not found";
+			LOGGER.error(message);
+			throw new BusinessException("foodSpecialty.not.found", new Object[] { foodSpecialtyId }, message);
+		}
+
+		return foodSpecialty;
 
 	}
 
@@ -477,14 +488,9 @@ public class FacadeImpl implements Facade {
 
 		final Long id = foodSpecialty.getId();
 
-		Preconditions.checkArgument(id != null, "Illegal call to updateFoodSpecialty, foodSpecialty.id is required");
+		final FoodSpecialty persistedInstance = readFoodSpecialty(id);
 
 		checkUniqueFoodSpecialtyCode(foodSpecialty);
-
-		final FoodSpecialty persistedInstance = this.baseDao.get(FoodSpecialty.class, id);
-
-		Preconditions.checkState(persistedInstance != null,
-				"Illegal call to updateFoodSpecialty, provided id should have corresponding foodSpecialty in store");
 
 		persistedInstance.setActive(foodSpecialty.isActive());
 

@@ -44,6 +44,12 @@ public class MidipascherClient {
 		jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
 	}
 
+	/**
+	 * @param relativePath
+	 * @param responseFormat
+	 * @param responseLanguage
+	 * @return
+	 */
 	public static ClientResponse readURI(String relativePath, String responseFormat, String responseLanguage) {
 		final URI uri = URI.create(baseEndPoint + relativePath);
 		return jerseyClient.resource(uri).accept(responseFormat).acceptLanguage(responseLanguage)
@@ -51,12 +57,26 @@ public class MidipascherClient {
 
 	}
 
+	/**
+	 * @param location
+	 * @param responseFormat
+	 * @param responseLanguage
+	 * @return
+	 */
 	public static ClientResponse readLocation(URI location, String responseFormat, String responseLanguage) {
 		return jerseyClient.resource(location).accept(responseFormat).acceptLanguage(responseLanguage)
 				.get(ClientResponse.class);
 
 	}
 
+	/**
+	 * @param body
+	 * @param relativePath
+	 * @param requestFormat
+	 * @param responseFormat
+	 * @param responseLanguage
+	 * @return
+	 */
 	public static <T> ClientResponse createEntity(T body, String relativePath, String requestFormat,
 			String responseFormat, String responseLanguage) {
 		final URI uri = URI.create(baseEndPoint + relativePath);
@@ -95,5 +115,20 @@ public class MidipascherClient {
 			final WebResource webResource = jerseyClient.resource(resource);
 			webResource.delete();
 		}
+	}
+
+	/**
+	 * @param foodSpecialty
+	 * @param relativePath
+	 * @param requestContentType
+	 * @param responseContentType
+	 * @param responseLanguage
+	 * @return
+	 */
+	public static <T> ClientResponse updateEntity(T body, String relativePath, String requestFormat,
+			String responseFormat, String responseLanguage) {
+		final URI uri = URI.create(baseEndPoint + relativePath);
+		return jerseyClient.resource(uri).type(requestFormat).accept(responseFormat).acceptLanguage(responseLanguage)
+				.put(ClientResponse.class, body);
 	}
 }

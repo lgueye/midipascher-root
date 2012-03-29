@@ -11,21 +11,21 @@ import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 
-import fr.midipascher.stories.steps.CreateFoodSpecialtySteps;
+import fr.midipascher.stories.steps.UpdateFoodSpecialtySteps;
 
 /**
  * @author louis.gueye@gmail.com
  */
-public class CreateFoodSpecialtyStory extends AbstractJUnitStories {
+public class UpdateFoodSpecialtyStory extends AbstractJUnitStories {
 
 	@Override
 	public InjectableStepsFactory stepsFactory() {
-		return new InstanceStepsFactory(configuration(), new CreateFoodSpecialtySteps());
+		return new InstanceStepsFactory(configuration(), new UpdateFoodSpecialtySteps());
 	}
 
 	@Override
 	protected List<String> storyPaths() {
 		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-				Arrays.asList("**/create_food_specialty.story"), null);
+				Arrays.asList("**/update_food_specialty.story"), null);
 	}
 }

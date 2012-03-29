@@ -11,6 +11,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -55,6 +56,21 @@ public class FoodSpecialtyController {
 		final URI uri = this.uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
 
 		return Response.created(uri).build();
+
+	}
+
+	@PUT
+	@Path("{id}")
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response update(@PathParam(value = "id") final Long id, final FoodSpecialty foodSpecialty) throws Throwable {
+
+		this.facade.readFoodSpecialty(id);
+
+		foodSpecialty.setId(id);
+
+		this.facade.updateFoodSpecialty(foodSpecialty);
+
+		return Response.ok().build();
 
 	}
 
