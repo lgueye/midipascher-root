@@ -416,7 +416,7 @@ public class FacadeImpl implements Facade {
 		FoodSpecialty foodSpecialty = this.baseDao.get(FoodSpecialty.class, foodSpecialtyId);
 
 		if (foodSpecialty == null) {
-			String message = "FoodSpecialty id was not found";
+			String message = "FoodSpecialty was not found for id = " + foodSpecialtyId;
 			LOGGER.error(message);
 			throw new BusinessException("foodSpecialty.not.found", new Object[] { foodSpecialtyId }, message);
 		}
@@ -476,21 +476,20 @@ public class FacadeImpl implements Facade {
 	}
 
 	/**
-	 * @see fr.midipascher.domain.business.Facade#updateFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
+	 * @see fr.midipascher.domain.business.Facade#updateFoodSpecialty(Long,
+	 *      fr.midipascher.domain.FoodSpecialty)
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RolesAllowed("ROLE_ADMIN")
-	public void updateFoodSpecialty(final FoodSpecialty foodSpecialty) {
+	public void updateFoodSpecialty(Long foodSpecialtyId, final FoodSpecialty foodSpecialty) {
 
 		Preconditions.checkArgument(foodSpecialty != null,
 				"Illegal call to updateFoodSpecialty, foodSpecialty is required");
 
-		final Long id = foodSpecialty.getId();
-
-		final FoodSpecialty persistedInstance = readFoodSpecialty(id);
-
 		checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+		final FoodSpecialty persistedInstance = readFoodSpecialty(foodSpecialtyId);
 
 		persistedInstance.setActive(foodSpecialty.isActive());
 
@@ -498,6 +497,7 @@ public class FacadeImpl implements Facade {
 
 		persistedInstance.setLabel(foodSpecialty.getLabel());
 
+		validate(persistedInstance, ValidationContext.UPDATE);
 	}
 
 	/**

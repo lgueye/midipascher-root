@@ -80,10 +80,11 @@ public interface Facade {
 	 */
 
 	/**
+	 * @param foodSpecialtyId TODO
 	 * @param foodSpecialty
 	 * @throws ConstraintViolationException
 	 */
-	void updateFoodSpecialty(FoodSpecialty foodSpecialty);
+	void updateFoodSpecialty(Long foodSpecialtyId, FoodSpecialty foodSpecialty);
 
 	/**
 	 * @param restaurant

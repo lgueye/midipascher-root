@@ -326,26 +326,25 @@ public class FacadeImplTest {
 
 		// When
 		Mockito.when(this.baseDao.get(FoodSpecialty.class, id)).thenReturn(persistedInstance);
-		Mockito.when(foodSpecialty.getId()).thenReturn(id);
 		Mockito.when(foodSpecialty.getCode()).thenReturn(code);
 		Mockito.when(foodSpecialty.isActive()).thenReturn(active);
 		Mockito.when(foodSpecialty.getLabel()).thenReturn(label);
 		Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
-		this.underTest.updateFoodSpecialty(foodSpecialty);
+		this.underTest.updateFoodSpecialty(id, foodSpecialty);
 
 		// Then
 		Mockito.verify(persistedInstance).setActive(active);
 		Mockito.verify(persistedInstance).setCode(code);
 		Mockito.verify(persistedInstance).setLabel(label);
 
-		Mockito.verify(foodSpecialty).getId();
 		Mockito.verify(foodSpecialty, Mockito.times(2)).getCode();
 		Mockito.verify(foodSpecialty).isActive();
 		Mockito.verify(foodSpecialty).getLabel();
 		Mockito.verify(this.baseDao).get(FoodSpecialty.class, id);
 		Mockito.verify(this.baseDao).findByExample(Matchers.any(FoodSpecialty.class));
+		Mockito.verify(this.validator).validate(persistedInstance, ValidationContext.UPDATE.getContext());
 
-		Mockito.verifyZeroInteractions(this.validator, this.messageSource);
+		Mockito.verifyZeroInteractions(this.messageSource);
 		Mockito.verifyNoMoreInteractions(foodSpecialty, this.baseDao, persistedInstance);
 	}
 
@@ -356,23 +355,24 @@ public class FacadeImplTest {
 		final FoodSpecialty foodSpecialty = null;
 
 		// When
-		this.underTest.updateFoodSpecialty(foodSpecialty);
+		this.underTest.updateFoodSpecialty(null, foodSpecialty);
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void updateFoodSpecialtyShouldThrowIllegalArgumentExceptionWithNullFoodSpecialtyId() {
+	@Test(expected = BusinessException.class)
+	public void updateFoodSpecialtyShouldThrowBusinessExceptionWithNullFoodSpecialtyId() {
 
 		// Given
 		final FoodSpecialty foodSpecialty = new FoodSpecialty();
+		final Long foodSpecialtyId = null;
 
 		// When
-		this.underTest.updateFoodSpecialty(foodSpecialty);
+		this.underTest.updateFoodSpecialty(foodSpecialtyId, foodSpecialty);
 
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void updateFoodSpecialtyShouldThrowIllegalStateExceptionWithNullPersistedInstance() {
+	@Test(expected = BusinessException.class)
+	public void updateFoodSpecialtyShouldThrowBusinessExceptionWithNullPersistedInstance() {
 
 		// Given
 		final FoodSpecialty foodSpecialty = new FoodSpecialty();
@@ -382,7 +382,7 @@ public class FacadeImplTest {
 		Mockito.when(this.baseDao.get(Matchers.eq(FoodSpecialty.class), Matchers.anyLong())).thenReturn(null);
 
 		// When
-		this.underTest.updateFoodSpecialty(foodSpecialty);
+		this.underTest.updateFoodSpecialty(null, foodSpecialty);
 
 	}
 

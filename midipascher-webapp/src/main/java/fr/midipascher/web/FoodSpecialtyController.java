@@ -68,7 +68,7 @@ public class FoodSpecialtyController {
 
 		foodSpecialty.setId(id);
 
-		this.facade.updateFoodSpecialty(foodSpecialty);
+		this.facade.updateFoodSpecialty(id, foodSpecialty);
 
 		return Response.ok().build();
 

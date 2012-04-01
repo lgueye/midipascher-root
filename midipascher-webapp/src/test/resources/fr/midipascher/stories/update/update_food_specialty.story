@@ -2,7 +2,7 @@ Update food specialties stories
 
 Meta:
 @refs 7
-@progress wip
+@progress done
 
 Narrative:
 Given I provide a update food specialty request
@@ -12,8 +12,7 @@ It should either succeed or fail
 Scenario: update food specialty should succeed
 Given I authenticate with "admin" uid and "secret" password
 When I send a valid "update food specialty" request
-Then the response code should be "201"
-And I should be able to read the new resource
+Then the response code should be "200"
 
 Scenario: update food specialty as account with wrong role should fail
 Given I authenticate with "rmgr" uid and "secret" password
@@ -31,11 +30,11 @@ Given I authenticate with "admin" uid and "secret" password
 And I accept "en" language
 And I accept "application/xml" format
 When I send a "update food specialty" request with wrong id "<wrong_id>"
-Then the response code should be "400"
+Then the response code should be "404"
 And the message should be "<message>"
 Examples:
 |wrong_id|message|
-|-1|Valid id is required|
+|-1|Food specialty (id = -1) was not found|
 
 Scenario: update food specialty with wrong code should fail
 Given I authenticate with "admin" uid and "secret" password

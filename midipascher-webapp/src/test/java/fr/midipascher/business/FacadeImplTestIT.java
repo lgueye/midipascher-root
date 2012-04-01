@@ -122,7 +122,7 @@ public class FacadeImplTestIT {
 		foodSpecialty.setLabel(newLabel);
 
 		// When
-		this.facade.updateFoodSpecialty(foodSpecialty);
+		this.facade.updateFoodSpecialty(id, foodSpecialty);
 
 		foodSpecialty = this.facade.readFoodSpecialty(id);
 
@@ -165,7 +165,14 @@ public class FacadeImplTestIT {
 		this.facade.deleteFoodSpecialty(foodSpecialty.getId());
 
 		// Then
-		Assert.assertNull(this.facade.readFoodSpecialty(id));
+		try {
+			this.facade.readFoodSpecialty(id);
+			fail(BusinessException.class.getName() + " expected");
+		} catch (BusinessException e) {
+			Assert.assertEquals("foodSpecialty.not.found", e.getMessageCode());
+		} catch (Throwable th) {
+			fail(BusinessException.class.getName() + " expected, get " + th.getClass().getName());
+		}
 	}
 
 	@Test

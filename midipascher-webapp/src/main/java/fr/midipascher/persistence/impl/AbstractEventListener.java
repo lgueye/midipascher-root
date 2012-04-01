@@ -44,10 +44,11 @@ public abstract class AbstractEventListener {
 				constraintViolations.size());
 
 		for ( final ConstraintViolation<?> violation : constraintViolations )
+			// System.out.println("-------------------------------------------------------------------------->"
+			// + violation.getMessage());
 			propagatedViolations.add(violation);
 
 		throw new ConstraintViolationException(propagatedViolations);
 
 	}
-
 }

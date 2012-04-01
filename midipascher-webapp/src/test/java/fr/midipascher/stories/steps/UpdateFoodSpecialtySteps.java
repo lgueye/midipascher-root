@@ -41,15 +41,6 @@ public class UpdateFoodSpecialtySteps {
 		Assert.assertEquals(message, this.response.getEntity(ResponseError.class).getMessage());
 	}
 
-	@Then("I should be able to read the new resource")
-	public void expectedNewResource() {
-		String responseFormat = this.responseContentType;
-		String responseLanguage = "en";
-		this.response = MidipascherClient.readLocation(this.response.getLocation(), responseFormat, responseLanguage);
-		Assert.assertEquals(200, this.response.getStatus());
-		Assert.assertNotNull(this.response.getEntity(FoodSpecialty.class));
-	}
-
 	@Then("the response code should be \"$statusCode\"")
 	public void expectStatusCode(@Named("statusCode") final int statusCode) {
 		Assert.assertEquals(statusCode, this.response.getStatus());
@@ -60,7 +51,7 @@ public class UpdateFoodSpecialtySteps {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setCode(code);
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty";
+		String relativePath = "/foodspecialty/5";
 		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}
@@ -70,7 +61,7 @@ public class UpdateFoodSpecialtySteps {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setLabel(label);
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty";
+		String relativePath = "/foodspecialty/5";
 		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}
@@ -79,7 +70,16 @@ public class UpdateFoodSpecialtySteps {
 	public void sendValidUpdateFoodSpecialtyRequest() {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty";
+		String relativePath = "/foodspecialty/5";
+		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
+				this.responseContentType, this.responseLanguage);
+	}
+
+	@When("I send a \"update food specialty\" request with wrong id \"<wrong_id>\"")
+	public void sendUpdateFoodSpecialtyRequestWithWrongId(@Named("wrong_id") final Long id) {
+		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+		final String requestContentType = "application/json";
+		String relativePath = "/foodspecialty/" + id;
 		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}
