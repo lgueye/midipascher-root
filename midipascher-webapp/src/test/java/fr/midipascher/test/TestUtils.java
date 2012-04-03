@@ -68,10 +68,10 @@ public abstract class TestUtils {
         final Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
         Assert.assertNotNull(constraintViolations);
         Assert.assertEquals(1, CollectionUtils.size(constraintViolations));
-        for (final ConstraintViolation<?> constraintViolation : constraintViolations) {
-            System.out.println("---------------------------------------->" + constraintViolation.getMessage());
-
-        }
+        // for (final ConstraintViolation<?> constraintViolation : constraintViolations) {
+        // System.out.println("---------------------------------------->" + constraintViolation.getMessage());
+        //
+        // }
         final ConstraintViolation<?> violation = constraintViolations.iterator().next();
         Assert.assertEquals(expectedMessage, violation.getMessage());
         Assert.assertEquals(expectedPath, violation.getPropertyPath().toString());
@@ -105,7 +105,7 @@ public abstract class TestUtils {
         final String format = "application/json";
         final String language = "fr";
         final String requestContentType = "application/xml";
-        final Account account = TestUtils.validUser();
+        final Account account = TestUtils.validAccount();
         final ClientResponse response = webResource.accept(MediaType.valueOf(format))
                 .acceptLanguage(new String[] { language }).header("Content-Type", requestContentType)
                 .post(ClientResponse.class, account);
@@ -191,6 +191,24 @@ public abstract class TestUtils {
     /**
      * @return
      */
+    public static Account validAccount() {
+        final Account account = new Account();
+        account.setAuthorities(new HashSet<Authority>(Arrays.asList(TestUtils.validAuthority())));
+        account.setCreated(new DateTime());
+        account.setEmail(RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + "@"
+            + RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + ".com");
+        account.setFirstName(RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE,
+            TestUtils.STANDARD_CHARSET));
+        account.setLastConnection(new DateTime());
+        account.setLastName(RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        account.setLocked(false);
+        account.setPassword(RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        return account;
+    }
+
+    /**
+     * @return
+     */
     public static Address validAddress() {
         final Address address = new Address();
         address.setCity(RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE, TestUtils.STANDARD_CHARSET));
@@ -240,24 +258,6 @@ public abstract class TestUtils {
             TestUtils.STANDARD_CHARSET));
         restaurant.setSpecialties(new HashSet<FoodSpecialty>(Arrays.asList(TestUtils.validFoodSpecialty())));
         return restaurant;
-    }
-
-    /**
-     * @return
-     */
-    public static Account validUser() {
-        final Account account = new Account();
-        account.setAuthorities(new HashSet<Authority>(Arrays.asList(TestUtils.validAuthority())));
-        account.setCreated(new DateTime());
-        account.setEmail(RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + "@"
-            + RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + ".com");
-        account.setFirstName(RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
-        account.setLastConnection(new DateTime());
-        account.setLastName(RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
-        account.setLocked(false);
-        account.setPassword(RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.STANDARD_CHARSET));
-        return account;
     }
 
 }

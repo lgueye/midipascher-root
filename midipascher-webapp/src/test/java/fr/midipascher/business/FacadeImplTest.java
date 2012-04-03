@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.validation.Validator;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,6 +29,7 @@ import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
@@ -145,7 +144,7 @@ public class FacadeImplTest {
         account = new Account();
         email = "mail@mail.com";
         account.setEmail(email);
-        results = Arrays.asList(TestUtils.validUser());
+        results = Arrays.asList(TestUtils.validAccount());
         LocaleContextHolder.setLocale(Locale.FRENCH);
         messageCode = "account.email.already.used";
         message = "Email already used";
@@ -412,8 +411,10 @@ public class FacadeImplTest {
         underTest.createAccount(account);
 
         Mockito.verify(baseDao).persist(account);
+        Mockito.verify(validator).validate(account, ValidationContext.CREATE);
         Mockito.verify(account).getId();
-        Mockito.verifyNoMoreInteractions(baseDao, account);
+        Mockito.verifyZeroInteractions(messageSource);
+        Mockito.verifyNoMoreInteractions(validator, account, baseDao);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -450,9 +451,10 @@ public class FacadeImplTest {
         Mockito.verify(authority).getCode();
         Mockito.verify(baseDao).findByExample(Matchers.any(Authority.class));
         Mockito.verify(baseDao).persist(authority);
+        Mockito.verify(validator).validate(authority, ValidationContext.CREATE);
 
-        Mockito.verifyZeroInteractions(validator, messageSource);
-        Mockito.verifyNoMoreInteractions(authority, baseDao);
+        Mockito.verifyZeroInteractions(messageSource);
+        Mockito.verifyNoMoreInteractions(validator, authority, baseDao);
 
     }
 
@@ -481,9 +483,9 @@ public class FacadeImplTest {
         Mockito.verify(foodSpecialty).getCode();
         Mockito.verify(baseDao).findByExample(Matchers.any(FoodSpecialty.class));
         Mockito.verify(baseDao).persist(foodSpecialty);
-
-        Mockito.verifyZeroInteractions(validator, messageSource);
-        Mockito.verifyNoMoreInteractions(foodSpecialty, baseDao);
+        Mockito.verify(validator).validate(foodSpecialty, ValidationContext.CREATE);
+        Mockito.verifyZeroInteractions(messageSource);
+        Mockito.verifyNoMoreInteractions(validator, foodSpecialty, baseDao);
 
     }
 
@@ -550,11 +552,13 @@ public class FacadeImplTest {
         // Mockito.verify(restaurant).addSpecialty(sp1);
 
         Mockito.verify(account).addRestaurant(restaurant);
+        Mockito.verify(validator).validate(restaurant, ValidationContext.CREATE);
         Mockito.verify(baseDao).persist(restaurant);
         Mockito.verify(restaurant, Mockito.times(2)).getId();
         // Mockito.verify(restaurant).countSpecialties();
 
-        Mockito.verifyNoMoreInteractions(baseDao, account, restaurant);
+        Mockito.verifyNoMoreInteractions(baseDao, account, restaurant, validator);
+        Mockito.verifyZeroInteractions(messageSource);
 
     }
 
@@ -1047,7 +1051,7 @@ public class FacadeImplTest {
         Mockito.verify(foodSpecialty).getLabel();
         Mockito.verify(baseDao).get(FoodSpecialty.class, id);
         Mockito.verify(baseDao).findByExample(Matchers.any(FoodSpecialty.class));
-        Mockito.verify(validator).validate(persistedInstance, ValidationContext.UPDATE.getContext());
+        Mockito.verify(validator).validate(persistedInstance, ValidationContext.UPDATE);
 
         Mockito.verifyZeroInteractions(messageSource);
         Mockito.verifyNoMoreInteractions(foodSpecialty, baseDao, persistedInstance);

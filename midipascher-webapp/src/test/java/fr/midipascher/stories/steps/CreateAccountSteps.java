@@ -45,7 +45,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong first name \"<wrong_first_name>\"")
 	public void sendCreateUserRequestWithWrongFirstName(@Named("wrong_first_name") final String firstName) {
-		final Account account = TestUtils.validUser();
+		final Account account = TestUtils.validAccount();
 		account.setFirstName(firstName);
 		account.setAuthorities(null);
 		final String requestContentType = "application/json";
@@ -57,7 +57,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong last name \"<wrong_last_name>\"")
 	public void sendCreateUserRequestWithWrongLastName(@Named("wrong_last_name") final String lastName) {
-		final Account account = TestUtils.validUser();
+		final Account account = TestUtils.validAccount();
 		account.setLastName(lastName);
 		account.setAuthorities(null);
 		final String requestContentType = "application/json";
@@ -69,7 +69,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong uid \"<wrong_uid>\"")
 	public void sendCreateUserRequestWithWrongUID(@Named("wrong_uid") final String email) {
-		final Account account = TestUtils.validUser();
+		final Account account = TestUtils.validAccount();
 		account.setEmail(email);
 		account.setAuthorities(null);
 		final String requestContentType = "application/json";
@@ -81,7 +81,7 @@ public class CreateAccountSteps {
 
 	@When("I send a \"create account\" request with wrong password \"<wrong_password>\"")
 	public void sendCreateUserRequestWithWrongPassword(@Named("wrong_password") final String password) {
-		final Account account = TestUtils.validUser();
+		final Account account = TestUtils.validAccount();
 		account.setPassword(password);
 		account.setAuthorities(null);
 		final String requestContentType = "application/json";
@@ -93,7 +93,7 @@ public class CreateAccountSteps {
 
 	@When("I send a valid \"create account\" request")
 	public void sendValidCreateUserRequest() {
-		final Account account = TestUtils.validUser();
+		final Account account = TestUtils.validAccount();
 		account.setAuthorities(null);
 		final String requestContentType = "application/json";
 		final String language = this.language;

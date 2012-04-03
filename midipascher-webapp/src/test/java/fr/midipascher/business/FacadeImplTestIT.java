@@ -44,7 +44,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
 
-import fr.midipacher.TestConstants;
+import fr.midipascher.TestConstants;
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
@@ -178,7 +178,7 @@ public class FacadeImplTestIT {
 	@Test
 	public void createAccountShouldSucceed() {
 		authenticateAsAdmin();
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long id = this.facade.createAccount(account);
 		Account persistedUser = this.facade.readAccount(id, true);
 		Assert.assertNotNull(persistedUser);
@@ -194,7 +194,7 @@ public class FacadeImplTestIT {
 		Account account;
 		Long id;
 
-		account = TestUtils.validUser();
+		account = TestUtils.validAccount();
 		email = "first@email.org";
 		account.setEmail(email);
 		id = this.facade.createAccount(account);
@@ -214,7 +214,7 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
@@ -237,7 +237,7 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = 1L;
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
@@ -258,7 +258,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Long accountId = this.facade.createAccount(TestUtils.validUser());
+		Long accountId = this.facade.createAccount(TestUtils.validAccount());
 		assertNotNull(this.facade.readAccount(accountId, false));
 		// When
 		this.facade.deleteAccount(accountId);
@@ -277,7 +277,7 @@ public class FacadeImplTestIT {
 		Long foodSpecialtyId = 1L;
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getSpecialties().clear();
@@ -300,7 +300,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
@@ -374,7 +374,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
@@ -398,7 +398,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);
@@ -427,7 +427,7 @@ public class FacadeImplTestIT {
 		authenticateAsAdmin();
 
 		// Given
-		Account account = TestUtils.validUser();
+		Account account = TestUtils.validAccount();
 		Long accountId = this.facade.createAccount(account);
 		Long restaurantId = createRestaurant(accountId);
 		assertNotNull(restaurantId);

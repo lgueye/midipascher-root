@@ -6,7 +6,6 @@ package fr.midipascher.persistence;
 import java.sql.Connection;
 
 import javax.sql.DataSource;
-import javax.validation.ConstraintViolationException;
 
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
@@ -24,13 +23,10 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
-import fr.midipacher.TestConstants;
+import fr.midipascher.TestConstants;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Persistable;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.test.TestUtils;
 
 /**
  * Base class for database integration testing<br/>
@@ -50,39 +46,6 @@ public abstract class BasePersistenceTestIT {
 
     @Autowired
     protected DataSource dataSource;
-
-    /**
-     * @param underTest
-     * @param context
-     */
-    protected void assertExpectedViolation(final Persistable underTest, final ValidationContext context,
-            final String errorCode, final String errorPath) {
-        // When
-        try {
-
-            switch (context) {
-                case CREATE:
-                case UPDATE:
-                    baseDao.persist(underTest);
-                    break;
-                case DELETE:
-                    baseDao.delete(underTest.getClass(), underTest.getId());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported validation context : " + context);
-            }
-
-            Assert.fail(ConstraintViolationException.class.getName() + " expected");
-
-            // Then
-        } catch (final ConstraintViolationException e) {
-            TestUtils.assertViolationContainsTemplateAndPath(e, errorCode, errorPath);
-        } catch (final Throwable th) {
-            th.printStackTrace();
-            Assert.fail(ConstraintViolationException.class.getName() + " expected, got class="
-                + th.getClass().getName() + ", message=" + th.getLocalizedMessage() + ", cause=" + th.getCause());
-        }
-    }
 
     @Before
     public void onSetUpInTransaction() throws Exception {

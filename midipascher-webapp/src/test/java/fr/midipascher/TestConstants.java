@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.midipacher;
+package fr.midipascher;
 
 /**
  * @author louis.gueye@gmail.com

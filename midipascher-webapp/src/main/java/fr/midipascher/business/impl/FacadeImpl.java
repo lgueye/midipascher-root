@@ -6,7 +6,6 @@ package fr.midipascher.business.impl;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
-import javax.validation.Validator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +28,7 @@ import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
@@ -180,6 +180,8 @@ public class FacadeImpl implements Facade {
 
         checkUniqueAccountUID(account);
 
+        validator.validate(account, ValidationContext.CREATE);
+
         baseDao.persist(account);
 
         return account.getId();
@@ -197,6 +199,8 @@ public class FacadeImpl implements Facade {
         Preconditions.checkArgument(authority != null, "Illegal call to createAuthority, authority is required");
 
         checkUniqueAuthorityCode(authority);
+
+        validator.validate(authority, ValidationContext.CREATE);
 
         baseDao.persist(authority);
 
@@ -216,6 +220,8 @@ public class FacadeImpl implements Facade {
             "Illegal call to createFoodSpecialty, foodSpecialty is required");
 
         checkUniqueFoodSpecialtyCode(foodSpecialty);
+
+        validator.validate(foodSpecialty, ValidationContext.CREATE);
 
         baseDao.persist(foodSpecialty);
 
@@ -295,6 +301,8 @@ public class FacadeImpl implements Facade {
             throw new BusinessException("account.not.found", null, "Illegal call to createRestaurant, Account with id "
                 + accountId + " was not found");
         }
+
+        validator.validate(restaurant, ValidationContext.CREATE);
 
         baseDao.persist(restaurant);
 
@@ -527,7 +535,7 @@ public class FacadeImpl implements Facade {
 
         persistedInstance.setLabel(foodSpecialty.getLabel());
 
-        validator.validate(persistedInstance, ValidationContext.UPDATE.getContext());
+        validator.validate(persistedInstance, ValidationContext.UPDATE);
     }
 
     /**

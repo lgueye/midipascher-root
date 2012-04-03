@@ -1,7 +1,7 @@
 /*
  *
  */
-package fr.midipascher.persistence;
+package fr.midipascher.business;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +17,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fr.midipacher.TestConstants;
+import fr.midipascher.TestConstants;
+
 
 /**
  * Authority database integration testing<br/>

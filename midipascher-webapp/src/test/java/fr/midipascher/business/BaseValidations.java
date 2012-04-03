@@ -15,7 +15,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fr.midipacher.TestConstants;
+import fr.midipascher.TestConstants;
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.validation.ValidationContext;

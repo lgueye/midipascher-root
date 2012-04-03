@@ -18,7 +18,7 @@ import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.test.TestUtils;
 
 /**
- * Restaurant validation testing<br/>
+ * {@link Restaurant} validation testing<br/>
  * CRUD operations are tested<br>
  * 
  * @author louis.gueye@gmail.com

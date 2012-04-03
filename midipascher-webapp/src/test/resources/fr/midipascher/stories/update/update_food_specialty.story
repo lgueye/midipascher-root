@@ -34,7 +34,7 @@ Then the response code should be "404"
 And the message should be "<message>"
 Examples:
 |wrong_id|message|
-|-1|Food specialty (id = -1) was not found|
+|-1|Food specialty [id = -1] was not found|
 
 Scenario: update food specialty with wrong code should fail
 Given I authenticate with "admin" uid and "secret" password
