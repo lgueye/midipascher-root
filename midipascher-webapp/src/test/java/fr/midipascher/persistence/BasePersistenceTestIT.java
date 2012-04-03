@@ -45,73 +45,60 @@ import fr.midipascher.test.TestUtils;
 @Transactional
 public abstract class BasePersistenceTestIT {
 
-	@Autowired
-	protected BaseDao		baseDao;
+    @Autowired
+    protected BaseDao baseDao;
 
-	@Autowired
-	protected DataSource	dataSource;
+    @Autowired
+    protected DataSource dataSource;
 
-	/**
-	 * @param underTest
-	 * @param context
-	 */
-	protected void assertExpectedViolation(final Persistable underTest, final ValidationContext context,
-			String errorCode, String errorPath) {
-		// When
-		try {
+    /**
+     * @param underTest
+     * @param context
+     */
+    protected void assertExpectedViolation(final Persistable underTest, final ValidationContext context,
+            final String errorCode, final String errorPath) {
+        // When
+        try {
 
-			switch (context) {
-				case CREATE:
-				case UPDATE:
-					this.baseDao.persist(underTest);
-					break;
-				case DELETE:
-					this.baseDao.delete(underTest.getClass(), underTest.getId());
-					break;
-				default:
-					throw new IllegalArgumentException("Unsupported validation context : " + context);
-			}
+            switch (context) {
+                case CREATE:
+                case UPDATE:
+                    baseDao.persist(underTest);
+                    break;
+                case DELETE:
+                    baseDao.delete(underTest.getClass(), underTest.getId());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported validation context : " + context);
+            }
 
-			Assert.fail(ConstraintViolationException.class.getName() + " expected");
+            Assert.fail(ConstraintViolationException.class.getName() + " expected");
 
-			// Then
-		} catch (final ConstraintViolationException e) {
-			TestUtils.assertViolationContainsTemplateAndPath(e, errorCode, errorPath);
-		} catch (final Throwable th) {
-			th.printStackTrace();
-			Assert.fail(ConstraintViolationException.class.getName() + " expected, got class="
-					+ th.getClass().getName() + ", message=" + th.getLocalizedMessage() + ", cause=" + th.getCause());
-		}
-	}
+            // Then
+        } catch (final ConstraintViolationException e) {
+            TestUtils.assertViolationContainsTemplateAndPath(e, errorCode, errorPath);
+        } catch (final Throwable th) {
+            th.printStackTrace();
+            Assert.fail(ConstraintViolationException.class.getName() + " expected, got class="
+                + th.getClass().getName() + ", message=" + th.getLocalizedMessage() + ", cause=" + th.getCause());
+        }
+    }
 
-	@Before
-	public void onSetUpInTransaction() throws Exception {
-		final Connection con = DataSourceUtils.getConnection(this.dataSource);
-		final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
-		final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
-				.getFile(TestConstants.PERSISTENCE_TEST_DATA));
+    @Before
+    public void onSetUpInTransaction() throws Exception {
+        final Connection con = DataSourceUtils.getConnection(dataSource);
+        final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
+        final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
+                .getFile(TestConstants.PERSISTENCE_TEST_DATA));
 
-		try {
-			DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
-		} finally {
-			DataSourceUtils.releaseConnection(con, this.dataSource);
-		}
-		Assert.assertEquals(2, this.baseDao.findAll(Authority.class).size());
-		Assert.assertEquals(5, this.baseDao.findAll(FoodSpecialty.class).size());
-		Assert.assertEquals(2, this.baseDao.findAll(Restaurant.class).size());
-	}
+        try {
+            DatabaseOperation.CLEAN_INSERT.execute(dbUnitCon, dataSet);
+        } finally {
+            DataSourceUtils.releaseConnection(con, dataSource);
+        }
+        Assert.assertEquals(2, baseDao.findAll(Authority.class).size());
+        Assert.assertEquals(5, baseDao.findAll(FoodSpecialty.class).size());
+        Assert.assertEquals(2, baseDao.findAll(Restaurant.class).size());
+    }
 
-	// @After
-	// public void onTearDownInTransaction() throws Exception {
-	// final Connection con = DataSourceUtils.getConnection(this.dataSource);
-	// final IDatabaseConnection dbUnitCon = new DatabaseConnection(con);
-	// final IDataSet dataSet = new FlatXmlDataSetBuilder().build(ResourceUtils
-	// .getFile("classpath:dbunit/BasePersistenceTestIT.xml"));
-	//
-	// try {
-	// DatabaseOperation.DELETE_ALL.execute(dbUnitCon, dataSet);
-	// } finally {
-	// DataSourceUtils.releaseConnection(con, this.dataSource);
-	// }
-	// }
 }

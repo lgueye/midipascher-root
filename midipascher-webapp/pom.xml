@@ -145,7 +145,101 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>embedded-wip</id>
+			<id>it-tests</id>
+			<build>
+				<resources>
+					<!-- Copy .properties files to output and filter them -->
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/log4j.xml</include>
+						</includes>
+					</resource>
+					<!-- Copy .xml files to output and do not filter them -->
+					<resource>
+						<directory>src/main/resources</directory>
+						<filtering>false</filtering>
+					</resource>
+				</resources>
+				<testResources>
+					<!-- Copy .properties files to output and filter them -->
+					<testResource>
+						<directory>src/test/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/log4j.xml</include>
+						</includes>
+					</testResource>
+					<!-- Copy .xml files to output and do not filter them -->
+					<testResource>
+						<directory>src/test/resources</directory>
+						<filtering>false</filtering>
+					</testResource>
+				</testResources>
+
+				<plugins>
+					<!-- Starts an H2 tcp server -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2.1</version>
+						<dependencies>
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>${h2.version}</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<!-- start server before integration tests -->
+								<id>start-database</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<includePluginDependencies>true</includePluginDependencies>
+									<mainClass>org.h2.tools.Server</mainClass>
+									<arguments>
+										<argument>-tcp</argument>
+										<argument>-tcpDaemon</argument>
+									</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<!-- stop server after integration tests -->
+								<id>stop-database</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<includePluginDependencies>true</includePluginDependencies>
+									<mainClass>org.h2.tools.Server</mainClass>
+									<arguments>
+										<argument>-tcpShutdown</argument>
+										<argument>tcp://localhost:9092</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				    				    
+					<!-- Runs tests that end with TestIT (database) tests -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	    	    
+		<profile>
+			<id>acceptance-wip</id>
 			<build>
 				<resources>
 					<!-- Copy .properties files to output and filter them -->
@@ -283,7 +377,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>embedded-done</id>
+			<id>acceptance-done</id>
 			<build>
 				<resources>
 					<!-- Copy .properties files to output and filter them -->
