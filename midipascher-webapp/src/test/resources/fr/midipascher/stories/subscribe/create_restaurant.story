@@ -23,7 +23,7 @@ Then the response code should be "404"
 And the message should be "<message>"
 Examples:
 |message|
-|Valid account required|
+|Account [id = -1] was not found|
 
 Scenario: create restaurant with wrong name should fail
 Given I provide  "louis" uid and "secret" password

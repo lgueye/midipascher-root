@@ -64,10 +64,6 @@ public class FoodSpecialtyController {
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response update(@PathParam(value = "id") final Long id, final FoodSpecialty foodSpecialty) throws Throwable {
 
-		this.facade.readFoodSpecialty(id);
-
-		foodSpecialty.setId(id);
-
 		this.facade.updateFoodSpecialty(id, foodSpecialty);
 
 		return Response.ok().build();

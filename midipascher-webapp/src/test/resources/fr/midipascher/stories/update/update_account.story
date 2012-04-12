@@ -1,23 +1,35 @@
-Create account scenarii
+Update account stories
 
 Meta:
-@refs 5
+@refs 8
 @progress done
 
 Narrative:
-Given I provide a create account request
+Given I provide a update account request
 When I send that request
 It should either succeed or fail
 
-Scenario: create account should succeed
-When I send a valid "create account" request
-Then the response code should be "201"
-And I should be able to read the new resource
+Scenario: update account should succeed
+Given I provide  "louis" uid and "secret" password
+When I send a valid "update account" request
+Then the response code should be "200"
 
-Scenario: create account with wrong uid should fail
+Scenario: update account with wrong id should fail
+Given I provide  "louis" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create account" request with wrong uid "<wrong_uid>"
+When I send a "update account" request with wrong id "<wrong_id>"
+Then the response code should be "404"
+And the message should be "<message>"
+Examples:
+|wrong_id|message|
+|-89|Account [id = -89] was not found|
+	
+Scenario: update account with wrong uid should fail
+Given I provide  "louis" uid and "secret" password
+Given I accept "en" language
+And I accept "application/json" format
+When I send a "update account" request with wrong uid "<wrong_uid>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
@@ -27,10 +39,11 @@ Examples:
 |mailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmail@mail.mail|Email max length is 100|
 |exists@mail.com|Email "exists@mail.com" already used|
 
-Scenario: create account with wrong password should fail
+Scenario: update account with wrong password should fail
+Given I provide  "louis" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create account" request with wrong password "<wrong_password>"
+When I send a "update account" request with wrong password "<wrong_password>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
@@ -38,10 +51,11 @@ Examples:
 ||Password is required|
 |aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax|Password max length is 200|
 
-Scenario: create account with wrong first name
+Scenario: update account with wrong first name
+Given I provide  "louis" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create account" request with wrong first name "<wrong_first_name>"
+When I send a "update account" request with wrong first name "<wrong_first_name>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:
@@ -49,10 +63,11 @@ Examples:
 ||First name is required|
 |ccccccccccccccccccccccccccccccccccccccccccccccccccx|First name max length is 50|
 
-Scenario: create account with wrong last name
+Scenario: update account with wrong last name
+Given I provide  "louis" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
-When I send a "create account" request with wrong last name "<wrong_last_name>"
+When I send a "update account" request with wrong last name "<wrong_last_name>"
 Then the response code should be "400"
 And the message should be "<message>"
 Examples:

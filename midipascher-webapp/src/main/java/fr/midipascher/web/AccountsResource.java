@@ -9,6 +9,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -89,6 +90,17 @@ public class AccountsResource {
 		this.facade.deleteAccount(id);
 
 		return Response.noContent().build();
+
+	}
+
+	@PUT
+	@Path("/account/{id}")
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response update(@PathParam(value = "id") final Long id, final Account account) throws Throwable {
+
+		this.facade.updateAccount(id, account);
+
+		return Response.ok().build();
 
 	}
 

@@ -171,7 +171,7 @@ public class FacadeImplTestIT {
 		} catch (BusinessException e) {
 			Assert.assertEquals("foodSpecialty.not.found", e.getMessageCode());
 		} catch (Throwable th) {
-			fail(BusinessException.class.getName() + " expected, get " + th.getClass().getName());
+			fail(BusinessException.class.getName() + " expected, got " + th.getClass().getName());
 		}
 	}
 
@@ -203,7 +203,7 @@ public class FacadeImplTestIT {
 
 		email = "second@email.org";
 		account.setEmail(email);
-		this.facade.updateAccount(account);
+		this.facade.updateAccount(id, account);
 		account = this.facade.readAccount(id, false);
 		Assert.assertEquals(email, account.getEmail());
 	}
@@ -264,7 +264,16 @@ public class FacadeImplTestIT {
 		this.facade.deleteAccount(accountId);
 
 		// Then
-		assertNull(this.facade.readAccount(accountId, false));
+
+		// Then
+		try {
+			this.facade.readAccount(accountId, false);
+			fail(BusinessException.class.getName() + " expected");
+		} catch (BusinessException e) {
+			Assert.assertEquals("account.not.found", e.getMessageCode());
+		} catch (Throwable th) {
+			fail(BusinessException.class.getName() + " expected, got " + th.getClass().getName());
+		}
 
 	}
 
