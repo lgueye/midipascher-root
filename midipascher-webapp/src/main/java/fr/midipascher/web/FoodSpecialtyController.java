@@ -59,6 +59,17 @@ public class FoodSpecialtyController {
 
 	}
 
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path("{id}/inactivate")
+	public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
+
+		this.facade.inactivateFoodSpecialty(id);
+
+		return Response.ok().build();
+
+	}
+
 	@PUT
 	@Path("{id}")
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -86,8 +97,6 @@ public class FoodSpecialtyController {
 	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
 		final FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(id);
-
-		if (foodSpecialty == null) return Response.status(Response.Status.NOT_FOUND).build();
 
 		return Response.ok(foodSpecialty).build();
 

@@ -2,7 +2,7 @@ Update restaurant stories
 
 Meta:
 @refs 9
-@progress wip
+@progress done
 
 
 Narrative:
