@@ -139,9 +139,11 @@ public interface Facade {
 	void updateFoodSpecialty(Long foodSpecialtyId, FoodSpecialty foodSpecialty);
 
 	/**
+	 * @param restaurantId
+	 * @param accountId
 	 * @param restaurant
 	 * @throws ConstraintViolationException
 	 */
-	void updateRestaurant(Restaurant restaurant);
+	void updateRestaurant(Long accountId, Long restaurantId, Restaurant restaurant);
 
 }

@@ -3,7 +3,9 @@
  */
 package fr.midipascher.business.impl;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
@@ -470,9 +474,22 @@ public class FacadeImpl implements Facade {
 	}
 
 	protected Restaurant readRestaurant(final Long restaurantId) {
-		Preconditions.checkArgument(restaurantId != null,
-				"Illegal call to readRestaurant, restaurant identifier is required");
-		return this.baseDao.get(Restaurant.class, restaurantId);
+
+		if (restaurantId == null) {
+			final String message = "Restaurant id was null";
+			LOGGER.error(message);
+			throw new BusinessException("restaurant.not.found", new Object[] { restaurantId }, message);
+		}
+
+		final Restaurant restaurant = this.baseDao.get(Restaurant.class, restaurantId);
+
+		if (restaurant == null) {
+			final String message = "Restaurant was not found for id = " + restaurantId;
+			LOGGER.error(message);
+			throw new BusinessException("restaurant.not.found", new Object[] { restaurantId }, message);
+		}
+
+		return restaurant;
 	}
 
 	/**
@@ -485,8 +502,8 @@ public class FacadeImpl implements Facade {
 
 		final Account account = readAccount(accountId);
 
-		if (account == null || account.isLocked()) throw new BusinessException("valid.account.required", null,
-				"No account with id '" + accountId + "' was found or account was locked");
+		if (account.isLocked()) throw new BusinessException("valid.account.required", null, "Account with id '"
+				+ accountId + "' was locked");
 
 		final Restaurant restaurant = readRestaurant(restaurantId);
 
@@ -537,7 +554,9 @@ public class FacadeImpl implements Facade {
 		checkUniqueFoodSpecialtyCode(detached);
 
 		persisted.setActive(detached.isActive());
+
 		persisted.setCode(detached.getCode());
+
 		persisted.setLabel(detached.getLabel());
 
 		this.validator.validate(persisted, ValidationContext.UPDATE);
@@ -550,37 +569,57 @@ public class FacadeImpl implements Facade {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
-	public void updateRestaurant(final Restaurant restaurant) {
+	public void updateRestaurant(Long accountId, final Long restaurantId, final Restaurant detached) {
 
-		Preconditions.checkArgument(restaurant != null, "Illegal call to updateRestaurant, restaurant is required");
+		Preconditions.checkArgument(detached != null, "Illegal call to updateRestaurant, restaurant is required");
 
-		Preconditions.checkArgument(restaurant.getId() != null,
-				"Illegal call to updateRestaurant, restaurant.id is required");
+		Account account = readAccount(accountId);
 
-		final Restaurant persistedInstance = this.baseDao.get(Restaurant.class, restaurant.getId());
+		Set<Restaurant> restaurants = account.getRestaurants();
 
-		Preconditions.checkState(persistedInstance != null,
-				"Illegal call to updateRestaurant, provided id should have corresponding restaurant in the store");
+		Collection<Restaurant> filtered = Collections2.filter(restaurants, new Predicate<Restaurant>() {
 
-		persistedInstance.setAddress(restaurant.getAddress());
+			@Override
+			public boolean apply(Restaurant input) {
+				return input.getId().equals(restaurantId);
+			}
 
-		persistedInstance.setCompanyId(restaurant.getCompanyId());
+		});
 
-		persistedInstance.setDescription(restaurant.getDescription());
+		Restaurant persisted = CollectionUtils.sizeIsEmpty(filtered) ? null : filtered.iterator().next();
 
-		persistedInstance.setHalal(restaurant.isHalal());
+		if (persisted == null) {
+			final String message = "Restaurant was not found for id = " + restaurantId;
+			LOGGER.error(message);
+			throw new BusinessException("restaurant.not.found", new Object[] { restaurantId }, message);
+		}
 
-		persistedInstance.setKosher(restaurant.isKosher());
+		persisted.setAddress(detached.getAddress());
 
-		persistedInstance.setMainOffer(restaurant.getMainOffer());
+		persisted.setCompanyId(detached.getCompanyId());
 
-		persistedInstance.setName(restaurant.getName());
+		persisted.setDescription(detached.getDescription());
 
-		persistedInstance.setPhoneNumber(restaurant.getPhoneNumber());
+		persisted.setHalal(detached.isHalal());
 
-		persistedInstance.setSpecialties(restaurant.getSpecialties());
+		persisted.setKosher(detached.isKosher());
 
-		persistedInstance.setVegetarian(restaurant.isVegetarian());
+		persisted.setMainOffer(detached.getMainOffer());
+
+		persisted.setName(detached.getName());
+
+		persisted.setPhoneNumber(detached.getPhoneNumber());
+
+		persisted.setVegetarian(detached.isVegetarian());
+
+		persisted.clearSpecialties();
+
+		for ( FoodSpecialty foodSpecialty : detached.getSpecialties() ) {
+			Long foodSpecialtyId = foodSpecialty.getId();
+			if (foodSpecialtyId != null) persisted.addSpecialty(readFoodSpecialty(foodSpecialtyId));
+		}
+
+		this.validator.validate(persisted, ValidationContext.UPDATE);
 
 	}
 

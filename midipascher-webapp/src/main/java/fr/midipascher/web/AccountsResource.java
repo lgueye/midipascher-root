@@ -69,6 +69,18 @@ public class AccountsResource {
 
 	}
 
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
+	public Response updateRestaurant(@PathParam(value = "accountId") final Long accountId,
+			@PathParam(value = "restaurantId") final Long restaurantId, final Restaurant restaurant) throws Throwable {
+
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
+
+		return Response.ok().build();
+
+	}
+
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")

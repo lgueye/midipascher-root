@@ -249,7 +249,15 @@ public class FacadeImplTestIT {
 		this.facade.deleteRestaurant(accountId, restaurantId);
 
 		// Then
-		assertNull(this.facade.readRestaurant(accountId, restaurantId, false));
+		try {
+			this.facade.readRestaurant(accountId, restaurantId, false);
+			fail(BusinessException.class.getName() + " expected");
+		} catch (BusinessException e) {
+			Assert.assertEquals("restaurant.not.found", e.getMessageCode());
+		} catch (Throwable th) {
+			th.printStackTrace();
+			fail(BusinessException.class.getName() + " expected, got " + th.getClass().getName());
+		}
 
 	}
 
@@ -260,10 +268,9 @@ public class FacadeImplTestIT {
 		// Given
 		Long accountId = this.facade.createAccount(TestUtils.validAccount());
 		assertNotNull(this.facade.readAccount(accountId, false));
+
 		// When
 		this.facade.deleteAccount(accountId);
-
-		// Then
 
 		// Then
 		try {
@@ -341,7 +348,7 @@ public class FacadeImplTestIT {
 		restaurant.setPhoneNumber(phoneNumber);
 		restaurant.setVegetarian(vegetarian);
 		// When
-		this.facade.updateRestaurant(restaurant);
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
 		restaurant = this.facade.readRestaurant(accountId, restaurantId, false);
 
 		// Then
@@ -395,7 +402,7 @@ public class FacadeImplTestIT {
 		restaurant.addSpecialty(foodSpecialty);
 
 		// When
-		this.facade.updateRestaurant(restaurant);
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
 		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		// Then
@@ -418,13 +425,13 @@ public class FacadeImplTestIT {
 		FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
 		assertNotNull(foodSpecialty);
 		restaurant.addSpecialty(foodSpecialty);
-		this.facade.updateRestaurant(restaurant);
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
 		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
 		restaurant.getSpecialties().remove(foodSpecialty);
 
 		// When
-		this.facade.updateRestaurant(restaurant);
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
 		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		// Then
@@ -449,7 +456,7 @@ public class FacadeImplTestIT {
 		restaurant.addSpecialty(foodSpecialty);
 
 		// When
-		this.facade.updateRestaurant(restaurant);
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
 		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		assertEquals(2, CollectionUtils.size(restaurant.getSpecialties()));
@@ -459,7 +466,7 @@ public class FacadeImplTestIT {
 		foodSpecialty.setLabel(newLabel);
 
 		// When
-		this.facade.updateRestaurant(restaurant);
+		this.facade.updateRestaurant(accountId, restaurantId, restaurant);
 		restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
 		for ( FoodSpecialty specialty : restaurant.getSpecialties() )

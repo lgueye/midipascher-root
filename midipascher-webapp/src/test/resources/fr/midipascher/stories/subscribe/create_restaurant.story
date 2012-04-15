@@ -71,8 +71,6 @@ Examples:
 |wrong_main_offer|message|
 |dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd1|Main offer max length is 200|
 
-Scenario: create restaurant with wrong specialties should fail
-
 Scenario: create restaurant with wrong street address should fail
 Given I provide  "louis" uid and "secret" password
 And I accept "en" language
