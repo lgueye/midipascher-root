@@ -1252,4 +1252,63 @@ public class FacadeImplTest {
 		Mockito.verifyNoMoreInteractions(persisted, this.baseDao);
 		Mockito.verifyZeroInteractions(this.messageSource);
 	}
+
+	@Test
+	public void readAuthorityShouldInvokePersistence() {
+
+		// Given
+		final Long authorityId = 5L;
+		final Authority authority = Mockito.mock(Authority.class);
+		Mockito.when(this.baseDao.get(Authority.class, authorityId)).thenReturn(authority);
+
+		// When
+		this.underTest.readAuthority(authorityId);
+
+		// Then
+		Mockito.verify(this.baseDao).get(Authority.class, authorityId);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void readAuthorityShouldThrowBusinessExceptionWhenNotFound() {
+
+		// Given
+		final Long authorityId = 5L;
+		final Authority authority = null;
+		Mockito.when(this.baseDao.get(Authority.class, authorityId)).thenReturn(authority);
+
+		// When
+		this.underTest.readAuthority(authorityId);
+
+		// Then
+		Mockito.verify(this.baseDao).get(Authority.class, authorityId);
+		Mockito.verifyNoMoreInteractions(this.baseDao);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void readAuthorityShouldThrowBusinessExceptionWhithNullId() {
+		this.underTest.readAuthority(null);
+	}
+
+	@Test
+	public void inactivateAuthorityShouldSucceed() {
+
+		// Variables
+		final Long id;
+
+		// Given
+		id = 5L;
+		Authority persisted = Mockito.mock(Authority.class);
+		Mockito.when(this.baseDao.get(Authority.class, id)).thenReturn(persisted);
+
+		// When
+		this.underTest.inactivateAuthority(id);
+
+		// Then
+		Mockito.verify(this.baseDao).get(Authority.class, id);
+		Mockito.verify(persisted).setActive(false);
+		Mockito.verifyNoMoreInteractions(persisted, this.baseDao);
+		Mockito.verifyZeroInteractions(this.messageSource);
+	}
 }

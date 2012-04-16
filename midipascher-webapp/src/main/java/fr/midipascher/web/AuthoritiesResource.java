@@ -65,4 +65,15 @@ public class AuthoritiesResource {
 
 	}
 
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path("{id}/inactivate")
+	public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
+
+		this.facade.inactivateAuthority(id);
+
+		return Response.ok().build();
+
+	}
+
 }

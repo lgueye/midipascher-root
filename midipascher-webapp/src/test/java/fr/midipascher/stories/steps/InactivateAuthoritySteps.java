@@ -17,7 +17,7 @@ import fr.midipascher.domain.ResponseError;
 /**
  * @author louis.gueye@gmail.com
  */
-public class InactivateFoodSpecialtySteps {
+public class InactivateAuthoritySteps {
 
 	private ClientResponse	response;
 	private String			responseLanguage;
@@ -44,18 +44,18 @@ public class InactivateFoodSpecialtySteps {
 		Assert.assertEquals(statusCode, this.response.getStatus());
 	}
 
-	@When("I send a valid \"inactivate food specialty\" request")
-	public void sendValidInactivateFoodSpecialtyRequest() {
+	@When("I send a valid \"inactivate authority\" request")
+	public void sendValidInactivateAuthorityRequest() {
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/5/inactivate";
+		String relativePath = "/admin/authorities/3/inactivate";
 		this.response = MidipascherClient.inactivateEntity(relativePath, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}
 
-	@When("I send a \"inactivate food specialty\" request with wrong id \"<wrong_id>\"")
-	public void sendInactivateFoodSpecialtyRequestWithWrongId(@Named("wrong_id") final Long id) {
+	@When("I send a \"inactivate authority\" request with wrong id \"<wrong_id>\"")
+	public void sendInactivateAuthorityRequestWithWrongId(@Named("wrong_id") final Long id) {
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/" + id + "/inactivate";
+		String relativePath = "/admin/authorities/" + id + "/inactivate";
 		this.response = MidipascherClient.inactivateEntity(relativePath, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}

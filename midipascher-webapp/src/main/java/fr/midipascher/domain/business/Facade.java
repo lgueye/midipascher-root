@@ -32,13 +32,6 @@ public interface Facade {
 	Long createAuthority(Authority authority);
 
 	/**
-	 * @param restaurant
-	 * @return
-	 * @throws ConstraintViolationException
-	 *             Long createRestaurant(Restaurant restaurant);
-	 */
-
-	/**
 	 * @param foodSpecialty
 	 * @return
 	 * @throws Throwable
@@ -66,16 +59,10 @@ public interface Facade {
 
 	/**
 	 * @param accountId
-	 *            TODO
 	 * @param restaurantId
 	 * @throws ConstraintViolationException
 	 */
 	void deleteRestaurant(Long accountId, Long restaurantId);
-
-	/**
-	 * @param restaurantId
-	 * @return Restaurant readRestaurant(Long restaurantId);
-	 */
 
 	/**
 	 * @param criteria
@@ -132,7 +119,6 @@ public interface Facade {
 
 	/**
 	 * @param foodSpecialtyId
-	 *            TODO
 	 * @param foodSpecialty
 	 * @throws ConstraintViolationException
 	 */
@@ -145,5 +131,10 @@ public interface Facade {
 	 * @throws ConstraintViolationException
 	 */
 	void updateRestaurant(Long accountId, Long restaurantId, Restaurant restaurant);
+
+	/**
+	 * @param authorityId
+	 */
+	void inactivateAuthority(Long authorityId);
 
 }

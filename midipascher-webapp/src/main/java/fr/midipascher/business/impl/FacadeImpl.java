@@ -393,11 +393,23 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Authority readAuthority(final Long id) {
+	public Authority readAuthority(final Long authorityId) {
 
-		Preconditions.checkArgument(id != null, "Illegal call to readAuthority, id is required");
+		if (authorityId == null) {
+			final String message = "Authority id was null";
+			LOGGER.error(message);
+			throw new BusinessException("authority.not.found", new Object[] { authorityId }, message);
+		}
 
-		return this.baseDao.get(Authority.class, id);
+		final Authority authority = this.baseDao.get(Authority.class, authorityId);
+
+		if (authority == null) {
+			final String message = "Authority was not found for id = " + authorityId;
+			LOGGER.error(message);
+			throw new BusinessException("authority.not.found", new Object[] { authorityId }, message);
+		}
+
+		return authority;
 
 	}
 
@@ -570,6 +582,20 @@ public class FacadeImpl implements Facade {
 		}
 
 		this.validator.validate(persisted, ValidationContext.UPDATE);
+
+	}
+
+	/**
+	 * @see fr.midipascher.domain.business.Facade#inactivateAuthority(java.lang.Long)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_ADMIN" })
+	public void inactivateAuthority(Long authorityId) {
+
+		final Authority authority = readAuthority(authorityId);
+
+		authority.setActive(false);
 
 	}
 
