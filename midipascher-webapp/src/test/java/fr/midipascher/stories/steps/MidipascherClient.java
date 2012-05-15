@@ -133,7 +133,6 @@ public class MidipascherClient {
 	}
 
 	/**
-	 * @param foodSpecialty
 	 * @param relativePath
 	 * @param requestContentType
 	 * @param responseContentType
@@ -142,6 +141,20 @@ public class MidipascherClient {
 	 */
 	public static ClientResponse inactivateEntity(String relativePath, String requestContentType,
 			String responseContentType, String responseLanguage) {
+		final URI uri = URI.create(baseEndPoint + relativePath);
+		return jerseyClient.resource(uri).type(requestContentType).accept(responseContentType)
+				.acceptLanguage(responseLanguage).post(ClientResponse.class);
+	}
+
+	/**
+	 * @param relativePath
+	 * @param requestContentType
+	 * @param responseContentType
+	 * @param responseLanguage
+	 * @return
+	 */
+	public static ClientResponse lockEntity(String relativePath, String requestContentType, String responseContentType,
+			String responseLanguage) {
 		final URI uri = URI.create(baseEndPoint + relativePath);
 		return jerseyClient.resource(uri).type(requestContentType).accept(responseContentType)
 				.acceptLanguage(responseLanguage).post(ClientResponse.class);

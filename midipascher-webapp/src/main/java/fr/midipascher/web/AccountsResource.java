@@ -135,4 +135,16 @@ public class AccountsResource {
 		return Response.ok().build();
 
 	}
+
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Path("/accounts/{accountId}/lock")
+	public Response lockAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
+
+		this.facade.lockAccount(id);
+
+		return Response.ok().build();
+
+	}
+
 }

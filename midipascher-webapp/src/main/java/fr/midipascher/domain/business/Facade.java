@@ -137,4 +137,9 @@ public interface Facade {
 	 */
 	void inactivateAuthority(Long authorityId);
 
+	/**
+	 * @param accountId
+	 */
+	void lockAccount(Long accountId);
+
 }

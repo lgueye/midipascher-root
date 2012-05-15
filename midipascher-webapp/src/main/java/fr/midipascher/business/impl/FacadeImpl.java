@@ -587,4 +587,18 @@ public class FacadeImpl implements Facade {
 
 	}
 
+	/**
+	 * @see fr.midipascher.domain.business.Facade#lockAccount(java.lang.Long)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	@RolesAllowed({ "ROLE_ADMIN" })
+	public void lockAccount(Long accountId) {
+
+		final Account account = readAccount(accountId);
+
+		account.setLocked(true);
+
+	}
+
 }
