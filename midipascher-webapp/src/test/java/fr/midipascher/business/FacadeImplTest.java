@@ -557,7 +557,7 @@ public class FacadeImplTest {
 		Mockito.verify(account).addRestaurant(restaurant);
 		Mockito.verify(this.validator).validate(restaurant, ValidationContext.CREATE);
 		Mockito.verify(this.baseDao).persist(restaurant);
-		Mockito.verify(restaurant, Mockito.times(2)).getId();
+		Mockito.verify(restaurant).getId();
 		// Mockito.verify(restaurant).countSpecialties();
 
 		Mockito.verifyNoMoreInteractions(this.baseDao, account, restaurant, this.validator);
@@ -585,30 +585,8 @@ public class FacadeImplTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNonNullRestaurantId() {
-		final Long accountId = 5L;
-		final Restaurant restaurant = new Restaurant();
-		restaurant.setId(45L);
-		this.underTest.createRestaurant(accountId, restaurant);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullRestaurant() {
-		final Long accountId = 5L;
-		final Restaurant restaurant = null;
-		this.underTest.createRestaurant(accountId, restaurant);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void createRestaurantShouldThrowIllegalArgumentExceptionWithNullUserId() {
-		final Long accountId = null;
-		final Restaurant restaurant = new Restaurant();
-		this.underTest.createRestaurant(accountId, restaurant);
-	}
-
 	@Test
-	public void createShouldSucceed() {
+	public void createAccountShouldSucceed() {
 		// Given
 		final Account account = Mockito.mock(Account.class);
 		final List<Authority> foundAuthorities = new ArrayList<Authority>();
@@ -636,7 +614,7 @@ public class FacadeImplTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void createShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFound() {
+	public void createAccountShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFound() {
 		// Given
 		final Account account = new Account();
 
@@ -646,7 +624,7 @@ public class FacadeImplTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void createShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFoundMoreThantOnce() {
+	public void createAccountShouldThowIllegalStateExceptionIfRMGRAuthorityWasNotFoundMoreThantOnce() {
 		// Given
 		final Account account = new Account();
 		final List<Authority> foundAuthorities = new ArrayList<Authority>();
@@ -706,36 +684,6 @@ public class FacadeImplTest {
 
 		// When
 		this.underTest.deleteFoodSpecialty(foodSpecialtyId);
-
-	}
-
-	@Test
-	public void deleteRestaurantShouldInvokePersistence() {
-
-		// Given
-		final Long restaurantId = 5L;
-		final Long accountId = 5L;
-
-		// When
-		final Account account = Mockito.mock(Account.class);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
-		this.underTest.deleteRestaurant(accountId, restaurantId);
-
-		// Then
-		Mockito.verify(this.baseDao).get(Account.class, accountId);
-		Mockito.verify(account).removeRestaurant(restaurantId);
-		Mockito.verifyNoMoreInteractions(this.baseDao, account);
-
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void deleteRestaurantShouldThrowIllegalArgumentExceptionWithNullId() {
-
-		// Given
-		final Long restaurantId = null;
-
-		// When
-		this.underTest.deleteRestaurant(null, restaurantId);
 
 	}
 
@@ -1311,4 +1259,162 @@ public class FacadeImplTest {
 		Mockito.verifyNoMoreInteractions(persisted, this.baseDao);
 		Mockito.verifyZeroInteractions(this.messageSource);
 	}
+
+	@Test(expected = BusinessException.class)
+	public void createRestaurantShouldThrowBusinessExceptionWithNullAccountId() {
+
+		// Given
+		final Long accountId = null;
+		final Restaurant restaurant = Mockito.mock(Restaurant.class);
+
+		// When
+		this.underTest.createRestaurant(accountId, restaurant);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void createRestaurantShouldThrowBusinessExceptionWhenAccountWasNotFound() {
+
+		// Variables
+		Long accountId;
+		Account account;
+
+		// Given
+		accountId = 5L;
+		account = null;
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		final Restaurant restaurant = Mockito.mock(Restaurant.class);
+
+		// When
+		this.underTest.createRestaurant(accountId, restaurant);
+
+		// Then
+	}
+
+	@Test
+	public void createRestaurantShouldSucceed() {
+
+		// Variables
+		Long accountId;
+		Account account;
+		Restaurant restaurant;
+
+		// Given
+		accountId = 5L;
+		account = Mockito.mock(Account.class);
+		restaurant = Mockito.mock(Restaurant.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.createRestaurant(accountId, restaurant);
+
+		// Then
+		Mockito.verify(this.validator).validate(restaurant, ValidationContext.CREATE);
+		Mockito.verify(this.baseDao).persist(restaurant);
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(account).addRestaurant(restaurant);
+		Mockito.verify(restaurant).getId();
+		Mockito.verifyNoMoreInteractions(this.validator, this.baseDao, account, restaurant);
+	}
+
+	@Test(expected = BusinessException.class)
+	public void deleteRestaurantShouldThrowBusinessExceptionWithNullAccountId() {
+
+		// Given
+		final Long accountId = null;
+		final Long restaurantId = 5L;
+
+		// When
+		this.underTest.deleteRestaurant(accountId, restaurantId);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void deleteRestaurantShouldThrowBusinessExceptionWhenAccountWasNotFound() {
+
+		// Variables
+		Long accountId;
+		Account account;
+
+		// Given
+		accountId = 5L;
+		account = null;
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.deleteRestaurant(accountId, 5L);
+
+		// Then
+	}
+
+	@Test(expected = BusinessException.class)
+	public void deleteRestaurantShouldThrowBusinessExceptionWhenRestaurantIdIsNull() {
+
+		// Variables
+		Long accountId;
+		Account account;
+		Long restaurantId;
+
+		// Given
+		accountId = 5L;
+		restaurantId = null;
+		account = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.deleteRestaurant(accountId, restaurantId);
+
+		// Then
+	}
+
+	@Test(expected = BusinessException.class)
+	public void deleteRestaurantShouldThrowBusinessExceptionWhenRestaurantWasNotFound() {
+
+		// Variables
+		Long accountId;
+		Account account;
+		Long restaurantId;
+		Restaurant restaurant;
+
+		// Given
+		accountId = 5L;
+		restaurantId = 2L;
+		account = Mockito.mock(Account.class);
+		restaurant = null;
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		Mockito.when(this.baseDao.get(Restaurant.class, restaurantId)).thenReturn(restaurant);
+
+		// When
+		this.underTest.deleteRestaurant(accountId, restaurantId);
+
+		// Then
+	}
+
+	@Test
+	public void deleteRestaurantShouldSucceed() {
+
+		// Variables
+		Long accountId;
+		Account account;
+		Long restaurantId;
+		Restaurant restaurant;
+
+		// Given
+		accountId = 5L;
+		account = Mockito.mock(Account.class);
+		restaurantId = 4L;
+		restaurant = Mockito.mock(Restaurant.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		Mockito.when(this.baseDao.get(Restaurant.class, restaurantId)).thenReturn(restaurant);
+
+		// When
+		this.underTest.deleteRestaurant(accountId, restaurantId);
+
+		// Then
+		Mockito.verify(account).removeRestaurant(restaurantId);
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(this.baseDao).get(Restaurant.class, restaurantId);
+		Mockito.verifyNoMoreInteractions(this.baseDao, account);
+	}
+
 }

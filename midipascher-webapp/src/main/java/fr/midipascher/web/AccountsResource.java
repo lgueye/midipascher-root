@@ -44,7 +44,7 @@ public class AccountsResource {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Path(value = "/accounts")
-	public Response create(final Account account) throws Throwable {
+	public Response createAccount(final Account account) throws Throwable {
 
 		final Long id = this.facade.createAccount(account);
 
@@ -84,12 +84,13 @@ public class AccountsResource {
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
-	public Response getRestaurant(@PathParam(value = "accountId") final Long accountId,
+	public Response readRestaurant(@PathParam(value = "accountId") final Long accountId,
 			@PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
 		final Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
-		if (restaurant == null) return Response.status(Response.Status.NOT_FOUND).build();
+		// if (restaurant == null) return
+		// Response.status(Response.Status.NOT_FOUND).build();
 
 		return Response.ok(restaurant).build();
 
@@ -97,7 +98,7 @@ public class AccountsResource {
 
 	@DELETE
 	@Path("/account/{id}")
-	public Response delete(@PathParam(value = "id") final Long id) throws Throwable {
+	public Response deleteAccount(@PathParam(value = "id") final Long id) throws Throwable {
 
 		this.facade.deleteAccount(id);
 
@@ -108,7 +109,7 @@ public class AccountsResource {
 	@PUT
 	@Path("/account/{id}")
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response update(@PathParam(value = "id") final Long id, final Account account) throws Throwable {
+	public Response updateAccount(@PathParam(value = "id") final Long id, final Account account) throws Throwable {
 
 		this.facade.updateAccount(id, account);
 
@@ -119,14 +120,25 @@ public class AccountsResource {
 	@GET
 	@Path("/account/{id}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
+	public Response readAccount(@PathParam(value = "id") final Long id) throws Throwable {
 
 		final Account account = this.facade.readAccount(id, true);
 
-		if (account == null) return Response.status(Response.Status.NOT_FOUND).build();
+		// if (account == null) return
+		// Response.status(Response.Status.NOT_FOUND).build();
 
 		return Response.ok(account).build();
 
 	}
 
+	@DELETE
+	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
+	public Response deleteRestaurant(@PathParam(value = "accountId") final Long accountId,
+			@PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
+
+		this.facade.deleteRestaurant(accountId, restaurantId);
+
+		return Response.ok().build();
+
+	}
 }

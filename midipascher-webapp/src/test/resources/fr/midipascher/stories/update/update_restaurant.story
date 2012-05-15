@@ -9,7 +9,7 @@ Narrative:
 Given I provide a update restaurant request
 When I send that request
 It should either succeed or fail
-
+update
 Scenario: update restaurant should succeed
 Given I provide  "louis" uid and "secret" password
 When I send a valid "update restaurant" request

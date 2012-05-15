@@ -146,4 +146,18 @@ public class MidipascherClient {
 		return jerseyClient.resource(uri).type(requestContentType).accept(responseContentType)
 				.acceptLanguage(responseLanguage).post(ClientResponse.class);
 	}
+
+	/**
+	 * @param restaurant
+	 * @param relativePath
+	 * @param requestContentType
+	 * @param format
+	 * @param language
+	 * @return
+	 */
+	public static ClientResponse deleteEntity(String relativePath, String responseFormat, String responseLanguage) {
+		final URI uri = URI.create(baseEndPoint + relativePath);
+		return jerseyClient.resource(uri).accept(responseFormat).acceptLanguage(responseLanguage)
+				.delete(ClientResponse.class);
+	}
 }

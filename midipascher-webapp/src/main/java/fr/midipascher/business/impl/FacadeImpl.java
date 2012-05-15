@@ -238,20 +238,7 @@ public class FacadeImpl implements Facade {
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
 	public Long createRestaurant(final Long accountId, final Restaurant restaurant) {
 
-		Preconditions.checkArgument(accountId != null, "Illegal call to createRestaurant, accountId is required");
-
-		Preconditions.checkArgument(restaurant != null, "Illegal call to createRestaurant, restaurant is required");
-
-		Preconditions.checkArgument(restaurant.getId() == null,
-				"Illegal call to createRestaurant, restaurant.id should be null");
-
-		final Account account = this.baseDao.get(Account.class, accountId);
-
-		if (account == null) {
-			LOGGER.error("Illegal call to createRestaurant, Account with id {} was not found", accountId);
-			throw new BusinessException("account.not.found", new Object[] { accountId },
-					"Illegal call to createRestaurant, Account with id " + accountId + " was not found");
-		}
+		final Account account = readAccount(accountId);
 
 		this.validator.validate(restaurant, ValidationContext.CREATE);
 
@@ -301,10 +288,11 @@ public class FacadeImpl implements Facade {
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
 	public void deleteRestaurant(final Long accountId, final Long restaurantId) {
 
-		Preconditions.checkArgument(restaurantId != null,
-				"Illegal call to deleteRestaurant, restaurant identifier is required");
+		final Account account = readAccount(accountId);
 
-		this.baseDao.get(Account.class, accountId).removeRestaurant(restaurantId);
+		readRestaurant(restaurantId);
+
+		account.removeRestaurant(restaurantId);
 
 	}
 
