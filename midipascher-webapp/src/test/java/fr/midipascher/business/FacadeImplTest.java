@@ -638,31 +638,6 @@ public class FacadeImplTest {
 	}
 
 	@Test
-	public void deleteAccountShouldInvokePersistence() {
-
-		// Given
-		final Long accountId = 5L;
-
-		// When
-		this.underTest.deleteAccount(accountId);
-
-		// Then
-		Mockito.verify(this.baseDao).delete(Account.class, accountId);
-
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void deleteAccountShouldThrowIllegalArgumentExceptionWithNullId() {
-
-		// Given
-		final Long accountId = null;
-
-		// When
-		this.underTest.deleteAccount(accountId);
-
-	}
-
-	@Test
 	public void deleteFoodSpecialtyShouldInvokePersistence() {
 
 		// Given
@@ -1414,6 +1389,56 @@ public class FacadeImplTest {
 		Mockito.verify(account).removeRestaurant(restaurantId);
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
 		Mockito.verify(this.baseDao).get(Restaurant.class, restaurantId);
+		Mockito.verifyNoMoreInteractions(this.baseDao, account);
+	}
+
+	@Test(expected = BusinessException.class)
+	public void deleteAccountShouldThrowBusinessExceptionWithNullAccountId() {
+
+		// Given
+		final Long accountId = null;
+
+		// When
+		this.underTest.deleteAccount(accountId);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void deleteAccountShouldThrowBusinessExceptionWhenAccountWasNotFound() {
+
+		// Variables
+		Long accountId;
+		Account account;
+
+		// Given
+		accountId = 5L;
+		account = null;
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.deleteAccount(accountId);
+
+		// Then
+	}
+
+	@Test
+	public void deleteAccountShouldSucceed() {
+
+		// Variables
+		Long accountId;
+		Account account;
+
+		// Given
+		accountId = 5L;
+		account = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.deleteAccount(accountId);
+
+		// Then
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(this.baseDao).delete(Account.class, accountId);
 		Mockito.verifyNoMoreInteractions(this.baseDao, account);
 	}
 

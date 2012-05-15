@@ -258,7 +258,7 @@ public class FacadeImpl implements Facade {
 	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
 	public void deleteAccount(final Long accountId) {
 
-		Preconditions.checkArgument(accountId != null, "Illegal call to deleteAccount, account identifier is required");
+		readAccount(accountId);
 
 		this.baseDao.delete(Account.class, accountId);
 

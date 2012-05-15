@@ -89,9 +89,6 @@ public class AccountsResource {
 
 		final Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
-		// if (restaurant == null) return
-		// Response.status(Response.Status.NOT_FOUND).build();
-
 		return Response.ok(restaurant).build();
 
 	}
@@ -102,7 +99,7 @@ public class AccountsResource {
 
 		this.facade.deleteAccount(id);
 
-		return Response.noContent().build();
+		return Response.ok().build();
 
 	}
 
@@ -123,9 +120,6 @@ public class AccountsResource {
 	public Response readAccount(@PathParam(value = "id") final Long id) throws Throwable {
 
 		final Account account = this.facade.readAccount(id, true);
-
-		// if (account == null) return
-		// Response.status(Response.Status.NOT_FOUND).build();
 
 		return Response.ok(account).build();
 

@@ -14,7 +14,7 @@ Given I provide  "louis" uid and "secret" password
 When I send a valid "delete restaurant" request
 Then the response code should be "200"
 
-Scenario: delete restaurant as restaurant with wrong role should fail
+Scenario: delete restaurant as restaurant with wrong account should fail
 Given I provide  "louis" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
