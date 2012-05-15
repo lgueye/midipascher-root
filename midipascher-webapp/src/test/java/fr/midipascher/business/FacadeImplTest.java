@@ -1442,4 +1442,54 @@ public class FacadeImplTest {
 		Mockito.verifyNoMoreInteractions(this.baseDao, account);
 	}
 
+	@Test(expected = BusinessException.class)
+	public void lockAccountShouldThrowBusinessExceptionWithNullAccountId() {
+
+		// Given
+		final Long accountId = null;
+
+		// When
+		this.underTest.lockAccount(accountId);
+
+	}
+
+	@Test(expected = BusinessException.class)
+	public void lockAccountShouldThrowBusinessExceptionWhenAccountWasNotFound() {
+
+		// Variables
+		Long accountId;
+		Account account;
+
+		// Given
+		accountId = 5L;
+		account = null;
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.lockAccount(accountId);
+
+		// Then
+	}
+
+	@Test
+	public void lockAccountShouldSucceed() {
+
+		// Variables
+		Long accountId;
+		Account account;
+
+		// Given
+		accountId = 5L;
+		account = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+
+		// When
+		this.underTest.lockAccount(accountId);
+
+		// Then
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(account).setLocked(true);
+		Mockito.verifyNoMoreInteractions(this.baseDao, account);
+	}
+
 }

@@ -37,7 +37,7 @@ import fr.midipascher.domain.business.Facade;
 @Component
 @Path(value = "/foodspecialty")
 @Scope("request")
-public class FoodSpecialtyController {
+public class FoodSpecialtyResource {
 
 	@Autowired
 	private Facade				facade;
@@ -45,7 +45,7 @@ public class FoodSpecialtyController {
 	@Context
 	private UriInfo				uriInfo;
 
-	private static final Logger	LOGGER	= LoggerFactory.getLogger(FoodSpecialtyController.class);
+	private static final Logger	LOGGER	= LoggerFactory.getLogger(FoodSpecialtyResource.class);
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -114,7 +114,7 @@ public class FoodSpecialtyController {
 		final GenericEntity<List<FoodSpecialty>> entity = new GenericEntity<List<FoodSpecialty>>(results) {
 		};
 
-		if (CollectionUtils.isEmpty(results)) FoodSpecialtyController.LOGGER.info("No results found");
+		if (CollectionUtils.isEmpty(results)) FoodSpecialtyResource.LOGGER.info("No results found");
 
 		return Response.ok(entity).build();
 
