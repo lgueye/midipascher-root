@@ -29,6 +29,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import fr.midipascher.domain.Constants;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.domain.exceptions.OwnershipException;
 
 /**
  * @author louis.gueye@gmail.com
@@ -67,7 +68,7 @@ public class ExceptionConverter {
 
 		if (th instanceof AuthenticationException) return HttpServletResponse.SC_UNAUTHORIZED;
 
-		if (th instanceof AccessDeniedException) return HttpServletResponse.SC_FORBIDDEN;
+		if (th instanceof AccessDeniedException || th instanceof OwnershipException) return HttpServletResponse.SC_FORBIDDEN;
 
 		if (th instanceof IllegalArgumentException || th instanceof ValidationException
 				|| th instanceof PersistenceException) return HttpServletResponse.SC_BAD_REQUEST;

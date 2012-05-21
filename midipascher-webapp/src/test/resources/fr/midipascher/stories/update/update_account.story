@@ -10,12 +10,12 @@ When I send that request
 It should either succeed or fail
 
 Scenario: update account should succeed
-Given I provide  "louis" uid and "secret" password
+Given I provide  "update@me.com" uid and "secret" password
 When I send a valid "update account" request
 Then the response code should be "200"
 
 Scenario: update account with wrong id should fail
-Given I provide  "louis" uid and "secret" password
+Given I provide  "update@me.com" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
 When I send a "update account" request with wrong id "<wrong_id>"
@@ -25,22 +25,8 @@ Examples:
 |wrong_id|message|
 |-89|Account [id = -89] was not found|
 	
-Scenario: update account with wrong uid should fail
-Given I provide  "louis" uid and "secret" password
-Given I accept "en" language
-And I accept "application/json" format
-When I send a "update account" request with wrong uid "<wrong_uid>"
-Then the response code should be "400"
-And the message should be "<message>"
-Examples:
-|wrong_uid|message|
-||Email is required|
-|mail.mail|Valid email format is required|
-|mailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmailmail@mail.mail|Email max length is 100|
-|exists@mail.com|Email "exists@mail.com" already used|
-
 Scenario: update account with wrong password should fail
-Given I provide  "louis" uid and "secret" password
+Given I provide  "update@me.com" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
 When I send a "update account" request with wrong password "<wrong_password>"
@@ -52,7 +38,7 @@ Examples:
 |aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaax|Password max length is 200|
 
 Scenario: update account with wrong first name
-Given I provide  "louis" uid and "secret" password
+Given I provide  "update@me.com" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
 When I send a "update account" request with wrong first name "<wrong_first_name>"
@@ -64,7 +50,7 @@ Examples:
 |ccccccccccccccccccccccccccccccccccccccccccccccccccx|First name max length is 50|
 
 Scenario: update account with wrong last name
-Given I provide  "louis" uid and "secret" password
+Given I provide  "update@me.com" uid and "secret" password
 Given I accept "en" language
 And I accept "application/json" format
 When I send a "update account" request with wrong last name "<wrong_last_name>"

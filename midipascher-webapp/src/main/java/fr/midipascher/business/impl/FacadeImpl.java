@@ -19,13 +19,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
@@ -34,6 +42,7 @@ import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.domain.exceptions.OwnershipException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
 
@@ -74,6 +83,8 @@ public class FacadeImpl implements Facade {
 
 		if (CollectionUtils.isEmpty(results)) return;
 
+		if (matchesConnectedUser(email)) return;
+
 		final String messageCode = "account.email.already.used";
 
 		final String message = this.messageSource.getMessage(messageCode, new Object[] { email },
@@ -84,6 +95,27 @@ public class FacadeImpl implements Facade {
 		final String defaultMessage = "Email already used";
 
 		throw new BusinessException(messageCode, new Object[] { email }, defaultMessage);
+
+	}
+
+	/**
+	 * @param email
+	 * @return
+	 */
+	private boolean matchesConnectedUser(String email) {
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		if (securityContext != null) {
+			Authentication authentication = securityContext.getAuthentication();
+			if (authentication != null) {
+				UserDetails principal = (UserDetails) authentication.getPrincipal();
+				if (principal != null) {
+					String uid = principal.getUsername();
+					if (uid != null) return uid.equals(email);
+				}
+			}
+		}
+
+		return false;
 
 	}
 
@@ -191,7 +223,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_ADMIN })
 	public Long createAuthority(final Authority authority) {
 
 		Preconditions.checkArgument(authority != null, "Illegal call to createAuthority, authority is required");
@@ -210,7 +242,7 @@ public class FacadeImpl implements Facade {
 	 * @see fr.midipascher.domain.business.Facade#createFoodSpecialty(fr.midipascher.domain.FoodSpecialty)
 	 */
 	@Override
-	@RolesAllowed("ROLE_ADMIN")
+	@RolesAllowed(Authority.ROLE_ADMIN)
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Long createFoodSpecialty(final FoodSpecialty foodSpecialty) {
 
@@ -235,7 +267,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
 	public Long createRestaurant(final Long accountId, final Restaurant restaurant) {
 
 		final Account account = readAccount(accountId);
@@ -255,7 +287,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
 	public void deleteAccount(final Long accountId) {
 
 		readAccount(accountId);
@@ -269,7 +301,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed("ROLE_ADMIN")
+	@RolesAllowed(Authority.ROLE_ADMIN)
 	public void deleteFoodSpecialty(final Long foodSpecialtyId) {
 
 		Preconditions.checkArgument(foodSpecialtyId != null,
@@ -285,7 +317,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
 	public void deleteRestaurant(final Long accountId, final Long restaurantId) {
 
 		final Account account = readAccount(accountId);
@@ -314,7 +346,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_ADMIN })
 	public void inactivateFoodSpecialty(final Long foodSpecialtyId) {
 
 		final FoodSpecialty foodSpecialty = readFoodSpecialty(foodSpecialtyId);
@@ -350,7 +382,82 @@ public class FacadeImpl implements Facade {
 			throw new BusinessException("account.not.found", new Object[] { id }, message);
 		}
 
+		checkOwnership(account);
+
 		return account;
+
+	}
+
+	/**
+	 * @param protectedAccount
+	 */
+	public void checkOwnership(final Account protectedAccount) {
+
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null) return;
+
+		final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+		if (CollectionUtils.isNotEmpty(authorities)) {
+
+			Collection<String> filteredRoles = rolesFromGrantedAuthorities(authorities);
+
+			if (filteredRoles.contains(Authority.ROLE_PREFIX + Authority.ADMIN)) return;
+
+		}
+
+		final UserDetails user = (UserDetails) authentication.getPrincipal();
+
+		final String requestingEmail = user.getUsername();
+
+		final String protectedEmail = protectedAccount.getEmail();
+
+		if (!requestingEmail.equals(protectedEmail)) {
+
+			final String message = String.format("Account [%s] tried to access account [%s] informations",
+					requestingEmail, protectedEmail);
+
+			LOGGER.error(message);
+
+			throw new OwnershipException("ownership.exception", null, message);
+
+		}
+	}
+
+	/**
+	 * @param authorities
+	 * @return
+	 */
+	public Collection<String> rolesFromGrantedAuthorities(final Collection<? extends GrantedAuthority> authorities) {
+
+		if (CollectionUtils.isEmpty(authorities)) return Lists.newArrayList();
+
+		final Collection<String> roles = Collections2.transform(authorities, new Function<GrantedAuthority, String>() {
+
+			/**
+			 * @see com.google.common.base.Function#apply(java.lang.Object)
+			 */
+			@Override
+			public String apply(GrantedAuthority input) {
+				return input.getAuthority();
+			}
+
+		});
+
+		final Collection<String> filteredRoles = Collections2.filter(roles, new Predicate<String>() {
+
+			/**
+			 * @see com.google.common.base.Predicate#apply(java.lang.Object)
+			 */
+			@Override
+			public boolean apply(String input) {
+				return !Strings.isNullOrEmpty(input);
+			}
+
+		});
+
+		return filteredRoles;
 
 	}
 
@@ -470,14 +577,14 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
 	public void updateAccount(final Long accountId, final Account detached) {
 
 		Preconditions.checkArgument(detached != null, "Illegal call to updateAccount, account is required");
 
-		checkUniqueAccountUID(detached);
-
 		Account persisted = readAccount(accountId);
+
+		checkUniqueAccountUID(detached);
 
 		persisted.setEmail(detached.getEmail());
 		persisted.setFirstName(detached.getFirstName());
@@ -496,7 +603,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed("ROLE_ADMIN")
+	@RolesAllowed(Authority.ROLE_ADMIN)
 	public void updateFoodSpecialty(final Long foodSpecialtyId, final FoodSpecialty detached) {
 
 		Preconditions.checkArgument(detached != null, "Illegal call to updateFoodSpecialty, foodSpecialty is required");
@@ -518,7 +625,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_RMGR", "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
 	public void updateRestaurant(Long accountId, final Long restaurantId, final Restaurant detached) {
 
 		Preconditions.checkArgument(detached != null, "Illegal call to updateRestaurant, restaurant is required");
@@ -578,7 +685,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_ADMIN })
 	public void inactivateAuthority(Long authorityId) {
 
 		final Authority authority = readAuthority(authorityId);
@@ -592,7 +699,7 @@ public class FacadeImpl implements Facade {
 	 */
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	@RolesAllowed({ "ROLE_ADMIN" })
+	@RolesAllowed({ Authority.ROLE_ADMIN })
 	public void lockAccount(Long accountId) {
 
 		final Account account = readAccount(accountId);

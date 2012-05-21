@@ -10,9 +10,10 @@
 	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
 
 	<account account_id="1" first_name="first_name" last_name="last_name" email="exists@mail.com" password="password" locked="0"/>
-	<account account_id="2" first_name="first_name" last_name="last_name" email="louis@mail.com" password="secret" locked="0"/>
-	<account account_id="3" first_name="louis" last_name="gueye" email="louis.gueye.trash@mail.com" password="secret" locked="0"/>
+	<account account_id="2" first_name="first_name" last_name="last_name" email="louis@rmgr.com" password="secret" locked="0"/>
+	<account account_id="3" first_name="louis" last_name="gueye" email="update@me.com" password="secret" locked="0"/>
 	<account account_id="4" first_name="locked" last_name="locked" email="locked.locked@locked.com" password="secret" locked="0"/>
+	<account account_id="5" first_name="first_name" last_name="last_name" email="delete@me.com" password="secret" locked="0"/>
 	<accounts_authorities account_id="2" authority_id="2"/>
 	<accounts_authorities account_id="3" authority_id="2"/>
 	

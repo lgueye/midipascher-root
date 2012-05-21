@@ -41,7 +41,7 @@ public class ContentNegotiationSteps {
 		String requestFormat = this.requestContentType;
 		String responseFormat = "application/json";
 		String responseLanguage = "en";
-		MidipascherClient.setCredentials("admin", "secret");
+		MidipascherClient.setCredentials("admin@admin.com", "secret");
 		this.response = MidipascherClient.createEntity(TestUtils.validFoodSpecialty(), "/foodspecialty", requestFormat,
 				responseFormat, responseLanguage);
 	}

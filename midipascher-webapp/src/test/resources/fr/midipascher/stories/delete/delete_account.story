@@ -2,7 +2,7 @@ Delete account stories
 
 Meta:
 @refs 13
-@progress wip
+@progress done
 
 Narrative:
 Given I provide a delete account request
@@ -10,12 +10,12 @@ When I send that request
 It should either succeed or fail
 
 Scenario: delete account should succeed
-Given I provide  "louis" uid and "secret" password
+Given I provide  "admin@admin.com" uid and "secret" password
 When I send a valid "delete account" request
 Then the response code should be "200"
 
 Scenario: delete account with wrong uid should fail
-Given I provide  "louis" uid and "secret" password
+Given I provide  "admin@admin.com" uid and "secret" password
 And I accept "en" language
 And I accept "application/xml" format
 When I send a "delete account" request with wrong id "<wrong_id>"

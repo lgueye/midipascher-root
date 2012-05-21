@@ -23,6 +23,8 @@ public class UpdateAccountSteps {
 	private ClientResponse	response;
 	private String			language;
 	private String			format;
+	private final String	relativePath	= "/account/3";
+	private String			uid;
 
 	@Then("the message should be \"<message>\"")
 	public void expectedMessage(@Named("message") final String message) {
@@ -31,6 +33,7 @@ public class UpdateAccountSteps {
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
+		this.uid = uid;
 		MidipascherClient.setCredentials(uid, password);
 	}
 
@@ -44,11 +47,12 @@ public class UpdateAccountSteps {
 		final Account account = TestUtils.validAccount();
 		account.setFirstName(firstName);
 		account.setAuthorities(null);
+		account.setEmail(this.uid);
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/account/3";
-		this.response = MidipascherClient.updateEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient
+				.updateEntity(account, this.relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"update account\" request with wrong last name \"<wrong_last_name>\"")
@@ -56,29 +60,19 @@ public class UpdateAccountSteps {
 		final Account account = TestUtils.validAccount();
 		account.setLastName(lastName);
 		account.setAuthorities(null);
+		account.setEmail(this.uid);
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/account/3";
-		this.response = MidipascherClient.updateEntity(account, relativePath, requestContentType, format, language);
-	}
-
-	@When("I send a \"update account\" request with wrong uid \"<wrong_uid>\"")
-	public void sendUpdateAccountRequestWithWrongUID(@Named("wrong_uid") final String email) {
-		final Account account = TestUtils.validAccount();
-		account.setEmail(email);
-		account.setAuthorities(null);
-		final String requestContentType = "application/json";
-		final String language = this.language;
-		final String format = this.format;
-		String relativePath = "/account/3";
-		this.response = MidipascherClient.updateEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient
+				.updateEntity(account, this.relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a \"update account\" request with wrong id \"<wrong_id>\"")
 	public void sendUpdateAccountRequestWithWrongUID(@Named("wrong_id") final Long id) {
 		final Account account = TestUtils.validAccount();
 		account.setAuthorities(null);
+		account.setEmail(this.uid);
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
@@ -91,22 +85,24 @@ public class UpdateAccountSteps {
 		final Account account = TestUtils.validAccount();
 		account.setPassword(password);
 		account.setAuthorities(null);
+		account.setEmail(this.uid);
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/account/3";
-		this.response = MidipascherClient.updateEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient
+				.updateEntity(account, this.relativePath, requestContentType, format, language);
 	}
 
 	@When("I send a valid \"update account\" request")
 	public void sendValidUpdateAccountRequest() {
 		final Account account = TestUtils.validAccount();
 		account.setAuthorities(null);
+		account.setEmail(this.uid);
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/account/3";
-		this.response = MidipascherClient.updateEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient
+				.updateEntity(account, this.relativePath, requestContentType, format, language);
 	}
 
 	@Given("I accept \"$format\" format")

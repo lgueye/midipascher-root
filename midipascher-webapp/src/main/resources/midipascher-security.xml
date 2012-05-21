@@ -27,9 +27,10 @@
     <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider>
             <sec:user-service>
-                <sec:user name="rmgr" password="secret" authorities="ROLE_RMGR"/>
-                <sec:user name="louis" password="secret" authorities="ROLE_RMGR"/>
-                <sec:user name="admin" password="secret" authorities="ROLE_RMGR,ROLE_ADMIN"/>
+                <sec:user name="rmgr@rmgr.com" password="secret" authorities="ROLE_RMGR"/>
+                <sec:user name="louis@rmgr.com" password="secret" authorities="ROLE_RMGR"/>
+                <sec:user name="admin@admin.com" password="secret" authorities="ROLE_RMGR,ROLE_ADMIN"/>
+                <sec:user name="update@me.com" password="secret" authorities="ROLE_RMGR"/>
             </sec:user-service>
         </sec:authentication-provider>
     </sec:authentication-manager>

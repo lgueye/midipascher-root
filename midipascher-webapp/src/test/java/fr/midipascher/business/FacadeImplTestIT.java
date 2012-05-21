@@ -513,11 +513,11 @@ public class FacadeImplTestIT {
 	}
 
 	private void authenticateAsAdmin() {
-		authenticateAs("admin", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		authenticateAs("admin@admin.com", "secret", Arrays.asList(new SimpleGrantedAuthority(Authority.ROLE_ADMIN)));
 	}
 
 	private void authenticateAsRmgr() {
-		authenticateAs("rmgr", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_RMGR")));
+		authenticateAs("rmgr@rmgr.com", "secret", Arrays.asList(new SimpleGrantedAuthority(Authority.ROLE_RMGR)));
 	}
 
 	@Test

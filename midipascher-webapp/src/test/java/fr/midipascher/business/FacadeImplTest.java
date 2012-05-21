@@ -3,8 +3,11 @@
  */
 package fr.midipascher.business;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +25,14 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import fr.midipascher.business.impl.FacadeImpl;
@@ -34,6 +44,7 @@ import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.domain.exceptions.OwnershipException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
 import fr.midipascher.test.TestUtils;
@@ -56,6 +67,7 @@ public class FacadeImplTest {
 	private final Facade	underTest	= new FacadeImpl();
 
 	public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
+
 		// Variables
 		Account account;
 		String email;
@@ -462,7 +474,7 @@ public class FacadeImplTest {
 	}
 
 	@Test
-	public void createFoodSpecialtyShouldInvokePersistence() throws Throwable {
+	public void createFoodSpecialtyShouldSucceed() throws Throwable {
 
 		// Variables
 		FoodSpecialty foodSpecialty;
@@ -516,51 +528,71 @@ public class FacadeImplTest {
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void createRestaurantShouldLoadUserThenAddRestaurantToItsRestaurantCollection() {
 
+		// Variables
 		Long accountId;
-		Long restaurantId = null;
-		Restaurant restaurant = Mockito.mock(Restaurant.class);
-		Account account = Mockito.mock(Account.class);
+		Long restaurantId;
+		Restaurant restaurant;
+		Account persistedAccount;
 		Set<FoodSpecialty> specialties;
 		FoodSpecialty sp0;
 		FoodSpecialty sp1;
 		Long id0;
 
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
+
+		// Given
+		userName = "connected@user.com";
+		email = userName;
 		accountId = 5L;
 		restaurantId = null;
 		restaurant = Mockito.mock(Restaurant.class);
-		account = Mockito.mock(Account.class);
-		restaurant = Mockito.mock(Restaurant.class);
+		persistedAccount = Mockito.mock(Account.class);
 		sp0 = Mockito.mock(FoodSpecialty.class);
 		sp1 = Mockito.mock(FoodSpecialty.class);
 		id0 = 5L;
+		principal = Mockito.mock(UserDetails.class);
 
 		Mockito.when(sp0.getId()).thenReturn(id0);
 		specialties = new HashSet<FoodSpecialty>(Arrays.asList(sp0));
-		Mockito.when(restaurant.getSpecialties()).thenReturn(specialties);
 		Mockito.when(this.baseDao.get(FoodSpecialty.class, id0)).thenReturn(sp1);
-
 		Mockito.when(restaurant.getId()).thenReturn(restaurantId);
 		Mockito.when(restaurant.getSpecialties()).thenReturn(specialties);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
 
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
+
+		// When
 		this.underTest.createRestaurant(accountId, restaurant);
 
+		// Then
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
-		// Mockito.verify(restaurant).getSpecialties();
-		// Mockito.verify(restaurant).clearSpecialties();
-		// Mockito.verify(this.baseDao).get(FoodSpecialty.class, id0);
-		// Mockito.verify(restaurant).addSpecialty(sp1);
-
-		Mockito.verify(account).addRestaurant(restaurant);
+		Mockito.verify(persistedAccount).addRestaurant(restaurant);
+		Mockito.verify(persistedAccount).getEmail();
 		Mockito.verify(this.validator).validate(restaurant, ValidationContext.CREATE);
 		Mockito.verify(this.baseDao).persist(restaurant);
 		Mockito.verify(restaurant).getId();
-		// Mockito.verify(restaurant).countSpecialties();
-
-		Mockito.verifyNoMoreInteractions(this.baseDao, account, restaurant, this.validator);
+		Mockito.verifyNoMoreInteractions(this.baseDao, persistedAccount, restaurant, this.validator);
 		Mockito.verifyZeroInteractions(this.messageSource);
 
 	}
@@ -755,24 +787,56 @@ public class FacadeImplTest {
 		this.underTest.readFoodSpecialty(null);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
-	public void readRestaurantShouldInvokePersistence() {
+	public void readRestaurantShouldSucceed() {
+
+		// Variables
+		final Long restaurantId;
+		final Long accountId;
+		Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
-		final Long restaurantId = 5L;
-		final Long accountId = 5L;
-		Account account;
-
-		// When
-		account = Mockito.mock(Account.class);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		userName = "connected@user.com";
+		email = userName;
+		restaurantId = 5L;
+		accountId = 5L;
+		persistedAccount = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
 		Restaurant persisted = Mockito.mock(Restaurant.class);
 		Mockito.when(this.baseDao.get(Restaurant.class, restaurantId)).thenReturn(persisted);
 
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		SecurityContextHolder.setContext(securityContext);
+
+		// When
 		this.underTest.readRestaurant(accountId, restaurantId, false);
 
 		// Then
 		Mockito.verify(this.baseDao).get(Restaurant.class, restaurantId);
+		Mockito.verify(this.baseDao).get(Account.class, accountId);
+		Mockito.verify(persistedAccount).isLocked();
+		Mockito.verify(persistedAccount).getEmail();
+		Mockito.verifyNoMoreInteractions(this.baseDao, persistedAccount);
 
 	}
 
@@ -793,26 +857,54 @@ public class FacadeImplTest {
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
-	public void readAccountShouldInvokeBaseDao() {
+	public void readAccountShouldSucceed() {
 		// Variables
 		final Long id;
-		final Account expectedUser;
+		final Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		id = 5L;
-		expectedUser = Mockito.mock(Account.class);
-		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(expectedUser);
+		persistedAccount = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(persistedAccount);
+
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		final Account actualUser = this.underTest.readAccount(id, false);
 
 		// Then
 		Mockito.verify(this.baseDao).get(Account.class, id);
-		Assert.assertSame(expectedUser, actualUser);
+		Assert.assertSame(persistedAccount, actualUser);
 		Mockito.verifyNoMoreInteractions(this.baseDao);
+
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void updateAccountShouldReadAccountFromRepositoryAndMerge() {
 
@@ -823,12 +915,20 @@ public class FacadeImplTest {
 		String firstName;
 		String lastName;
 		String password;
-		// Set<Restaurant> restaurants;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		detached = Mockito.mock(Account.class);
 		id = 5L;
-		email = "mail@mail.com";
 		firstName = "xavier";
 		lastName = "dcx";
 		password = "secret";
@@ -839,8 +939,20 @@ public class FacadeImplTest {
 		Mockito.when(detached.getFirstName()).thenReturn(firstName);
 		Mockito.when(detached.getLastName()).thenReturn(lastName);
 		Mockito.when(detached.getPassword()).thenReturn(password);
-		// Mockito.when(account.getRestaurants()).thenReturn(restaurants);
 		Mockito.when(this.baseDao.get(Account.class, id)).thenReturn(persisted);
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persisted.getEmail()).thenReturn(email);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		this.underTest.updateAccount(id, detached);
@@ -852,12 +964,11 @@ public class FacadeImplTest {
 		Mockito.verify(detached).getFirstName();
 		Mockito.verify(detached).getLastName();
 		Mockito.verify(detached).getPassword();
-		// Mockito.verify(account).getRestaurants();
+		Mockito.verify(persisted).getEmail();
 		Mockito.verify(persisted).setEmail(email);
 		Mockito.verify(persisted).setFirstName(firstName);
 		Mockito.verify(persisted).setLastName(lastName);
 		Mockito.verify(persisted).setPassword(password);
-		// Mockito.verify(persistedAccount).setRestaurants(restaurants);
 		Mockito.verify(this.validator).validate(persisted, ValidationContext.UPDATE);
 		Mockito.verifyNoMoreInteractions(detached, persisted, this.baseDao);
 		Mockito.verifyZeroInteractions(this.baseDao);
@@ -1074,6 +1185,7 @@ public class FacadeImplTest {
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void updateRestaurantShouldSucceed() {
 
@@ -1081,7 +1193,6 @@ public class FacadeImplTest {
 		Long accountId;
 		Long restaurantId;
 		Restaurant detached;
-		Account account;
 		Set<Restaurant> accountRestaurants;
 		Restaurant persisted;
 		FoodSpecialty foodSpecialty;
@@ -1095,12 +1206,23 @@ public class FacadeImplTest {
 		String name;
 		String phoneNumber;
 		boolean vegetarian;
+		final Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		accountId = 8L;
 		restaurantId = 7L;
 		detached = Mockito.mock(Restaurant.class);
-		account = Mockito.mock(Account.class);
+		persistedAccount = Mockito.mock(Account.class);
 		accountRestaurants = Sets.newHashSet();
 		persisted = Mockito.mock(Restaurant.class);
 		accountRestaurants.add(persisted);
@@ -1117,9 +1239,10 @@ public class FacadeImplTest {
 		halal = true;
 		kosher = false;
 		vegetarian = true;
+		principal = Mockito.mock(UserDetails.class);
 
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
-		Mockito.when(account.getRestaurants()).thenReturn(accountRestaurants);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
+		Mockito.when(persistedAccount.getRestaurants()).thenReturn(accountRestaurants);
 		Mockito.when(persisted.getId()).thenReturn(restaurantId);
 		Mockito.when(foodSpecialty.getId()).thenReturn(foodSpecialtyId);
 		Mockito.when(this.baseDao.get(FoodSpecialty.class, foodSpecialtyId)).thenReturn(foodSpecialty);
@@ -1133,6 +1256,19 @@ public class FacadeImplTest {
 		Mockito.when(detached.isHalal()).thenReturn(halal);
 		Mockito.when(detached.isKosher()).thenReturn(kosher);
 		Mockito.when(detached.isVegetarian()).thenReturn(vegetarian);
+
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		this.underTest.updateRestaurant(accountId, restaurantId, detached);
@@ -1151,7 +1287,9 @@ public class FacadeImplTest {
 		Mockito.verify(persisted).clearSpecialties();
 		Mockito.verify(persisted).addSpecialty(foodSpecialty);
 		Mockito.verify(this.validator).validate(persisted, ValidationContext.UPDATE);
-		Mockito.verifyNoMoreInteractions(persisted);
+		Mockito.verify(persistedAccount).getEmail();
+		Mockito.verify(persistedAccount).getRestaurants();
+		Mockito.verifyNoMoreInteractions(persisted, persistedAccount);
 
 	}
 
@@ -1266,19 +1404,44 @@ public class FacadeImplTest {
 		// Then
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void createRestaurantShouldSucceed() {
 
 		// Variables
 		Long accountId;
-		Account account;
 		Restaurant restaurant;
+		Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		accountId = 5L;
-		account = Mockito.mock(Account.class);
+		persistedAccount = Mockito.mock(Account.class);
 		restaurant = Mockito.mock(Restaurant.class);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
+
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		this.underTest.createRestaurant(accountId, restaurant);
@@ -1287,9 +1450,10 @@ public class FacadeImplTest {
 		Mockito.verify(this.validator).validate(restaurant, ValidationContext.CREATE);
 		Mockito.verify(this.baseDao).persist(restaurant);
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
-		Mockito.verify(account).addRestaurant(restaurant);
+		Mockito.verify(persistedAccount).addRestaurant(restaurant);
 		Mockito.verify(restaurant).getId();
-		Mockito.verifyNoMoreInteractions(this.validator, this.baseDao, account, restaurant);
+		Mockito.verify(persistedAccount).getEmail();
+		Mockito.verifyNoMoreInteractions(this.validator, this.baseDao, persistedAccount, restaurant);
 	}
 
 	@Test(expected = BusinessException.class)
@@ -1365,31 +1529,57 @@ public class FacadeImplTest {
 		// Then
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void deleteRestaurantShouldSucceed() {
 
 		// Variables
 		Long accountId;
-		Account account;
 		Long restaurantId;
 		Restaurant restaurant;
+		Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		accountId = 5L;
-		account = Mockito.mock(Account.class);
+		persistedAccount = Mockito.mock(Account.class);
 		restaurantId = 4L;
 		restaurant = Mockito.mock(Restaurant.class);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
 		Mockito.when(this.baseDao.get(Restaurant.class, restaurantId)).thenReturn(restaurant);
+
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		this.underTest.deleteRestaurant(accountId, restaurantId);
 
 		// Then
-		Mockito.verify(account).removeRestaurant(restaurantId);
+		Mockito.verify(persistedAccount).removeRestaurant(restaurantId);
+		Mockito.verify(persistedAccount).getEmail();
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
 		Mockito.verify(this.baseDao).get(Restaurant.class, restaurantId);
-		Mockito.verifyNoMoreInteractions(this.baseDao, account);
+		Mockito.verifyNoMoreInteractions(this.baseDao, persistedAccount);
 	}
 
 	@Test(expected = BusinessException.class)
@@ -1421,17 +1611,42 @@ public class FacadeImplTest {
 		// Then
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void deleteAccountShouldSucceed() {
 
 		// Variables
 		Long accountId;
-		Account account;
+		Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		accountId = 5L;
-		account = Mockito.mock(Account.class);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		persistedAccount = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
+
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		this.underTest.deleteAccount(accountId);
@@ -1439,7 +1654,8 @@ public class FacadeImplTest {
 		// Then
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
 		Mockito.verify(this.baseDao).delete(Account.class, accountId);
-		Mockito.verifyNoMoreInteractions(this.baseDao, account);
+		Mockito.verify(persistedAccount).getEmail();
+		Mockito.verifyNoMoreInteractions(this.baseDao, persistedAccount);
 	}
 
 	@Test(expected = BusinessException.class)
@@ -1471,25 +1687,270 @@ public class FacadeImplTest {
 		// Then
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void lockAccountShouldSucceed() {
 
 		// Variables
 		Long accountId;
-		Account account;
+		Account persistedAccount;
+
+		SecurityContext securityContext;
+		Authentication authentication;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
 
 		// Given
+		userName = "connected@user.com";
+		email = userName;
 		accountId = 5L;
-		account = Mockito.mock(Account.class);
-		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(account);
+		persistedAccount = Mockito.mock(Account.class);
+		Mockito.when(this.baseDao.get(Account.class, accountId)).thenReturn(persistedAccount);
+
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(persistedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
 
 		// When
 		this.underTest.lockAccount(accountId);
 
 		// Then
 		Mockito.verify(this.baseDao).get(Account.class, accountId);
-		Mockito.verify(account).setLocked(true);
-		Mockito.verifyNoMoreInteractions(this.baseDao, account);
+		Mockito.verify(persistedAccount).getEmail();
+		Mockito.verify(persistedAccount).setLocked(true);
+		Mockito.verifyNoMoreInteractions(this.baseDao, persistedAccount);
+	}
+
+	@Test
+	public void rolesFromGrantedAuthoritiesShouldReturnEmptyListWithEmptyInput() {
+
+		Collection<GrantedAuthority> input;
+		Collection<String> result;
+
+		input = null;
+		result = ((FacadeImpl) this.underTest).rolesFromGrantedAuthorities(input);
+		Assert.assertTrue(CollectionUtils.isEmpty(result));
+
+		input = Lists.newArrayList();
+		result = ((FacadeImpl) this.underTest).rolesFromGrantedAuthorities(input);
+		Assert.assertTrue(CollectionUtils.isEmpty(result));
+
+	}
+
+	@Test
+	public void rolesFromGrantedAuthoritiesShouldFilterEmptyAuthority() {
+
+		// Variables
+		Collection<GrantedAuthority> input;
+		GrantedAuthority emptyAuthority;
+		Collection<String> result;
+
+		// Given
+		input = Lists.newArrayList();
+		emptyAuthority = Mockito.mock(GrantedAuthority.class);
+		Mockito.when(emptyAuthority.getAuthority()).thenReturn(null);
+		input.add(emptyAuthority);
+
+		// When
+		result = ((FacadeImpl) this.underTest).rolesFromGrantedAuthorities(input);
+
+		// Then
+		Assert.assertTrue(CollectionUtils.isEmpty(result));
+
+		// Given
+		input = Lists.newArrayList();
+		emptyAuthority = Mockito.mock(GrantedAuthority.class);
+		Mockito.when(emptyAuthority.getAuthority()).thenReturn(StringUtils.EMPTY);
+		input.add(emptyAuthority);
+
+		// When
+		result = ((FacadeImpl) this.underTest).rolesFromGrantedAuthorities(input);
+
+		// Then
+		Assert.assertTrue(CollectionUtils.isEmpty(result));
+
+	}
+
+	@Test
+	public void checkOwnershipShouldNotThrowOwnershipExceptionIfNoUserIsLoggedOn() {
+
+		// Variables
+		SecurityContext securityContext;
+		Authentication authentication;
+		Account protectedAccount;
+
+		// Given
+		protectedAccount = null;
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = null;
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+
+		// When
+		try {
+			((FacadeImpl) this.underTest).checkOwnership(protectedAccount);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			fail("No exception expected, got " + th);
+		}
+
+		// Then
+		Mockito.verify(securityContext).getAuthentication();
+		Mockito.verifyNoMoreInteractions(securityContext);
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void checkOwnershipShouldNotThrowOwnershipExceptionIfUserIsAdmin() {
+
+		// Variables
+		SecurityContext securityContext;
+		Authentication authentication;
+		Account protectedAccount;
+		List authorities;
+		GrantedAuthority adminAuthority;
+		String userName;
+		UserDetails principal;
+
+		// Given
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		userName = "me@somewhere.com";
+		authorities = Lists.newArrayList();
+		adminAuthority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(adminAuthority);
+		protectedAccount = null;
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(adminAuthority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.ADMIN);
+		SecurityContextHolder.setContext(securityContext);
+
+		// When
+		try {
+			((FacadeImpl) this.underTest).checkOwnership(protectedAccount);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			fail("No exception expected, got " + th);
+		}
+
+		// Then
+		Mockito.verify(securityContext).getAuthentication();
+		Mockito.verify(authentication).getAuthorities();
+		Mockito.verify(adminAuthority).getAuthority();
+		Mockito.verifyNoMoreInteractions(securityContext, authentication, adminAuthority);
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test
+	public void checkOwnershipShouldNotThrowOwnershipExceptionIfUserIsOwner() {
+
+		// Variables
+		SecurityContext securityContext;
+		Authentication authentication;
+		Account protectedAccount;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
+
+		// Given
+		userName = "connected@user.com";
+		email = userName;
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		protectedAccount = Mockito.mock(Account.class);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(protectedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
+
+		// When
+		try {
+			((FacadeImpl) this.underTest).checkOwnership(protectedAccount);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			fail("No exception expected, got " + th);
+		}
+
+		// Then
+		Mockito.verify(securityContext).getAuthentication();
+		Mockito.verify(authentication).getPrincipal();
+		Mockito.verify(authentication).getAuthorities();
+		Mockito.verify(authority).getAuthority();
+		Mockito.verify(protectedAccount).getEmail();
+		Mockito.verifyNoMoreInteractions(securityContext, authentication, authority, protectedAccount);
+
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test(expected = OwnershipException.class)
+	public void checkOwnershipShouldThrowOwnershipExceptionIfUserIsNotOwner() {
+
+		// Variables
+		SecurityContext securityContext;
+		Authentication authentication;
+		Account protectedAccount;
+		List authorities;
+		GrantedAuthority authority;
+		String userName;
+		String email;
+		UserDetails principal;
+
+		// Given
+		email = "any.other@user.com";
+		userName = "connected@user.com";
+		securityContext = Mockito.mock(SecurityContext.class);
+		authentication = Mockito.mock(Authentication.class);
+		authorities = Lists.newArrayList();
+		authority = Mockito.mock(GrantedAuthority.class);
+		authorities.add(authority);
+		protectedAccount = Mockito.mock(Account.class);
+		principal = Mockito.mock(UserDetails.class);
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		Mockito.when(authentication.getPrincipal()).thenReturn(principal);
+		Mockito.when(authentication.getAuthorities()).thenReturn(authorities);
+		Mockito.when(principal.getUsername()).thenReturn(userName);
+		Mockito.when(authority.getAuthority()).thenReturn(Authority.ROLE_PREFIX + Authority.RMGR);
+		Mockito.when(protectedAccount.getEmail()).thenReturn(email);
+		SecurityContextHolder.setContext(securityContext);
+
+		// When
+		((FacadeImpl) this.underTest).checkOwnership(protectedAccount);
+
+		// Then
+		Mockito.verify(securityContext).getAuthentication();
+		Mockito.verify(authentication).getPrincipal();
+		Mockito.verify(authentication).getAuthorities();
+		Mockito.verify(authority).getAuthority();
+		Mockito.verify(protectedAccount).getEmail();
+		Mockito.verifyNoMoreInteractions(securityContext, authentication, authority, protectedAccount);
+
 	}
 
 }
