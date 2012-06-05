@@ -29,9 +29,7 @@ public class AccountToUserConverter implements Converter<Account, User> {
 	 */
 	@Override
 	public User convert(Account source) {
-
 		if (source == null) return null;
-
 		String username = source.getEmail();
 		String password = source.getPassword();
 		boolean enabled = !source.isLocked();
@@ -42,7 +40,5 @@ public class AccountToUserConverter implements Converter<Account, User> {
 				.fromAuthorities(source.getAuthorities());
 		return new User(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked,
 				grantedAuthorities);
-
 	}
-
 }

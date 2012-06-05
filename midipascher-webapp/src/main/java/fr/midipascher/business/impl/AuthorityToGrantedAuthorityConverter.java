@@ -45,6 +45,6 @@ public class AuthorityToGrantedAuthorityConverter implements Converter<Authority
 		}
 
 		return collection;
-
 	}
+
 }
