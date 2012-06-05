@@ -47,7 +47,7 @@ public class LockAccountSteps {
 	@When("I send a valid \"lock account\" request")
 	public void sendValidLockAccountRequest() {
 		final String requestContentType = "application/json";
-		String relativePath = "/accounts/4/lock";
+		String relativePath = "/accounts/5/lock";
 		this.response = MidipascherClient.lockEntity(relativePath, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}

@@ -24,7 +24,7 @@ public class UpdateRestaurantSteps {
 	private ClientResponse	response;
 	private String			preferredLanguage;
 	private String			preferredFormat;
-	private final String	restaurantURI	= "/account/2/restaurant/1";
+	private final String	restaurantURI	= "/account/3/restaurant/1";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -67,7 +67,7 @@ public class UpdateRestaurantSteps {
 
 	@When("I send a \"update restaurant\" request with wrong id \"<wrong_id>\"")
 	public void sendAnUpdateRestaurantRequestWithWrongId(@Named("wrong_id") final Long id) {
-		final String relativePath = "/account/2/restaurant/-1";
+		final String relativePath = "/account/3/restaurant/-1";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();

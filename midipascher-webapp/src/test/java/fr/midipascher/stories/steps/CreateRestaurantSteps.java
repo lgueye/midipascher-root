@@ -24,7 +24,7 @@ public class CreateRestaurantSteps {
 	private ClientResponse	response;
 	private String			preferredLanguage;
 	private String			preferredFormat;
-	private final String	accountURI	= "/account/2";
+	private final String	accountURI	= "/account/3";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
