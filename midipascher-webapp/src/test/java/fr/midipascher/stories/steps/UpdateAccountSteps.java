@@ -23,7 +23,7 @@ public class UpdateAccountSteps {
 	private ClientResponse	response;
 	private String			language;
 	private String			format;
-	private final String	relativePath	= "/account/3";
+	private final String	relativePath	= "/account/4";
 	private String			uid;
 
 	@Then("the message should be \"<message>\"")

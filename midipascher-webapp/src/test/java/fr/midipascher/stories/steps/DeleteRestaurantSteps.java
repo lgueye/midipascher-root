@@ -21,7 +21,7 @@ public class DeleteRestaurantSteps {
 	private ClientResponse	response;
 	private String			preferredLanguage;
 	private String			preferredFormat;
-	private final String	restaurantURI	= "/account/2/restaurant/2";
+	private final String	restaurantURI	= "/account/3/restaurant/2";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -65,7 +65,7 @@ public class DeleteRestaurantSteps {
 
 	@When("I send a \"delete restaurant\" request with wrong id \"<wrong_id>\"")
 	public void sendAnDeleteRestaurantRequestWithWrongId(@Named("wrong_id") final Long id) {
-		final String relativePath = "/account/2/restaurant/-1";
+		final String relativePath = "/account/3/restaurant/-1";
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		this.response = MidipascherClient.deleteEntity(relativePath, format, language);

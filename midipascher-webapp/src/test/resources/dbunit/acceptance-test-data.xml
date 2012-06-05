@@ -1,5 +1,6 @@
 <dataset>
-	<authority authority_id="1" code="ADM" label="Administrator" active="1"/>
+
+	<authority authority_id="1" code="ADMIN" label="Administrator" active="1"/>
 	<authority authority_id="2" code="RMGR" label="Restaurant manager" active="1"/>
 	<authority authority_id="3" code="TST" label="Test authority" active="1"/>
 
@@ -9,13 +10,16 @@
 	<food_specialty food_specialty_id="4" code="CHN" label="Chinois" active="1"/>
 	<food_specialty food_specialty_id="5" code="JPN" label="Japonais" active="1"/>
 
-	<account account_id="1" first_name="first_name" last_name="last_name" email="exists@mail.com" password="password" locked="0"/>
-	<account account_id="2" first_name="first_name" last_name="last_name" email="louis@rmgr.com" password="secret" locked="0"/>
-	<account account_id="3" first_name="louis" last_name="gueye" email="update@me.com" password="secret" locked="0"/>
-	<account account_id="4" first_name="locked" last_name="locked" email="locked.locked@locked.com" password="secret" locked="0"/>
-	<account account_id="5" first_name="first_name" last_name="last_name" email="delete@me.com" password="secret" locked="0"/>
-	<accounts_authorities account_id="2" authority_id="2"/>
+	<account account_id="1" first_name="admin" last_name="admin" email="admin@admin.com" password="secret" locked="0"/>
+	<account account_id="2" first_name="first_name" last_name="last_name" email="exists@mail.com" password="secret" locked="0"/>
+	<account account_id="3" first_name="first_name" last_name="last_name" email="louis@rmgr.com" password="secret" locked="0"/>
+	<account account_id="4" first_name="louis" last_name="gueye" email="update@me.com" password="secret" locked="0"/>
+	<account account_id="5" first_name="locked" last_name="locked" email="lock@me.com" password="secret" locked="0"/>
+	<account account_id="6" first_name="first_name" last_name="last_name" email="delete@me.com" password="secret" locked="0"/>
+	<account account_id="7" first_name="first_name" last_name="last_name" email="rmgr@rmgr.com" password="secret" locked="0"/>
+	<accounts_authorities account_id="1" authority_id="1"/>
 	<accounts_authorities account_id="3" authority_id="2"/>
+	<accounts_authorities account_id="4" authority_id="2"/>
 	
 	<restaurant restaurant_id="1" address_city="Paris" address_country_code="FR" address_postal_code="75009" 
 		address_street_address="12 rue Lafayette" description="venez découvrir nos compositions uniques de salade originales" halal="0" 
@@ -26,7 +30,7 @@
 		kosher="0" vegetarian="0" main_offer="Salade quinoa 6,20€" name="Noon" phone_number="0143568537" company_id="552 100 555"/>
 
 	<restaurant_food_specialty restaurant_id="1" food_specialty_id="1"/>
-	<accounts_restaurants account_id="2" restaurant_id="1"/>
-	<accounts_restaurants account_id="2" restaurant_id="2"/>
+	<accounts_restaurants account_id="3" restaurant_id="1"/>
+	<accounts_restaurants account_id="3" restaurant_id="2"/>
 	
 </dataset>
