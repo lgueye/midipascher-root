@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,12 +40,13 @@ public class AuthorityToGrantedAuthorityConverter implements Converter<Authority
 
 		Collection<GrantedAuthority> collection = new ArrayList<GrantedAuthority>();
 
-		if (authorities != null) for ( Authority authority : authorities ) {
+		if (CollectionUtils.isEmpty(authorities)) return collection;
+
+		for ( Authority authority : authorities ) {
 			GrantedAuthority grantedAuthority = this.convert(authority);
 			if (grantedAuthority != null) collection.add(grantedAuthority);
 		}
 
 		return collection;
 	}
-
 }
