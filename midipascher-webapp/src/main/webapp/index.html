@@ -1,25 +1,105 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//FR" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!--[if (gt IE 6)&(lt IE 9)]><html xmlns="http://www.w3.org/1999/xhtml" class="IEgradient oldiesIE" lang="fr"><![endif]-->
+<!--[if gte IE 9]><html xmlns="http://www.w3.org/1999/xhtml" class="IEgradient" lang="fr"><![endif]-->
+<!--[if !IE]><!--><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><!--<![endif]-->
+
 <head>
-<title>Geocoding with GMap v3</title>
-<link type="text/css" href="css/midipascher.css" rel="stylesheet" />
-<!-- <script type="text/javascript"
-	src="http://maps.google.com/maps/api/js?sensor=false"></script>
- -->
- <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<!-- <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
- -->
- <script type="text/javascript" src="js/main.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Page d'accueil de Midi Pas Cher</title>
+<link rel="stylesheet" href="css/charte.css" />
 </head>
 <body>
-	<label>Address: </label>
-	<input id="address" type="text" />
-	<div id="map_canvas" style="width: 300px; height: 300px"></div>
-	<br />
-	<label>latitude: </label>
-	<input id="latitude" type="text" />
-	<br />
-	<label>longitude: </label>
-	<input id="longitude" type="text" />
+<!-- CONTAINER -->
+	<div id="mpc_page">
+  <!-- HEADER -->
+    <div id="mpc_header">
+    	<h1>Midi Pas Cher</h1>
+      <span class="bandeau_left">&nbsp;</span>
+      <div class="mpc_header_content">
+        <div class="mpc_candidat">
+          <p>Espace perso</p>
+          <p><a href="#">Mes recherches enregistrées</a></p>
+        </div>
+		      <a href="index.html" id="mpc_home">Accueil</a>
+        <div class="mpc_pro">
+          <p>Espace pro</p>
+          <p><a href="#">Mon compte</a><br/><a href="#">Créer un compte</a></p>
+        </div>
+      </div>
+      <span class="bandeau_right">&nbsp;</span>
+    </div>
+  <!-- FIN HEADER -->
+  <!-- CONTENT -->
+    <div id="mpc_conteneur">
+    <!-- BLOCK CAROUSEL -->
+      <div id="mpc_carousel">
+        <span class="chevron cheLeft">&laquo;</span>
+       	<div id="mpc_carousel_content">
+        	<p class="titleSlide"><strong>Vous recherchez un lieu pour manger sans vous ruinez</strong><br/>Midi pas cher vous aide à trouver les restaurants les moins chers de votre quartier</p>
+           <p class="icoHelp gradientgreenLinear"><span>&nbsp;</span></p>
+          <div>
+          	<img src="images/aJeter.png" width="900" height="295" alt="" />
+          </div>
+        </div>
+       <span class="chevron cheRight">&raquo;</span>
+     </div>
+    <!-- FIN BLOCK CAROUSEL -->
+      <hr class="haut" />
+    	<div id="mpc_content">
+      <!-- MOTEUR -->
+      	<div id="mpcSearch">
+          <ul>
+            <li id="table">
+            	<span>&nbsp;</span>
+            	<h2>Entrez une adresse</h2>
+              <p>Vous recherchez un restaurant à une adresse précise ?</p>
+			        <form action="#" method="post" name="mpcSearch">
+              	<input type="text" value="Numéro et rue" name="" class="w140 floatLeft" placeholder="Numéro et rue" />
+                <input type="text" value="Code postal" name="" class="w85 floatLeft" placeholder="Code postal" />
+                <button type="submit" class="gradientOrangeLinear btn w60">Ok</button>
+			        </form>
+            </li>
+            <li id="separateur">
+            	<span>OU</span>
+            </li>
+            <li id="carte">
+            	<span>&nbsp;</span>
+            	<h2>Géolocalisez-vous</h2>
+              <p>Vous recherchez un restaurant autour de vous ?</p>
+              <form action="#" method="post" name="mpcGeoLoc">
+                <button type="submit" class="gradientOrangeLinear btn w300">Rechercher ma position actuelle</button>
+			        </form>
+            </li>
+          </ul>
+        </div>
+      <!-- FIN MOTEUR -->
+      <!-- ETAPES -->
+        <div id="step">
+          <div class="stepBox floatLeft">
+            <span class="one floatLeft">&nbsp;</span><p class="linear">Localisez-vous</p>
+          </div>
+          <div class="stepBox floatLeft">
+            <span class="two floatLeft">&nbsp;</span><p>Affinez vos critères</p>
+          </div>
+          <div class="stepBox floatLeft">
+            <span class="three floatLeft">&nbsp;</span><p>Trouvez vos restaurants</p>
+          </div>
+        </div>
+      <!-- FIN ETAPES -->
+      </div>
+      <hr class="bas" />
+   </div>
+  <!-- FIN CONTENT -->
+  <!-- FOOTER -->
+    <div id="mpc_footer">
+      <p><a href="statique.html">Mentions légales</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="statique.html">Confidentialité</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="statique.html">A propos</a></p>
+    </div>
+  <!-- FIN FOOTER -->
+  </div>
+<!-- FIN CONTAINER -->
+
+<!-- APPEL SCRIPTS -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 </body>
 </html>
