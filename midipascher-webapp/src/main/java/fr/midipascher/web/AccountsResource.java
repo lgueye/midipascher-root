@@ -41,6 +41,7 @@ public class AccountsResource {
     // LoggerFactory.getLogger(AccountsResource.class);
 
     public static final String COLLECTION_RESOURCE_PATH = "/accounts";
+
     public static final String SINGLE_RESOURCE_PATH = "/{accountId}";
 
     @POST

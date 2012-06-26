@@ -29,9 +29,6 @@ public class UpdateAccountSteps {
     private String format;
     private String uid;
 
-    // private static final String UPDATE_URI = WebConstants.BACKEND_PATH + AccountsResource.COLLECTION_RESOURCE_PATH
-    // + "/4";
-
     private static final String UPDATE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(AccountsResource.COLLECTION_RESOURCE_PATH).path("4").build().toString();
 

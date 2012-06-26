@@ -27,9 +27,6 @@ public class InactivateFoodSpecialtySteps {
     private String responseLanguage;
     private String responseContentType;
 
-    // private static final String INACTIVATE_URI = WebConstants.BACKEND_PATH
-    // + FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH + "/5/inactivate";
-
     private static final String INACTIVATE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH).path("5").path("inactivate").build().toString();
 

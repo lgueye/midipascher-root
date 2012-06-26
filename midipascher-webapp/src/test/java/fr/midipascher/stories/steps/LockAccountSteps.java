@@ -27,9 +27,6 @@ public class LockAccountSteps {
     private String responseLanguage;
     private String responseContentType;
 
-    // private static final String LOCK_URI = WebConstants.BACKEND_PATH + AccountsResource.COLLECTION_RESOURCE_PATH
-    // + "/5/lock";
-
     private static final String LOCK_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(AccountsResource.COLLECTION_RESOURCE_PATH).path("5").path("lock").build().toString();
 

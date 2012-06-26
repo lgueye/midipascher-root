@@ -29,15 +29,6 @@ public class UpdateRestaurantSteps {
     private String preferredLanguage;
     private String preferredFormat;
 
-    // private static final String UPDATE_URI = WebConstants.BACKEND_PATH + AccountsResource.COLLECTION_RESOURCE_PATH
-    // + "/3/restaurants/1";
-    //
-    // private static final String INVALID_ACCOUNT_UPDATE_URI = WebConstants.BACKEND_PATH
-    // + AccountsResource.COLLECTION_RESOURCE_PATH + "/-1/restaurants/1";
-    //
-    // private static final String INVALID_RESTAURANT_UPDATE_URI = WebConstants.BACKEND_PATH
-    // + AccountsResource.COLLECTION_RESOURCE_PATH + "/3/restaurants/-1";
-
     private static final String UPDATE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(AccountsResource.COLLECTION_RESOURCE_PATH).path("3").path("restaurants").path("1").build().toString();
 

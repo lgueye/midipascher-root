@@ -48,6 +48,7 @@ public class FoodSpecialtiesResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(FoodSpecialtiesResource.class);
 
     public static final String COLLECTION_RESOURCE_PATH = "/foodspecialties";
+
     public static final String SINGLE_RESOURCE_PATH = "/{id}";
 
     @POST

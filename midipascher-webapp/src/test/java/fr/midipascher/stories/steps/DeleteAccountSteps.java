@@ -26,9 +26,6 @@ public class DeleteAccountSteps {
     private String preferredLanguage;
     private String preferredFormat;
 
-    // private static final String DELETE_URI = WebConstants.BACKEND_PATH + AccountsResource.COLLECTION_RESOURCE_PATH
-    // + "/6";
-
     private static final String DELETE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(AccountsResource.COLLECTION_RESOURCE_PATH).path("6").build().toString();
 

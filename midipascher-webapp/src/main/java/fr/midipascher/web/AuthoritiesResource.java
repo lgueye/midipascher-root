@@ -41,6 +41,7 @@ public class AuthoritiesResource {
     // LoggerFactory.getLogger(AuthoritiesResource.class);
 
     public static final String COLLECTION_RESOURCE_PATH = "/authorities";
+
     public static final String SINGLE_RESOURCE_PATH = "/{id}";
 
     @POST

@@ -29,9 +29,6 @@ public class UpdateFoodSpecialtySteps {
     private String responseLanguage;
     private String responseContentType;
 
-    // private static final String UPDATE_URI = WebConstants.BACKEND_PATH
-    // + FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH + "/5";
-
     private static final String UPDATE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH).path("5").build().toString();
 

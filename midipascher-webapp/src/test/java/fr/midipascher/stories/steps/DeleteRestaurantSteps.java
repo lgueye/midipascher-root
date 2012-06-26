@@ -25,11 +25,6 @@ public class DeleteRestaurantSteps {
     private ClientResponse response;
     private String preferredLanguage;
     private String preferredFormat;
-    // private static final String DELETE_URI = WebConstants.BACKEND_PATH + "/accounts/3/restaurants/2";
-    // private static final String INVALID_ACCOUNT_DELETE_URI = WebConstants.BACKEND_PATH +
-    // "/accounts/-1/restaurants/2";
-    // private static final String INVALID_RESTAURANT_DELETE_URI = WebConstants.BACKEND_PATH
-    // + "/accounts/3/restaurants/-1";
 
     private static final String DELETE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(AccountsResource.COLLECTION_RESOURCE_PATH).path("3").path("restaurants").path("2").build().toString();

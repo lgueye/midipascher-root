@@ -41,6 +41,7 @@ public class RestaurantsResource {
 
     public static final String COLLECTION_RESOURCE_PATH = AccountsResource.COLLECTION_RESOURCE_PATH
         + AccountsResource.SINGLE_RESOURCE_PATH + "/restaurants";
+
     public static final String SINGLE_RESOURCE_PATH = "/{restaurantId}";
 
     @POST
@@ -50,8 +51,7 @@ public class RestaurantsResource {
 
         final Long id = facade.createRestaurant(accountId, restaurant);
 
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(SINGLE_RESOURCE_PATH)
-                .build(String.valueOf(id));
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(SINGLE_RESOURCE_PATH).build(String.valueOf(id));
 
         return Response.created(uri).build();
 

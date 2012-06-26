@@ -27,9 +27,6 @@ public class InactivateAuthoritySteps {
     private String responseLanguage;
     private String responseContentType;
 
-    // private static final String INACTIVATE_URI = WebConstants.BACKEND_PATH
-    // + AuthoritiesResource.COLLECTION_RESOURCE_PATH + "/3/inactivate";
-
     private static final String INACTIVATE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(AuthoritiesResource.COLLECTION_RESOURCE_PATH).path("3").path("inactivate").build().toString();
 
