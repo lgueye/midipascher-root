@@ -3,6 +3,8 @@
  */
 package fr.midipascher.stories.steps;
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.jbehave.core.annotations.Alias;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -15,15 +17,18 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.AuthoritiesResource;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class AuthorizationSteps {
 
-	private String			responseLanguage;
-	private ClientResponse	response;
-	private String			responseContentType;
+	private String				responseLanguage;
+	private ClientResponse		response;
+	private String				responseContentType;
+
+	private static final String	URI	= UriBuilder.fromResource(AuthoritiesResource.class).build().toString();
 
 	@Given("I authenticate with \"$uid\" uid and \"$password\" password")
 	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
@@ -39,7 +44,7 @@ public class AuthorizationSteps {
 	@Alias("I request a protected resource")
 	public void requestProtectedResource() {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		final String path = "/foodspecialty";
+		final String path = AuthorizationSteps.URI;
 		final String requestContentType = "application/json";
 		this.response = MidipascherClient.createEntity(foodSpecialty, path, requestContentType,
 				this.responseContentType, this.responseLanguage);

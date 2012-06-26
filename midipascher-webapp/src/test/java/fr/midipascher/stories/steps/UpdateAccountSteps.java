@@ -14,17 +14,21 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.AccountsResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class UpdateAccountSteps {
 
-	private ClientResponse	response;
-	private String			language;
-	private String			format;
-	private final String	relativePath	= "/account/4";
-	private String			uid;
+	private ClientResponse		response;
+	private String				language;
+	private String				format;
+	private String				uid;
+
+	private static final String	UPDATE_URI	= WebConstants.BACKEND_PATH
+													+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH + "/4";
 
 	@Then("the message should be \"<message>\"")
 	public void expectedMessage(@Named("message") final String message) {
@@ -51,8 +55,8 @@ public class UpdateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		this.response = MidipascherClient
-				.updateEntity(account, this.relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.updateEntity(account, UpdateAccountSteps.UPDATE_URI, requestContentType,
+				format, language);
 	}
 
 	@When("I send a \"update account\" request with wrong last name \"<wrong_last_name>\"")
@@ -64,8 +68,8 @@ public class UpdateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		this.response = MidipascherClient
-				.updateEntity(account, this.relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.updateEntity(account, UpdateAccountSteps.UPDATE_URI, requestContentType,
+				format, language);
 	}
 
 	@When("I send a \"update account\" request with wrong id \"<wrong_id>\"")
@@ -76,7 +80,7 @@ public class UpdateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/account/" + id;
+		String relativePath = WebConstants.BACKEND_PATH + AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH + "/" + id;
 		this.response = MidipascherClient.updateEntity(account, relativePath, requestContentType, format, language);
 	}
 
@@ -89,8 +93,8 @@ public class UpdateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		this.response = MidipascherClient
-				.updateEntity(account, this.relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.updateEntity(account, UpdateAccountSteps.UPDATE_URI, requestContentType,
+				format, language);
 	}
 
 	@When("I send a valid \"update account\" request")
@@ -101,8 +105,8 @@ public class UpdateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		this.response = MidipascherClient
-				.updateEntity(account, this.relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.updateEntity(account, UpdateAccountSteps.UPDATE_URI, requestContentType,
+				format, language);
 	}
 
 	@Given("I accept \"$format\" format")

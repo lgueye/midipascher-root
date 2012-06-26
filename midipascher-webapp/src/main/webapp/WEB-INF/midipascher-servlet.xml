@@ -36,8 +36,9 @@
 	<!-- Dispatcher configuration for serving static resources -->
 	<!-- **************************************************************** -->
 
-	<mvc:resources location="/images/" mapping="/images/**" />
 	<mvc:resources location="/css/" mapping="/css/**" />
+	<mvc:resources location="/images/" mapping="/images/**" />
+	<mvc:resources location="/js/" mapping="/js/**" />
 
 	<!-- **************************************************************** -->
 	<!-- SPRING ANNOTATION PROCESSING -->
@@ -61,5 +62,4 @@
 	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
 		<property name="templateEngine" ref="templateEngine" />
 	</bean>
-
 </beans>

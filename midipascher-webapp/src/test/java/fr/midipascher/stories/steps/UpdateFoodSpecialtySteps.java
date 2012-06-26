@@ -15,15 +15,20 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.FoodSpecialtyResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class UpdateFoodSpecialtySteps {
 
-	private ClientResponse	response;
-	private String			responseLanguage;
-	private String			responseContentType;
+	private ClientResponse		response;
+	private String				responseLanguage;
+	private String				responseContentType;
+
+	private static final String	UPDATE_URI	= WebConstants.BACKEND_PATH
+													+ FoodSpecialtyResource.COLLECTION_RESOURCE_PATH + "/5";
 
 	@AfterScenario
 	public void afterScenario() {
@@ -51,8 +56,7 @@ public class UpdateFoodSpecialtySteps {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setCode(code);
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/5";
-		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
+		this.response = MidipascherClient.updateEntity(foodSpecialty, UPDATE_URI, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}
 
@@ -61,8 +65,7 @@ public class UpdateFoodSpecialtySteps {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		foodSpecialty.setLabel(label);
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/5";
-		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
+		this.response = MidipascherClient.updateEntity(foodSpecialty, UPDATE_URI, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}
 
@@ -70,8 +73,7 @@ public class UpdateFoodSpecialtySteps {
 	public void sendValidUpdateFoodSpecialtyRequest() {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/5";
-		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
+		this.response = MidipascherClient.updateEntity(foodSpecialty, UPDATE_URI, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}
 
@@ -79,7 +81,7 @@ public class UpdateFoodSpecialtySteps {
 	public void sendUpdateFoodSpecialtyRequestWithWrongId(@Named("wrong_id") final Long id) {
 		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/" + id;
+		String relativePath = WebConstants.BACKEND_PATH + FoodSpecialtyResource.COLLECTION_RESOURCE_PATH + "/" + id;
 		this.response = MidipascherClient.updateEntity(foodSpecialty, relativePath, requestContentType,
 				this.responseContentType, this.responseLanguage);
 	}

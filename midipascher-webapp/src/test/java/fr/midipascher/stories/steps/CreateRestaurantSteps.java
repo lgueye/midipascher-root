@@ -15,16 +15,19 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class CreateRestaurantSteps {
 
-	private ClientResponse	response;
-	private String			preferredLanguage;
-	private String			preferredFormat;
-	private final String	accountURI	= "/account/3";
+	private ClientResponse		response;
+	private String				preferredLanguage;
+	private String				preferredFormat;
+
+	private static final String	CREATE_URI			= WebConstants.BACKEND_PATH + "/accounts/3/restaurants";
+	private static final String	INVALID_ACCOUNT_URI	= WebConstants.BACKEND_PATH + "/accounts/-1/restaurants";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -33,7 +36,6 @@ public class CreateRestaurantSteps {
 
 	@When("I send a valid \"create restaurant\" request")
 	public void sendAValidcreateRestaurantRequest() {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
@@ -42,7 +44,7 @@ public class CreateRestaurantSteps {
 		String format = "application/json";
 		String language = "fr";
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@Then("the response code should be \"$status\"")
@@ -76,7 +78,6 @@ public class CreateRestaurantSteps {
 
 	@When("I send a \"create restaurant\" request with wrong account")
 	public void sendAcreateRestaurantRequestWithWrongAccount() {
-		final String relativePath = "/account/-1/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
@@ -85,12 +86,12 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, INVALID_ACCOUNT_URI, requestContentType, format,
+				language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong name \"<wrong_name>\"")
 	public void sendAcreateRestaurantRequestWithWrongName(@Named("wrong_name") String wrongName) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setName(wrongName);
 		restaurant.clearSpecialties();
@@ -100,12 +101,11 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong description \"<wrong_description>\"")
 	public void sendAcreateRestaurantRequestWithWrongDescription(@Named("wrong_description") String wrongDescription) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setDescription(wrongDescription);
 		restaurant.clearSpecialties();
@@ -115,12 +115,11 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong phone number \"<wrong_phone_number>\"")
 	public void sendAcreateRestaurantRequestWithWrongPhoneNumber(@Named("wrong_phone_number") String wrongPhoneNumber) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setPhoneNumber(wrongPhoneNumber);
 		restaurant.clearSpecialties();
@@ -130,12 +129,11 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong main offer \"<wrong_main_offer>\"")
 	public void sendAcreateRestaurantRequestWithWrongMainOffer(@Named("wrong_main_offer") String wrongMainOffer) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.setMainOffer(wrongMainOffer);
 		restaurant.clearSpecialties();
@@ -145,13 +143,12 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong street address \"<wrong_street_address>\"")
 	public void sendAcreateRestaurantRequestWithWrongStreetAddress(
 			@Named("wrong_street_address") String wrongStreetAddress) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setStreetAddress(wrongStreetAddress);
 		restaurant.clearSpecialties();
@@ -161,12 +158,11 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong city \"<wrong_city>\"")
 	public void sendAcreateRestaurantRequestWithWrongCity(@Named("wrong_city") String wrongCity) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setCity(wrongCity);
 		restaurant.clearSpecialties();
@@ -176,12 +172,11 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong postal code \"<wrong_postal_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongPostalCode(@Named("wrong_postal_code") String wrongPostalCode) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setPostalCode(wrongPostalCode);
 		restaurant.clearSpecialties();
@@ -191,12 +186,11 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create restaurant\" request with wrong country code \"<wrong_country_code>\"")
 	public void sendAcreateRestaurantRequestWithWrongCountryCode(@Named("wrong_country_code") String wrongCountryCode) {
-		final String relativePath = this.accountURI + "/restaurants";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.getAddress().setCountryCode(wrongCountryCode);
 		restaurant.clearSpecialties();
@@ -206,7 +200,7 @@ public class CreateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.createEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(restaurant, CREATE_URI, requestContentType, format, language);
 	}
 
 }

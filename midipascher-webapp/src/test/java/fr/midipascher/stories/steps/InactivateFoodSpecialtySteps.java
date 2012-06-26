@@ -13,15 +13,21 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.web.FoodSpecialtyResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class InactivateFoodSpecialtySteps {
 
-	private ClientResponse	response;
-	private String			responseLanguage;
-	private String			responseContentType;
+	private ClientResponse		response;
+	private String				responseLanguage;
+	private String				responseContentType;
+
+	private static final String	INACTIVATE_URI	= WebConstants.BACKEND_PATH
+														+ FoodSpecialtyResource.COLLECTION_RESOURCE_PATH
+														+ "/5/inactivate";
 
 	@AfterScenario
 	public void afterScenario() {
@@ -47,15 +53,15 @@ public class InactivateFoodSpecialtySteps {
 	@When("I send a valid \"inactivate food specialty\" request")
 	public void sendValidInactivateFoodSpecialtyRequest() {
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/5/inactivate";
-		this.response = MidipascherClient.inactivateEntity(relativePath, requestContentType, this.responseContentType,
-				this.responseLanguage);
+		this.response = MidipascherClient.inactivateEntity(INACTIVATE_URI, requestContentType,
+				this.responseContentType, this.responseLanguage);
 	}
 
 	@When("I send a \"inactivate food specialty\" request with wrong id \"<wrong_id>\"")
 	public void sendInactivateFoodSpecialtyRequestWithWrongId(@Named("wrong_id") final Long id) {
 		final String requestContentType = "application/json";
-		String relativePath = "/foodspecialty/" + id + "/inactivate";
+		String relativePath = WebConstants.BACKEND_PATH + FoodSpecialtyResource.COLLECTION_RESOURCE_PATH + "/" + id
+				+ "/inactivate";
 		this.response = MidipascherClient.inactivateEntity(relativePath, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}

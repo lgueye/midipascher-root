@@ -12,16 +12,22 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class DeleteRestaurantSteps {
 
-	private ClientResponse	response;
-	private String			preferredLanguage;
-	private String			preferredFormat;
-	private final String	restaurantURI	= "/account/3/restaurant/2";
+	private ClientResponse		response;
+	private String				preferredLanguage;
+	private String				preferredFormat;
+	private static final String	DELETE_URI						= WebConstants.BACKEND_PATH
+																		+ "/accounts/3/restaurants/2";
+	private static final String	INVALID_ACCOUNT_DELETE_URI		= WebConstants.BACKEND_PATH
+																		+ "/accounts/-1/restaurants/2";
+	private static final String	INVALID_RESTAURANT_DELETE_URI	= WebConstants.BACKEND_PATH
+																		+ "/accounts/3/restaurants/-1";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -32,7 +38,7 @@ public class DeleteRestaurantSteps {
 	public void sendAValidcreateRestaurantRequest() {
 		String format = "application/json";
 		String language = "fr";
-		this.response = MidipascherClient.deleteEntity(this.restaurantURI, format, language);
+		this.response = MidipascherClient.deleteEntity(DELETE_URI, format, language);
 	}
 
 	@Then("the response code should be \"$status\"")
@@ -56,19 +62,17 @@ public class DeleteRestaurantSteps {
 	}
 
 	@When("I send a \"delete restaurant\" request with wrong account")
-	public void sendAnDeleteRestaurantRequestWithWrongAccount() {
-		final String relativePath = "/account/-1/restaurant/1";
+	public void sendADeleteRestaurantRequestWithWrongAccount() {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
-		this.response = MidipascherClient.deleteEntity(relativePath, format, language);
+		this.response = MidipascherClient.deleteEntity(INVALID_ACCOUNT_DELETE_URI, format, language);
 	}
 
 	@When("I send a \"delete restaurant\" request with wrong id \"<wrong_id>\"")
-	public void sendAnDeleteRestaurantRequestWithWrongId(@Named("wrong_id") final Long id) {
-		final String relativePath = "/account/3/restaurant/-1";
+	public void sendADeleteRestaurantRequestWithWrongId(@Named("wrong_id") final Long id) {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
-		this.response = MidipascherClient.deleteEntity(relativePath, format, language);
+		this.response = MidipascherClient.deleteEntity(INVALID_RESTAURANT_DELETE_URI, format, language);
 	}
 
 }

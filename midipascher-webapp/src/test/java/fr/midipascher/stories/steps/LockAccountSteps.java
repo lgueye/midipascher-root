@@ -13,15 +13,20 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.web.AccountsResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class LockAccountSteps {
 
-	private ClientResponse	response;
-	private String			responseLanguage;
-	private String			responseContentType;
+	private ClientResponse		response;
+	private String				responseLanguage;
+	private String				responseContentType;
+
+	private static final String	LOCK_URI	= WebConstants.BACKEND_PATH
+													+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH + "/5/lock";
 
 	@AfterScenario
 	public void afterScenario() {
@@ -47,15 +52,15 @@ public class LockAccountSteps {
 	@When("I send a valid \"lock account\" request")
 	public void sendValidLockAccountRequest() {
 		final String requestContentType = "application/json";
-		String relativePath = "/accounts/5/lock";
-		this.response = MidipascherClient.lockEntity(relativePath, requestContentType, this.responseContentType,
+		this.response = MidipascherClient.lockEntity(LOCK_URI, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}
 
 	@When("I send a \"lock account\" request with wrong id \"<wrong_id>\"")
 	public void sendLockAccountRequestWithWrongId(@Named("wrong_id") final Long id) {
 		final String requestContentType = "application/json";
-		String relativePath = "/accounts/" + id + "/lock";
+		String relativePath = WebConstants.BACKEND_PATH + AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH + "/" + id
+				+ "/lock";
 		this.response = MidipascherClient.lockEntity(relativePath, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}
