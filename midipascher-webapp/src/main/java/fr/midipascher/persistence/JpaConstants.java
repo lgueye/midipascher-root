@@ -8,6 +8,6 @@ package fr.midipascher.persistence;
  */
 public class JpaConstants {
 
-	public static final String	PERSISTANCE_UNIT_NAME	= "midipascher-persistence-unit";
+    public static final String PERSISTANCE_UNIT_NAME = "midipascher-persistence-unit";
 
 }

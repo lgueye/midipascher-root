@@ -15,20 +15,20 @@ import fr.midipascher.domain.validation.ValidationContext;
 @Component(PreInsertEventListener.BEAN_ID)
 public class PreInsertEventListener extends AbstractEventListener implements org.hibernate.event.PreInsertEventListener {
 
-	public static final String	BEAN_ID				= "preInsertEventListener";
+    public static final String BEAN_ID = "preInsertEventListener";
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 2153376355687873385L;
+    private static final long serialVersionUID = 2153376355687873385L;
 
-	/**
-	 * @see org.hibernate.event.PreInsertEventListener#onPreInsert(org.hibernate.event.PreInsertEvent)
-	 */
-	@Override
-	public boolean onPreInsert(PreInsertEvent event) {
-		validate((AbstractEntity) event.getEntity(), ValidationContext.CREATE);
-		return false;
-	}
+    /**
+     * @see org.hibernate.event.PreInsertEventListener#onPreInsert(org.hibernate.event.PreInsertEvent)
+     */
+    @Override
+    public boolean onPreInsert(PreInsertEvent event) {
+        validate((AbstractEntity) event.getEntity(), ValidationContext.CREATE);
+        return false;
+    }
 
 }

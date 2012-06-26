@@ -18,14 +18,14 @@ import fr.midipascher.stories.steps.AuthorizationSteps;
  */
 public class AuthorizationStory extends AbstractJUnitStories {
 
-	@Override
-	public InjectableStepsFactory stepsFactory() {
-		return new InstanceStepsFactory(configuration(), new AuthorizationSteps());
-	}
+    @Override
+    public InjectableStepsFactory stepsFactory() {
+        return new InstanceStepsFactory(configuration(), new AuthorizationSteps());
+    }
 
-	@Override
-	protected List<String> storyPaths() {
-		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-				Arrays.asList("**/authorization.story"), null);
-	}
+    @Override
+    protected List<String> storyPaths() {
+        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+            Arrays.asList("**/authorization.story"), null);
+    }
 }

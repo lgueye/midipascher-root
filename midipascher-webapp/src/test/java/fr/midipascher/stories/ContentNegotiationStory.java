@@ -18,14 +18,14 @@ import fr.midipascher.stories.steps.ContentNegotiationSteps;
  */
 public class ContentNegotiationStory extends AbstractJUnitStories {
 
-	@Override
-	public InjectableStepsFactory stepsFactory() {
-		return new InstanceStepsFactory(configuration(), new ContentNegotiationSteps());
-	}
+    @Override
+    public InjectableStepsFactory stepsFactory() {
+        return new InstanceStepsFactory(configuration(), new ContentNegotiationSteps());
+    }
 
-	@Override
-	protected List<String> storyPaths() {
-		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-				Arrays.asList("**/content_negotiation.story"), null);
-	}
+    @Override
+    protected List<String> storyPaths() {
+        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+            Arrays.asList("**/content_negotiation.story"), null);
+    }
 }

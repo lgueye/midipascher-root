@@ -18,14 +18,14 @@ import fr.midipascher.stories.steps.CreateAccountSteps;
  */
 public class CreateAccountStory extends AbstractJUnitStories {
 
-	@Override
-	public InjectableStepsFactory stepsFactory() {
-		return new InstanceStepsFactory(configuration(), new CreateAccountSteps());
-	}
+    @Override
+    public InjectableStepsFactory stepsFactory() {
+        return new InstanceStepsFactory(configuration(), new CreateAccountSteps());
+    }
 
-	@Override
-	protected List<String> storyPaths() {
-		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-				Arrays.asList("**/create_account.story"), null);
-	}
+    @Override
+    protected List<String> storyPaths() {
+        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+            Arrays.asList("**/create_account.story"), null);
+    }
 }

@@ -28,7 +28,7 @@ import fr.midipascher.domain.business.Facade;
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = WebConstants.BACKEND_PATH + AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH)
+@Path(AccountsResource.COLLECTION_RESOURCE_PATH)
 public class AccountsResource {
 
     @Autowired
@@ -40,14 +40,14 @@ public class AccountsResource {
     // private static final Logger LOGGER =
     // LoggerFactory.getLogger(AccountsResource.class);
 
-    public static final String ACCOUNT_COLLECTION_RESOURCE_PATH = "/accounts";
-    public static final String ACCOUNT_SINGLE_RESOURCE_PATH = "/{accountId}";
+    public static final String COLLECTION_RESOURCE_PATH = "/accounts";
+    public static final String SINGLE_RESOURCE_PATH = "/{accountId}";
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response createAccount(final Account account) throws Throwable {
         final Long id = facade.createAccount(account);
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(AccountsResource.ACCOUNT_SINGLE_RESOURCE_PATH)
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(AccountsResource.SINGLE_RESOURCE_PATH)
                 .build(String.valueOf(id));
 
         return Response.created(uri).build();
@@ -55,7 +55,7 @@ public class AccountsResource {
     }
 
     @DELETE
-    @Path(ACCOUNT_SINGLE_RESOURCE_PATH)
+    @Path(SINGLE_RESOURCE_PATH)
     public Response deleteAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
         facade.deleteAccount(id);
@@ -66,7 +66,7 @@ public class AccountsResource {
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @Path(ACCOUNT_SINGLE_RESOURCE_PATH + "/lock")
+    @Path(SINGLE_RESOURCE_PATH + "/lock")
     public Response lockAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
         facade.lockAccount(id);
@@ -76,7 +76,7 @@ public class AccountsResource {
     }
 
     @GET
-    @Path(ACCOUNT_SINGLE_RESOURCE_PATH)
+    @Path(SINGLE_RESOURCE_PATH)
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Response readAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
@@ -87,7 +87,7 @@ public class AccountsResource {
     }
 
     @PUT
-    @Path(ACCOUNT_SINGLE_RESOURCE_PATH)
+    @Path(SINGLE_RESOURCE_PATH)
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response updateAccount(@PathParam(value = "accountId") final Long id, final Account account)
             throws Throwable {

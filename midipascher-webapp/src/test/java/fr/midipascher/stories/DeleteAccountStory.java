@@ -18,15 +18,15 @@ import fr.midipascher.stories.steps.DeleteAccountSteps;
  */
 public class DeleteAccountStory extends AbstractJUnitStories {
 
-	@Override
-	public InjectableStepsFactory stepsFactory() {
-		return new InstanceStepsFactory(configuration(), new DeleteAccountSteps());
-	}
+    @Override
+    public InjectableStepsFactory stepsFactory() {
+        return new InstanceStepsFactory(configuration(), new DeleteAccountSteps());
+    }
 
-	@Override
-	protected List<String> storyPaths() {
-		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-				Arrays.asList("**/delete_account.story"), null);
-	}
+    @Override
+    protected List<String> storyPaths() {
+        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+            Arrays.asList("**/delete_account.story"), null);
+    }
 
 }

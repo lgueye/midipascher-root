@@ -11,54 +11,52 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ResponseError extends AbstractObject {
 
-	private String	message;
-	private int		httpStatus;
+    private String message;
+    private int httpStatus;
 
-	/**
+    /**
 	 * 
 	 */
-	public ResponseError() {
-		super();
-	}
+    public ResponseError() {
+        super();
+    }
 
-	/**
-	 * @param errorCode
-	 * @param message
-	 * @param httpStatus
-	 */
-	public ResponseError(String message, int httpStatus) {
-		setMessage(message);
-		setHttpStatus(httpStatus);
-	}
+    /**
+     * @param errorCode
+     * @param message
+     * @param httpStatus
+     */
+    public ResponseError(String message, int httpStatus) {
+        setMessage(message);
+        setHttpStatus(httpStatus);
+    }
 
-	/**
-	 * @return the message
-	 */
-	public String getMessage() {
-		return this.message;
-	}
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return this.message;
+    }
 
-	/**
-	 * @param message
-	 *            the message to set
-	 */
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	/**
-	 * @return the httpStatus
-	 */
-	public int getHttpStatus() {
-		return this.httpStatus;
-	}
+    /**
+     * @return the httpStatus
+     */
+    public int getHttpStatus() {
+        return this.httpStatus;
+    }
 
-	/**
-	 * @param httpStatus
-	 *            the httpStatus to set
-	 */
-	public void setHttpStatus(int httpStatus) {
-		this.httpStatus = httpStatus;
-	}
+    /**
+     * @param httpStatus the httpStatus to set
+     */
+    public void setHttpStatus(int httpStatus) {
+        this.httpStatus = httpStatus;
+    }
 
 }

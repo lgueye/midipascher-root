@@ -18,14 +18,14 @@ import fr.midipascher.stories.steps.LockAccountSteps;
  */
 public class LockAccountStory extends AbstractJUnitStories {
 
-	@Override
-	public InjectableStepsFactory stepsFactory() {
-		return new InstanceStepsFactory(configuration(), new LockAccountSteps());
-	}
+    @Override
+    public InjectableStepsFactory stepsFactory() {
+        return new InstanceStepsFactory(configuration(), new LockAccountSteps());
+    }
 
-	@Override
-	protected List<String> storyPaths() {
-		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-				Arrays.asList("**/lock_account.story"), null);
-	}
+    @Override
+    protected List<String> storyPaths() {
+        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+            Arrays.asList("**/lock_account.story"), null);
+    }
 }

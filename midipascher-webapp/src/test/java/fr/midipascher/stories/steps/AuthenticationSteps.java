@@ -13,41 +13,43 @@ import org.jbehave.core.annotations.When;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.web.AuthoritiesResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class AuthenticationSteps {
 
-	private String				responseLanguage;
-	private ClientResponse		response;
+    private String responseLanguage;
+    private ClientResponse response;
 
-	private static final String	URI	= UriBuilder.fromResource(AuthoritiesResource.class).build().toString();
+    private static final String URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH).path(AuthoritiesResource.class)
+            .build().toString();
 
-	@Given("I authenticate with \"<uid>\" uid and \"<password>\" password")
-	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
-		MidipascherClient.setCredentials(uid, password);
-	}
+    @Given("I authenticate with \"<uid>\" uid and \"<password>\" password")
+    public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
+        MidipascherClient.setCredentials(uid, password);
+    }
 
-	@Given("I accept \"<responseLanguage>\" language")
-	public void setAcceptLanguage(@Named("responseLanguage") final String responseLanguage) {
-		this.responseLanguage = responseLanguage;
-	}
+    @Then("the response message should be \"<message>\"")
+    public void expectResponseMessage(@Named("message") final String responseMessage) {
+        final String error = response.getEntity(String.class);
+        MidipascherClient.expectedMessage(responseMessage, error);
+    }
 
-	@When("I request a protected resource")
-	public void requestProtectedResource() {
-		this.response = MidipascherClient.readURI(URI, "application/json", this.responseLanguage);
-	}
+    @Then("the response code should be \"$statusCode\"")
+    public void expectStatusCode(@Named("statusCode") final int statusCode) {
+        MidipascherClient.expectedCode(statusCode, response.getStatus());
+    }
 
-	@Then("the response code should be \"$statusCode\"")
-	public void expectStatusCode(@Named("statusCode") final int statusCode) {
-		MidipascherClient.expectedCode(statusCode, this.response.getStatus());
-	}
+    @When("I request a protected resource")
+    public void requestProtectedResource() {
+        response = MidipascherClient.readURI(URI, "application/json", responseLanguage);
+    }
 
-	@Then("the response message should be \"<message>\"")
-	public void expectResponseMessage(@Named("message") final String responseMessage) {
-		String error = this.response.getEntity(String.class);
-		MidipascherClient.expectedMessage(responseMessage, error);
-	}
+    @Given("I accept \"<responseLanguage>\" language")
+    public void setAcceptLanguage(@Named("responseLanguage") final String responseLanguage) {
+        this.responseLanguage = responseLanguage;
+    }
 
 }

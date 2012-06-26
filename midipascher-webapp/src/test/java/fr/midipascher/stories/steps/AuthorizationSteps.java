@@ -17,55 +17,57 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
-import fr.midipascher.web.AuthoritiesResource;
+import fr.midipascher.web.FoodSpecialtiesResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class AuthorizationSteps {
 
-	private String				responseLanguage;
-	private ClientResponse		response;
-	private String				responseContentType;
+    private String responseLanguage;
+    private ClientResponse response;
+    private String responseContentType;
 
-	private static final String	URI	= UriBuilder.fromResource(AuthoritiesResource.class).build().toString();
+    private static final String URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
+            .path(FoodSpecialtiesResource.class).build().toString();
 
-	@Given("I authenticate with \"$uid\" uid and \"$password\" password")
-	public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
-		MidipascherClient.setCredentials(uid, password);
-	}
+    @Given("I authenticate with \"$uid\" uid and \"$password\" password")
+    public void authenticateWithWrongUid(@Named("uid") final String uid, @Named("password") final String password) {
+        MidipascherClient.setCredentials(uid, password);
+    }
 
-	@Given("I accept \"<responseLanguage>\" language")
-	public void setAcceptLanguage(@Named("responseLanguage") final String responseLanguage) {
-		this.responseLanguage = responseLanguage;
-	}
+    @Then("the response message should be \"<message>\"")
+    public void expectResponseMessage(@Named("message") final String responseMessage) {
+        final ResponseError error = response.getEntity(ResponseError.class);
+        Assert.assertNotNull(error);
+        Assert.assertNotNull(error.getMessage());
+        Assert.assertEquals(responseMessage, error.getMessage().trim());
+    }
 
-	@When("I request a protected resource that require ADMIN rights")
-	@Alias("I request a protected resource")
-	public void requestProtectedResource() {
-		final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
-		final String path = AuthorizationSteps.URI;
-		final String requestContentType = "application/json";
-		this.response = MidipascherClient.createEntity(foodSpecialty, path, requestContentType,
-				this.responseContentType, this.responseLanguage);
-	}
+    @Then("the response code should be \"$statusCode\"")
+    public void expectStatusCode(@Named("statusCode") final int statusCode) {
+        Assert.assertEquals(statusCode, response.getStatus());
+    }
 
-	@Given("I receive \"<responseContentType>\" data")
-	public void setResponseContentType(@Named("responseContentType") final String responseContentType) {
-		this.responseContentType = responseContentType;
-	}
+    @When("I request a protected resource that require ADMIN rights")
+    @Alias("I request a protected resource")
+    public void requestProtectedResource() {
+        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final String path = AuthorizationSteps.URI;
+        final String requestContentType = "application/json";
+        response = MidipascherClient.createEntity(foodSpecialty, path, requestContentType, responseContentType,
+            responseLanguage);
+    }
 
-	@Then("the response code should be \"$statusCode\"")
-	public void expectStatusCode(@Named("statusCode") final int statusCode) {
-		Assert.assertEquals(statusCode, this.response.getStatus());
-	}
+    @Given("I accept \"<responseLanguage>\" language")
+    public void setAcceptLanguage(@Named("responseLanguage") final String responseLanguage) {
+        this.responseLanguage = responseLanguage;
+    }
 
-	@Then("the response message should be \"<message>\"")
-	public void expectResponseMessage(@Named("message") final String responseMessage) {
-		ResponseError error = this.response.getEntity(ResponseError.class);
-		Assert.assertNotNull(error);
-		Assert.assertNotNull(error.getMessage());
-		Assert.assertEquals(responseMessage, error.getMessage().trim());
-	}
+    @Given("I receive \"<responseContentType>\" data")
+    public void setResponseContentType(@Named("responseContentType") final String responseContentType) {
+        this.responseContentType = responseContentType;
+    }
 
 }

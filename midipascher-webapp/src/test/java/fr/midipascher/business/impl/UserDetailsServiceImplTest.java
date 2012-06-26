@@ -28,43 +28,42 @@ import fr.midipascher.persistence.BaseDao;
 @RunWith(MockitoJUnitRunner.class)
 public class UserDetailsServiceImplTest {
 
-	@Mock
-	private BaseDao							baseDao;
+    @Mock
+    private BaseDao baseDao;
 
-	@Mock
-	private AccountToUserConverter			accountToUserConverter;
+    @Mock
+    private AccountToUserConverter accountToUserConverter;
 
-	@InjectMocks
-	private final UserDetailsServiceImpl	underTest	= new UserDetailsServiceImpl();
+    @InjectMocks
+    private final UserDetailsServiceImpl underTest = new UserDetailsServiceImpl();
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.business.impl.UserDetailsServiceImpl#loadUserByUsername(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public final void loadUserByUsernameShouldSucceed() {
+    /**
+     * Test method for {@link fr.midipascher.business.impl.UserDetailsServiceImpl#loadUserByUsername(java.lang.String)}
+     * .
+     */
+    @Test
+    public final void loadUserByUsernameShouldSucceed() {
 
-		// Variables
-		String username;
-		User user;
-		Account account;
+        // Variables
+        String username;
+        User user;
+        Account account;
 
-		// Given
-		username = "louis@mail.com";
-		account = Mockito.mock(Account.class);
-		user = Mockito.mock(User.class);
-		List<Account> accounts = Lists.newArrayList();
-		accounts.add(account);
-		Mockito.when(this.baseDao.findByExample(Matchers.any(Account.class))).thenReturn(accounts);
-		Mockito.when(this.accountToUserConverter.convert(account)).thenReturn(user);
+        // Given
+        username = "louis@mail.com";
+        account = Mockito.mock(Account.class);
+        user = Mockito.mock(User.class);
+        List<Account> accounts = Lists.newArrayList();
+        accounts.add(account);
+        Mockito.when(this.baseDao.findByExample(Matchers.any(Account.class))).thenReturn(accounts);
+        Mockito.when(this.accountToUserConverter.convert(account)).thenReturn(user);
 
-		// When
-		UserDetails result = this.underTest.loadUserByUsername(username);
+        // When
+        UserDetails result = this.underTest.loadUserByUsername(username);
 
-		// Then
-		assertSame(result, user);
+        // Then
+        assertSame(result, user);
 
-	}
+    }
 
 }

@@ -15,20 +15,20 @@ import fr.midipascher.domain.validation.ValidationContext;
 @Component(PreDeleteEventListener.BEAN_ID)
 public class PreDeleteEventListener extends AbstractEventListener implements org.hibernate.event.PreDeleteEventListener {
 
-	public static final String	BEAN_ID				= "preDeleteEventListener";
+    public static final String BEAN_ID = "preDeleteEventListener";
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 2153376355687873385L;
+    private static final long serialVersionUID = 2153376355687873385L;
 
-	/**
-	 * @see org.hibernate.event.PreDeleteEventListener#onPreDelete(org.hibernate.event.PreDeleteEvent)
-	 */
-	@Override
-	public boolean onPreDelete(PreDeleteEvent event) {
-		validate((AbstractEntity) event.getEntity(), ValidationContext.DELETE);
-		return false;
-	}
+    /**
+     * @see org.hibernate.event.PreDeleteEventListener#onPreDelete(org.hibernate.event.PreDeleteEvent)
+     */
+    @Override
+    public boolean onPreDelete(PreDeleteEvent event) {
+        validate((AbstractEntity) event.getEntity(), ValidationContext.DELETE);
+        return false;
+    }
 
 }

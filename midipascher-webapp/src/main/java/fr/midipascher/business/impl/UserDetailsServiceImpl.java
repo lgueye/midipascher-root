@@ -19,23 +19,23 @@ import fr.midipascher.persistence.BaseDao;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	@Autowired
-	private BaseDao					baseDao;
+    @Autowired
+    private BaseDao baseDao;
 
-	@Autowired
-	private AccountToUserConverter	accountToUserConverter;
+    @Autowired
+    private AccountToUserConverter accountToUserConverter;
 
-	/**
-	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String username) {
-		Account exampleInstance = new Account();
-		exampleInstance.setEmail(username);
-		exampleInstance.setLocked(false);
-		Account account = DataAccessUtils.uniqueResult(this.baseDao.findByExample(exampleInstance));
-		return this.accountToUserConverter.convert(account);
-	}
+    /**
+     * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username) {
+        Account exampleInstance = new Account();
+        exampleInstance.setEmail(username);
+        exampleInstance.setLocked(false);
+        Account account = DataAccessUtils.uniqueResult(this.baseDao.findByExample(exampleInstance));
+        return this.accountToUserConverter.convert(account);
+    }
 
 }

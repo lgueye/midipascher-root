@@ -8,9 +8,9 @@ package fr.midipascher.domain;
  */
 public abstract class AbstractEntity extends AbstractObject implements Persistable {
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -5998275044262238157L;
+    private static final long serialVersionUID = -5998275044262238157L;
 
 }

@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fr.midipascher.TestConstants;
 
-
 /**
  * Authority database integration testing<br/>
  * CRUD operations are tested<br>
@@ -31,16 +30,16 @@ import fr.midipascher.TestConstants;
 @ContextConfiguration(locations = { TestConstants.VALIDATION_CONTEXT })
 public class MessageSourceTestIT {
 
-	@Autowired
-	@Qualifier("messageSources")
-	private MessageSource	underTest;
+    @Autowired
+    @Qualifier("messageSources")
+    private MessageSource underTest;
 
-	@Test
-	public final void messageSourceShouldConsiderEncoding() {
+    @Test
+    public final void messageSourceShouldConsiderEncoding() {
 
-		assertEquals("informations de connexion erronées",
-				this.underTest.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null, Locale.FRENCH));
+        assertEquals("informations de connexion erronées",
+            this.underTest.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null, Locale.FRENCH));
 
-	}
+    }
 
 }

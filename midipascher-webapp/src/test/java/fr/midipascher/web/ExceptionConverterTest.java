@@ -29,150 +29,130 @@ import fr.midipascher.domain.exceptions.BusinessException;
 @RunWith(MockitoJUnitRunner.class)
 public class ExceptionConverterTest {
 
-	@Mock
-	MessageSource						messageSource;
+    @Mock
+    MessageSource messageSource;
 
-	@Mock
-	LocaleResolver						localeResolver;
+    @Mock
+    LocaleResolver localeResolver;
 
-	@InjectMocks
-	private final ExceptionConverter	underTest	= new ExceptionConverter();
+    @InjectMocks
+    private final ExceptionConverter underTest = new ExceptionConverter();
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveHttpStatusShouldMapTo400WithIllegalArgumentException() {
-		Throwable th = new IllegalArgumentException();
-		int httpStatus = this.underTest.resolveHttpStatus(th);
-		Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), httpStatus);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveHttpStatusShouldMapTo400WithIllegalArgumentException() {
+        Throwable th = new IllegalArgumentException();
+        int httpStatus = this.underTest.resolveHttpStatus(th);
+        Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), httpStatus);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveHttpStatusShouldMapTo500WithIllegalStateException() {
-		Throwable th = new IllegalStateException();
-		int httpStatus = this.underTest.resolveHttpStatus(th);
-		Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveHttpStatusShouldMapTo500WithIllegalStateException() {
+        Throwable th = new IllegalStateException();
+        int httpStatus = this.underTest.resolveHttpStatus(th);
+        Assert.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), httpStatus);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveHttpStatusShouldMapTo404WithBusinessExceptionAndNotFoundMessageCode() {
-		Throwable th = new BusinessException("anything.not.found", null, "default message");
-		int httpStatus = this.underTest.resolveHttpStatus(th);
-		Assert.assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveHttpStatusShouldMapTo404WithBusinessExceptionAndNotFoundMessageCode() {
+        Throwable th = new BusinessException("anything.not.found", null, "default message");
+        int httpStatus = this.underTest.resolveHttpStatus(th);
+        Assert.assertEquals(HttpStatus.NOT_FOUND.value(), httpStatus);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveHttpStatusShouldMapTo200WithNullException() {
-		Throwable th = null;
-		int httpStatus = this.underTest.resolveHttpStatus(th);
-		Assert.assertEquals(HttpStatus.OK.value(), httpStatus);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveHttpStatusShouldMapTo200WithNullException() {
+        Throwable th = null;
+        int httpStatus = this.underTest.resolveHttpStatus(th);
+        Assert.assertEquals(HttpStatus.OK.value(), httpStatus);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveMessageShouldReturnEmptyWithBothNullExceptionAndNullRequest() {
-		Throwable th = null;
-		HttpServletRequest request = null;
-		String message = this.underTest.resolveMesage(request, th);
-		Assert.assertEquals(StringUtils.EMPTY, message);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveMessageShouldReturnEmptyWithBothNullExceptionAndNullRequest() {
+        Throwable th = null;
+        HttpServletRequest request = null;
+        String message = this.underTest.resolveMesage(request, th);
+        Assert.assertEquals(StringUtils.EMPTY, message);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveMessageShouldReturnEmptyWithNullException() {
-		Throwable th = null;
-		HttpServletRequest request = new MockHttpServletRequest();
-		String message = this.underTest.resolveMesage(request, th);
-		Assert.assertEquals(StringUtils.EMPTY, message);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveMessageShouldReturnEmptyWithNullException() {
+        Throwable th = null;
+        HttpServletRequest request = new MockHttpServletRequest();
+        String message = this.underTest.resolveMesage(request, th);
+        Assert.assertEquals(StringUtils.EMPTY, message);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveMessageShouldReturnUnlocalizedMessageWithNullRequest() {
-		String nonLocalizedMessage = "message en francais";
-		Throwable th = new IllegalArgumentException(nonLocalizedMessage);
-		HttpServletRequest request = null;
-		String message = this.underTest.resolveMesage(request, th);
-		Assert.assertEquals(nonLocalizedMessage, message);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveMessageShouldReturnUnlocalizedMessageWithNullRequest() {
+        String nonLocalizedMessage = "message en francais";
+        Throwable th = new IllegalArgumentException(nonLocalizedMessage);
+        HttpServletRequest request = null;
+        String message = this.underTest.resolveMesage(request, th);
+        Assert.assertEquals(nonLocalizedMessage, message);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveMessageShouldReturnUnlocalizedMessageWithNonLocalizedException() {
-		String nonLocalizedMessage = "message en francais";
-		Throwable th = new IllegalArgumentException(nonLocalizedMessage);
-		HttpServletRequest request = new MockHttpServletRequest();
-		String message = this.underTest.resolveMesage(request, th);
-		Assert.assertEquals(nonLocalizedMessage, message);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveMessageShouldReturnUnlocalizedMessageWithNonLocalizedException() {
+        String nonLocalizedMessage = "message en francais";
+        Throwable th = new IllegalArgumentException(nonLocalizedMessage);
+        HttpServletRequest request = new MockHttpServletRequest();
+        String message = this.underTest.resolveMesage(request, th);
+        Assert.assertEquals(nonLocalizedMessage, message);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveMessageShouldInvokeLocalizedExceptionMessageResolver() {
-		String code = "message.code";
-		Object[] args = new Object[] {};
-		Locale locale = Locale.FRENCH;
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveMessageShouldInvokeLocalizedExceptionMessageResolver() {
+        String code = "message.code";
+        Object[] args = new Object[] {};
+        Locale locale = Locale.FRENCH;
 
-		BusinessException th = Mockito.mock(BusinessException.class);
-		HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-		Mockito.when(th.getMessageCode()).thenReturn(code);
-		Mockito.when(th.getMessageArgs()).thenReturn(args);
-		Mockito.when(this.localeResolver.resolveLocale(request)).thenReturn(locale);
-		this.underTest.resolveMesage(request, th);
-		Mockito.verify(th).getMessageCode();
-		Mockito.verify(th).getMessageArgs();
-		Mockito.verify(this.messageSource).getMessage(code, args, locale);
-		Mockito.verify(this.localeResolver).resolveLocale(request);
-	}
+        BusinessException th = Mockito.mock(BusinessException.class);
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(th.getMessageCode()).thenReturn(code);
+        Mockito.when(th.getMessageArgs()).thenReturn(args);
+        Mockito.when(this.localeResolver.resolveLocale(request)).thenReturn(locale);
+        this.underTest.resolveMesage(request, th);
+        Mockito.verify(th).getMessageCode();
+        Mockito.verify(th).getMessageArgs();
+        Mockito.verify(this.messageSource).getMessage(code, args, locale);
+        Mockito.verify(this.localeResolver).resolveLocale(request);
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)}
-	 * .
-	 */
-	@Test
-	public final void resolveHttpStatusShouldMapTo401WithAuthenticationException() {
-		Throwable th = new BadCredentialsException(null);
-		int httpStatus = this.underTest.resolveHttpStatus(th);
-		Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), httpStatus);
-	}
+    /**
+     * Test method for {@link fr.midipascher.web.ExceptionResolver#resolveHttpStatus(Throwable)} .
+     */
+    @Test
+    public final void resolveHttpStatusShouldMapTo401WithAuthenticationException() {
+        Throwable th = new BadCredentialsException(null);
+        int httpStatus = this.underTest.resolveHttpStatus(th);
+        Assert.assertEquals(HttpStatus.UNAUTHORIZED.value(), httpStatus);
+    }
 
 }

@@ -27,7 +27,7 @@ import fr.midipascher.domain.business.Facade;
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = WebConstants.BACKEND_PATH + RestaurantsResource.RESTAURANT_COLLECTION_RESOURCE_PATH)
+@Path(RestaurantsResource.COLLECTION_RESOURCE_PATH)
 public class RestaurantsResource {
 
     @Autowired
@@ -39,9 +39,9 @@ public class RestaurantsResource {
     // private static final Logger LOGGER =
     // LoggerFactory.getLogger(RestaurantsResource.class);
 
-    public static final String RESTAURANT_COLLECTION_RESOURCE_PATH = AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH
-        + AccountsResource.ACCOUNT_SINGLE_RESOURCE_PATH + "/restaurants";
-    public static final String RESTAURANT_SINGLE_RESOURCE_PATH = "/{restaurantId}";
+    public static final String COLLECTION_RESOURCE_PATH = AccountsResource.COLLECTION_RESOURCE_PATH
+        + AccountsResource.SINGLE_RESOURCE_PATH + "/restaurants";
+    public static final String SINGLE_RESOURCE_PATH = "/{restaurantId}";
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -50,7 +50,7 @@ public class RestaurantsResource {
 
         final Long id = facade.createRestaurant(accountId, restaurant);
 
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(RESTAURANT_SINGLE_RESOURCE_PATH)
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(SINGLE_RESOURCE_PATH)
                 .build(String.valueOf(id));
 
         return Response.created(uri).build();
@@ -58,7 +58,7 @@ public class RestaurantsResource {
     }
 
     @DELETE
-    @Path(RESTAURANT_SINGLE_RESOURCE_PATH)
+    @Path(SINGLE_RESOURCE_PATH)
     public Response deleteRestaurant(@PathParam(value = "accountId") final Long accountId,
             @PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
@@ -70,7 +70,7 @@ public class RestaurantsResource {
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @Path(RESTAURANT_SINGLE_RESOURCE_PATH)
+    @Path(SINGLE_RESOURCE_PATH)
     public Response readRestaurant(@PathParam(value = "accountId") final Long accountId,
             @PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
@@ -82,7 +82,7 @@ public class RestaurantsResource {
 
     @PUT
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    @Path(RESTAURANT_SINGLE_RESOURCE_PATH)
+    @Path(SINGLE_RESOURCE_PATH)
     public Response updateRestaurant(@PathParam(value = "accountId") final Long accountId,
             @PathParam(value = "restaurantId") final Long restaurantId, final Restaurant restaurant) throws Throwable {
 

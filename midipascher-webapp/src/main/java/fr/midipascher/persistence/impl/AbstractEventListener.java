@@ -23,32 +23,33 @@ import fr.midipascher.domain.validation.ValidationContext;
  */
 public abstract class AbstractEventListener {
 
-	@Autowired
-	private Validator	validator;
+    @Autowired
+    private Validator validator;
 
-	/**
-	 * @see fr.midipascher.domain.business.Facade#validate(fr.midipascher.domain.AbstractEntity,
-	 *      fr.midipascher.domain.validation.ValidationContext)
-	 */
-	protected final <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
+    /**
+     * @see fr.midipascher.domain.business.Facade#validate(fr.midipascher.domain.AbstractEntity,
+     *      fr.midipascher.domain.validation.ValidationContext)
+     */
+    protected final <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
 
-		Preconditions.checkArgument(type != null, "Illegal call to validate, object is required");
+        Preconditions.checkArgument(type != null, "Illegal call to validate, object is required");
 
-		Preconditions.checkArgument(context != null, "Illegal call to validate, validation context is required");
+        Preconditions.checkArgument(context != null, "Illegal call to validate, validation context is required");
 
-		final Set<ConstraintViolation<T>> constraintViolations = this.validator.validate(type, context.getContext());
+        final Set<ConstraintViolation<T>> constraintViolations = this.validator.validate(type, context.getContext());
 
-		if (CollectionUtils.isEmpty(constraintViolations)) return;
+        if (CollectionUtils.isEmpty(constraintViolations))
+            return;
 
-		final Set<ConstraintViolation<?>> propagatedViolations = new HashSet<ConstraintViolation<?>>(
-				constraintViolations.size());
+        final Set<ConstraintViolation<?>> propagatedViolations = new HashSet<ConstraintViolation<?>>(
+                constraintViolations.size());
 
-		for ( final ConstraintViolation<?> violation : constraintViolations )
-			// System.out.println("-------------------------------------------------------------------------->"
-			// + violation.getMessage());
-			propagatedViolations.add(violation);
+        for (final ConstraintViolation<?> violation : constraintViolations)
+            // System.out.println("-------------------------------------------------------------------------->"
+            // + violation.getMessage());
+            propagatedViolations.add(violation);
 
-		throw new ConstraintViolationException(propagatedViolations);
+        throw new ConstraintViolationException(propagatedViolations);
 
-	}
+    }
 }

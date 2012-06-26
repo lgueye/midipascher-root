@@ -8,6 +8,6 @@ package fr.midipascher.web;
  */
 public class WebConstants {
 
-	public static final String	BACKEND_PATH	= "/backend";
+    public static final String BACKEND_PATH = "/backend";
 
 }

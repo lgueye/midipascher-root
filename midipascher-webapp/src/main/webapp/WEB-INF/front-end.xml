@@ -12,24 +12,9 @@
                            http://www.springframework.org/schema/security  
                            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<import resource="classpath:midipascher-server.xml" />
-	<import resource="classpath:midipascher-security.xml" />
-	<import resource="classpath:midipascher-validation.xml" />
-
 	<context:component-scan base-package="fr.midipascher.web" />
 
-	<sec:http entry-point-ref="defaultEntryPoint" auto-config="true">
-		<sec:http-basic />
-	</sec:http>
-
-	<bean id="authenticationFilter"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<property name="authenticationManager" ref="authenticationManager" />
-		<property name="authenticationEntryPoint" ref="defaultEntryPoint" />
-	</bean>
-
 	<bean class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
-
 
 	<!-- **************************************************************** -->
 	<!-- RESOURCE FOLDERS CONFIGURATION -->
@@ -43,7 +28,6 @@
 	<!-- **************************************************************** -->
 	<!-- SPRING ANNOTATION PROCESSING -->
 	<!-- **************************************************************** -->
-	
 	<mvc:annotation-driven />
 	
 	<!-- **************************************************************** -->

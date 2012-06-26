@@ -37,97 +37,110 @@ import fr.midipascher.domain.exceptions.OwnershipException;
 @Component(ExceptionConverter.BEAN_ID)
 public class ExceptionConverter {
 
-	public static final String			BEAN_ID					= "ExceptionConverter";
+    public static final String BEAN_ID = "ExceptionConverter";
 
-	public static final List<String>	SUPPORTED_MEDIA_TYPES	= Arrays.asList(MediaType.APPLICATION_JSON,
-																		MediaType.APPLICATION_XML);
+    public static final List<String> SUPPORTED_MEDIA_TYPES = Arrays.asList(MediaType.APPLICATION_JSON,
+        MediaType.APPLICATION_XML);
 
-	public static final String			DEFAULT_MEDIA_TYPE		= MediaType.APPLICATION_JSON;
+    public static final String DEFAULT_MEDIA_TYPE = MediaType.APPLICATION_JSON;
 
-	@Autowired
-	private LocaleResolver				localeResolver;
+    @Autowired
+    private LocaleResolver localeResolver;
 
-	@Autowired
-	@Qualifier("messageSources")
-	MessageSource						messageSource;
+    @Autowired
+    @Qualifier("messageSources")
+    MessageSource messageSource;
 
-	protected Locale getLocale(final HttpServletRequest request) {
-		final Locale locale = this.localeResolver.resolveLocale(request);
-		if (locale == null) return Constants.DEFAULT_LOCALE;
-		if (!Constants.SUPPORTED_LOCALES.contains(locale.getLanguage())) return Constants.DEFAULT_LOCALE;
-		return new Locale(locale.getLanguage());
-	}
+    protected Locale getLocale(final HttpServletRequest request) {
+        final Locale locale = this.localeResolver.resolveLocale(request);
+        if (locale == null)
+            return Constants.DEFAULT_LOCALE;
+        if (!Constants.SUPPORTED_LOCALES.contains(locale.getLanguage()))
+            return Constants.DEFAULT_LOCALE;
+        return new Locale(locale.getLanguage());
+    }
 
-	/**
-	 * @param th
-	 * @return
-	 */
-	public int resolveHttpStatus(final Throwable th) {
-		if (th == null) return HttpServletResponse.SC_OK;
-		// th.printStackTrace();
+    /**
+     * @param th
+     * @return
+     */
+    public int resolveHttpStatus(final Throwable th) {
+        if (th == null)
+            return HttpServletResponse.SC_OK;
+        // th.printStackTrace();
 
-		if (th instanceof AuthenticationException) return HttpServletResponse.SC_UNAUTHORIZED;
+        if (th instanceof AuthenticationException)
+            return HttpServletResponse.SC_UNAUTHORIZED;
 
-		if (th instanceof AccessDeniedException || th instanceof OwnershipException) return HttpServletResponse.SC_FORBIDDEN;
+        if (th instanceof AccessDeniedException || th instanceof OwnershipException)
+            return HttpServletResponse.SC_FORBIDDEN;
 
-		if (th instanceof IllegalArgumentException || th instanceof ValidationException
-				|| th instanceof PersistenceException) return HttpServletResponse.SC_BAD_REQUEST;
+        if (th instanceof IllegalArgumentException || th instanceof ValidationException
+            || th instanceof PersistenceException)
+            return HttpServletResponse.SC_BAD_REQUEST;
 
-		if (th instanceof BusinessException) {
+        if (th instanceof BusinessException) {
 
-			String messageCode = ((BusinessException) th).getMessageCode();
+            String messageCode = ((BusinessException) th).getMessageCode();
 
-			if (StringUtils.isNotEmpty(messageCode) && messageCode.endsWith(".not.found")) return HttpServletResponse.SC_NOT_FOUND;
+            if (StringUtils.isNotEmpty(messageCode) && messageCode.endsWith(".not.found"))
+                return HttpServletResponse.SC_NOT_FOUND;
 
-			return HttpServletResponse.SC_BAD_REQUEST;
-		}
+            return HttpServletResponse.SC_BAD_REQUEST;
+        }
 
-		if (th instanceof IllegalStateException) return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        if (th instanceof IllegalStateException)
+            return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-		if (th instanceof WebApplicationException && ((WebApplicationException) th).getResponse() != null) return ((WebApplicationException) th)
-				.getResponse().getStatus();
+        if (th instanceof WebApplicationException && ((WebApplicationException) th).getResponse() != null)
+            return ((WebApplicationException) th).getResponse().getStatus();
 
-		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-	}
+    }
 
-	/**
-	 * @param request
-	 * @param th
-	 * @return
-	 */
-	public String resolveMesage(final HttpServletRequest request, final Throwable th) {
-		if (th == null && request == null) return StringUtils.EMPTY;
+    /**
+     * @param request
+     * @param th
+     * @return
+     */
+    public String resolveMesage(final HttpServletRequest request, final Throwable th) {
+        if (th == null && request == null)
+            return StringUtils.EMPTY;
 
-		if (th == null) return StringUtils.EMPTY;
+        if (th == null)
+            return StringUtils.EMPTY;
 
-		if (request == null) return th.getMessage();
+        if (request == null)
+            return th.getMessage();
 
-		if (th instanceof AuthenticationException) return this.messageSource.getMessage(
-				String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null, getLocale(request));
+        if (th instanceof AuthenticationException)
+            return this.messageSource.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null,
+                getLocale(request));
 
-		if (th instanceof AccessDeniedException) return this.messageSource.getMessage(
-				String.valueOf(HttpServletResponse.SC_FORBIDDEN), null, getLocale(request));
+        if (th instanceof AccessDeniedException)
+            return this.messageSource.getMessage(String.valueOf(HttpServletResponse.SC_FORBIDDEN), null,
+                getLocale(request));
 
-		if (th instanceof ConstraintViolationException) {
-			final ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
-			final Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
-			final ConstraintViolation<?> violation = violations.iterator().next();
-			return violation.getMessage();
-		}
+        if (th instanceof ConstraintViolationException) {
+            final ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;
+            final Set<ConstraintViolation<?>> violations = constraintViolationException.getConstraintViolations();
+            final ConstraintViolation<?> violation = violations.iterator().next();
+            return violation.getMessage();
+        }
 
-		if (th instanceof BusinessException) {
-			BusinessException be = (BusinessException) th;
-			return this.messageSource.getMessage(be.getMessageCode(), be.getMessageArgs(), getLocale(request));
-		}
+        if (th instanceof BusinessException) {
+            BusinessException be = (BusinessException) th;
+            return this.messageSource.getMessage(be.getMessageCode(), be.getMessageArgs(), getLocale(request));
+        }
 
-		return th.getMessage();
-	}
+        return th.getMessage();
+    }
 
-	public ResponseError toResponseError(final Throwable th, final HttpServletRequest request) {
-		final String message = resolveMesage(request, th);
-		final int httpStatus = resolveHttpStatus(th);
-		final ResponseError responseError = new ResponseError(message, httpStatus);
-		return responseError;
-	}
+    public ResponseError toResponseError(final Throwable th, final HttpServletRequest request) {
+        final String message = resolveMesage(request, th);
+        final int httpStatus = resolveHttpStatus(th);
+        final ResponseError responseError = new ResponseError(message, httpStatus);
+        return responseError;
+    }
 }

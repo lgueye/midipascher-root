@@ -3,6 +3,8 @@
  */
 package fr.midipascher.stories.steps;
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -13,7 +15,7 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.test.TestUtils;
-import fr.midipascher.web.FoodSpecialtyResource;
+import fr.midipascher.web.FoodSpecialtiesResource;
 import fr.midipascher.web.WebConstants;
 
 /**
@@ -21,54 +23,55 @@ import fr.midipascher.web.WebConstants;
  */
 public class ContentNegotiationSteps {
 
-	private String				responseContentType;
-	private String				requestContentType;
-	private ClientResponse		response;
+    private String responseContentType;
+    private String requestContentType;
+    private ClientResponse response;
 
-	private static final String	CREATE_URI	= WebConstants.BACKEND_PATH
-													+ FoodSpecialtyResource.COLLECTION_RESOURCE_PATH;
-	private static final String	SEARCH_URI	= WebConstants.BACKEND_PATH
-													+ FoodSpecialtyResource.COLLECTION_RESOURCE_PATH + "/search";
+    private static final String CREATE_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
+            .path(FoodSpecialtiesResource.class).build().toString();
 
-	@Then("the response code should be \"$statusCode\"")
-	public void expectStatusCode(@Named("statusCode") final int statusCode) {
-		Assert.assertEquals(statusCode, this.response.getStatus());
-	}
+    private static final String SEARCH_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
+            .path(FoodSpecialtiesResource.class).path("search").build().toString();
 
-	@Then("I should get my newly created resource")
-	public void getResourceAtLocation() {
-		String responseFormat = this.responseContentType;
-		String responseLanguage = "en";
-		this.response = MidipascherClient.readLocation(this.response.getLocation(), responseFormat, responseLanguage);
-		Assert.assertNotNull(this.response.getEntity(FoodSpecialty.class));
-	}
+    @Then("the response code should be \"$statusCode\"")
+    public void expectStatusCode(@Named("statusCode") final int statusCode) {
+        Assert.assertEquals(statusCode, response.getStatus());
+    }
 
-	@When("I send a create request")
-	public void sendCreateRequest() {
-		String requestFormat = this.requestContentType;
-		String responseFormat = "application/json";
-		String responseLanguage = "en";
-		MidipascherClient.setCredentials("admin@admin.com", "secret");
-		this.response = MidipascherClient.createEntity(TestUtils.validFoodSpecialty(), CREATE_URI, requestFormat,
-				responseFormat, responseLanguage);
-	}
+    @Then("I should get my newly created resource")
+    public void getResourceAtLocation() {
+        final String responseFormat = responseContentType;
+        final String responseLanguage = "en";
+        response = MidipascherClient.readLocation(response.getLocation(), responseFormat, responseLanguage);
+        Assert.assertNotNull(response.getEntity(FoodSpecialty.class));
+    }
 
-	@When("I send a search request")
-	public void sendSearchRequest() {
-		final String requestContentType = "application/x-www-form-urlencoded";
-		String queryString = "";
-		this.response = MidipascherClient.findEntityByCriteria(SEARCH_URI, queryString, requestContentType,
-				this.responseContentType, "en");
-	}
+    @When("I send a create request")
+    public void sendCreateRequest() {
+        final String requestFormat = requestContentType;
+        final String responseFormat = "application/json";
+        final String responseLanguage = "en";
+        MidipascherClient.setCredentials("admin@admin.com", "secret");
+        response = MidipascherClient.createEntity(TestUtils.validFoodSpecialty(), CREATE_URI, requestFormat,
+            responseFormat, responseLanguage);
+    }
 
-	@Given("I send \"<requestContentType>\" data")
-	public void setRequestContentType(@Named("requestContentType") final String requestContentType) {
-		this.requestContentType = requestContentType;
-	}
+    @When("I send a search request")
+    public void sendSearchRequest() {
+        final String requestContentType = "application/x-www-form-urlencoded";
+        final String queryString = "";
+        response = MidipascherClient.findEntityByCriteria(SEARCH_URI, queryString, requestContentType,
+            responseContentType, "en");
+    }
 
-	@Given("I receive \"<responseContentType>\" data")
-	public void setResponseContentType(@Named("responseContentType") final String responseContentType) {
-		this.responseContentType = responseContentType;
-	}
+    @Given("I send \"<requestContentType>\" data")
+    public void setRequestContentType(@Named("requestContentType") final String requestContentType) {
+        this.requestContentType = requestContentType;
+    }
+
+    @Given("I receive \"<responseContentType>\" data")
+    public void setResponseContentType(@Named("responseContentType") final String responseContentType) {
+        this.responseContentType = responseContentType;
+    }
 
 }

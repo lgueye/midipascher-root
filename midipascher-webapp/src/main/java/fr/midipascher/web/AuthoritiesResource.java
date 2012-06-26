@@ -27,56 +27,57 @@ import fr.midipascher.domain.business.Facade;
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = WebConstants.BACKEND_PATH + AuthoritiesResource.COLLECTION_RESOURCE_PATH)
+@Path(AuthoritiesResource.COLLECTION_RESOURCE_PATH)
 @Scope("request")
 public class AuthoritiesResource {
 
-	@Autowired
-	private Facade				facade;
+    @Autowired
+    private Facade facade;
 
-	@Context
-	private UriInfo				uriInfo;
+    @Context
+    private UriInfo uriInfo;
 
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(AuthoritiesResource.class);
+    // private static final Logger LOGGER =
+    // LoggerFactory.getLogger(AuthoritiesResource.class);
 
-	public static final String	COLLECTION_RESOURCE_PATH	= "/authorities";
-	public static final String	SINGLE_RESOURCE_PATH		= "/{id}";
+    public static final String COLLECTION_RESOURCE_PATH = "/authorities";
+    public static final String SINGLE_RESOURCE_PATH = "/{id}";
 
-	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response create(final Authority authority) throws Throwable {
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    public Response create(final Authority authority) throws Throwable {
 
-		final Long id = this.facade.createAuthority(authority);
+        final Long id = facade.createAuthority(authority);
 
-		final URI uri = this.uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(id)).build();
 
-		return Response.created(uri).build();
+        return Response.created(uri).build();
 
-	}
+    }
 
-	@GET
-	@Path(AuthoritiesResource.SINGLE_RESOURCE_PATH)
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
+    @GET
+    @Path(AuthoritiesResource.SINGLE_RESOURCE_PATH)
+    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
-		final Authority authority = this.facade.readAuthority(id);
+        final Authority authority = facade.readAuthority(id);
 
-		if (authority == null) return Response.status(Response.Status.NOT_FOUND).build();
+        if (authority == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
 
-		return Response.ok(authority).build();
+        return Response.ok(authority).build();
 
-	}
+    }
 
-	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path(AuthoritiesResource.SINGLE_RESOURCE_PATH + "/inactivate")
-	public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
+    @POST
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Path(AuthoritiesResource.SINGLE_RESOURCE_PATH + "/inactivate")
+    public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
 
-		this.facade.inactivateAuthority(id);
+        facade.inactivateAuthority(id);
 
-		return Response.ok().build();
+        return Response.ok().build();
 
-	}
+    }
 
 }
