@@ -37,7 +37,7 @@ public class RestaurantsResource {
     private UriInfo uriInfo;
 
     // private static final Logger LOGGER =
-    // LoggerFactory.getLogger(AccountsResource.class);
+    // LoggerFactory.getLogger(RestaurantsResource.class);
 
     public static final String RESTAURANT_COLLECTION_RESOURCE_PATH = AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH
         + AccountsResource.ACCOUNT_SINGLE_RESOURCE_PATH + "/restaurants";

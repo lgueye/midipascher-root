@@ -46,7 +46,6 @@ public class AccountsResource {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response createAccount(final Account account) throws Throwable {
-
         final Long id = facade.createAccount(account);
         final URI uri = uriInfo.getAbsolutePathBuilder().path(AccountsResource.ACCOUNT_SINGLE_RESOURCE_PATH)
                 .build(String.valueOf(id));
