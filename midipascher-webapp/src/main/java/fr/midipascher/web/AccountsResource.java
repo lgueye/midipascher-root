@@ -13,10 +13,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.UriBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,26 +28,28 @@ import fr.midipascher.domain.business.Facade;
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = "/")
+@Path(value = WebConstants.BACKEND_PATH + AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH)
 public class AccountsResource {
 
 	@Autowired
-	private Facade	facade;
-
-	@Context
-	private UriInfo	uriInfo;
+	private Facade				facade;
 
 	// private static final Logger LOGGER =
 	// LoggerFactory.getLogger(AccountsResource.class);
 
+	public static final String	ACCOUNT_COLLECTION_RESOURCE_PATH	= "/accounts";
+	public static final String	ACCOUNT_SINGLE_RESOURCE_PATH		= "/{accountId}";
+	public static final String	RESTAURANT_COLLECTION_RESOURCE_PATH	= ACCOUNT_SINGLE_RESOURCE_PATH + "/restaurants";
+	public static final String	RESTAURANT_SINGLE_RESOURCE_PATH		= RESTAURANT_COLLECTION_RESOURCE_PATH
+																			+ "/{restaurantId}";
+
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path(value = "/accounts")
 	public Response createAccount(final Account account) throws Throwable {
 
 		final Long id = this.facade.createAccount(account);
 
-		final URI uri = this.uriInfo.getBaseUriBuilder().path("account").path(String.valueOf(id)).build();
+		final URI uri = UriBuilder.fromPath(ACCOUNT_SINGLE_RESOURCE_PATH).build(String.valueOf(id));
 
 		return Response.created(uri).build();
 
@@ -56,14 +57,14 @@ public class AccountsResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path(value = "/account/{accountId}/restaurants")
+	@Path(value = RESTAURANT_COLLECTION_RESOURCE_PATH)
 	public Response createRestaurant(@PathParam(value = "accountId") final Long accountId, final Restaurant restaurant)
 			throws Throwable {
 
 		final Long id = this.facade.createRestaurant(accountId, restaurant);
 
-		final URI uri = this.uriInfo.getBaseUriBuilder().path("account").path(accountId.toString()).path("restaurant")
-				.path(String.valueOf(id)).build();
+		final URI uri = UriBuilder.fromPath(RESTAURANT_SINGLE_RESOURCE_PATH).build(String.valueOf(accountId),
+				String.valueOf(id));
 
 		return Response.created(uri).build();
 
@@ -71,7 +72,7 @@ public class AccountsResource {
 
 	@PUT
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
+	@Path(RESTAURANT_SINGLE_RESOURCE_PATH)
 	public Response updateRestaurant(@PathParam(value = "accountId") final Long accountId,
 			@PathParam(value = "restaurantId") final Long restaurantId, final Restaurant restaurant) throws Throwable {
 
@@ -83,7 +84,7 @@ public class AccountsResource {
 
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
+	@Path(RESTAURANT_SINGLE_RESOURCE_PATH)
 	public Response readRestaurant(@PathParam(value = "accountId") final Long accountId,
 			@PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
@@ -94,8 +95,8 @@ public class AccountsResource {
 	}
 
 	@DELETE
-	@Path("/account/{id}")
-	public Response deleteAccount(@PathParam(value = "id") final Long id) throws Throwable {
+	@Path(ACCOUNT_SINGLE_RESOURCE_PATH)
+	public Response deleteAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
 		this.facade.deleteAccount(id);
 
@@ -104,9 +105,10 @@ public class AccountsResource {
 	}
 
 	@PUT
-	@Path("/account/{id}")
+	@Path(ACCOUNT_SINGLE_RESOURCE_PATH)
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response updateAccount(@PathParam(value = "id") final Long id, final Account account) throws Throwable {
+	public Response updateAccount(@PathParam(value = "accountId") final Long id, final Account account)
+			throws Throwable {
 
 		this.facade.updateAccount(id, account);
 
@@ -115,9 +117,9 @@ public class AccountsResource {
 	}
 
 	@GET
-	@Path("/account/{id}")
+	@Path(ACCOUNT_SINGLE_RESOURCE_PATH)
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response readAccount(@PathParam(value = "id") final Long id) throws Throwable {
+	public Response readAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
 		final Account account = this.facade.readAccount(id, true);
 
@@ -126,7 +128,7 @@ public class AccountsResource {
 	}
 
 	@DELETE
-	@Path(value = "/account/{accountId}/restaurant/{restaurantId}")
+	@Path(RESTAURANT_SINGLE_RESOURCE_PATH)
 	public Response deleteRestaurant(@PathParam(value = "accountId") final Long accountId,
 			@PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
@@ -138,7 +140,7 @@ public class AccountsResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path("/accounts/{accountId}/lock")
+	@Path(ACCOUNT_SINGLE_RESOURCE_PATH + "/lock")
 	public Response lockAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
 		this.facade.lockAccount(id);

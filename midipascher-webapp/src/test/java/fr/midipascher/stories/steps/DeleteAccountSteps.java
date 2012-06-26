@@ -12,16 +12,22 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.web.AccountsResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class DeleteAccountSteps {
 
-	private ClientResponse	response;
-	private String			preferredLanguage;
-	private String			preferredFormat;
-	private final String	accountURI	= "/account/6";
+	private ClientResponse		response;
+	private String				preferredLanguage;
+	private String				preferredFormat;
+	private static final String	DELETE_URI			= WebConstants.BACKEND_PATH
+															+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH + "/6";
+
+	private static final String	INVALID_DELETE_URI	= WebConstants.BACKEND_PATH
+															+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH + "/-1";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -32,7 +38,7 @@ public class DeleteAccountSteps {
 	public void sendAValidcreateAccountRequest() {
 		String format = "application/json";
 		String language = "fr";
-		this.response = MidipascherClient.deleteEntity(this.accountURI, format, language);
+		this.response = MidipascherClient.deleteEntity(DELETE_URI, format, language);
 	}
 
 	@Then("the response code should be \"$status\"")
@@ -55,20 +61,11 @@ public class DeleteAccountSteps {
 		Assert.assertEquals(message, this.response.getEntity(ResponseError.class).getMessage());
 	}
 
-	@When("I send a \"delete account\" request with wrong account")
-	public void sendAnDeleteAccountRequestWithWrongAccount() {
-		final String relativePath = "/account/-1/account/1";
-		String format = this.preferredFormat;
-		String language = this.preferredLanguage;
-		this.response = MidipascherClient.deleteEntity(relativePath, format, language);
-	}
-
 	@When("I send a \"delete account\" request with wrong id \"<wrong_id>\"")
-	public void sendAnDeleteAccountRequestWithWrongId(@Named("wrong_id") final Long id) {
-		final String relativePath = "/account/-1";
+	public void sendADeleteAccountRequestWithWrongId(@Named("wrong_id") final Long id) {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
-		this.response = MidipascherClient.deleteEntity(relativePath, format, language);
+		this.response = MidipascherClient.deleteEntity(INVALID_DELETE_URI, format, language);
 	}
 
 }

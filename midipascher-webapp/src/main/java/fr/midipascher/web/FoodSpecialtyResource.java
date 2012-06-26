@@ -35,7 +35,7 @@ import fr.midipascher.domain.business.Facade;
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = "/foodspecialty")
+@Path(value = WebConstants.BACKEND_PATH + FoodSpecialtyResource.COLLECTION_RESOURCE_PATH)
 @Scope("request")
 public class FoodSpecialtyResource {
 
@@ -45,7 +45,10 @@ public class FoodSpecialtyResource {
 	@Context
 	private UriInfo				uriInfo;
 
-	private static final Logger	LOGGER	= LoggerFactory.getLogger(FoodSpecialtyResource.class);
+	private static final Logger	LOGGER						= LoggerFactory.getLogger(FoodSpecialtyResource.class);
+
+	public static final String	COLLECTION_RESOURCE_PATH	= "/foodspecialties";
+	public static final String	SINGLE_RESOURCE_PATH		= "/{id}";
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -61,7 +64,7 @@ public class FoodSpecialtyResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path("{id}/inactivate")
+	@Path(SINGLE_RESOURCE_PATH + "/inactivate")
 	public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
 
 		this.facade.inactivateFoodSpecialty(id);
@@ -71,7 +74,7 @@ public class FoodSpecialtyResource {
 	}
 
 	@PUT
-	@Path("{id}")
+	@Path(SINGLE_RESOURCE_PATH)
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response update(@PathParam(value = "id") final Long id, final FoodSpecialty foodSpecialty) throws Throwable {
 
@@ -82,7 +85,7 @@ public class FoodSpecialtyResource {
 	}
 
 	@DELETE
-	@Path("{id}")
+	@Path(SINGLE_RESOURCE_PATH)
 	public Response delete(@PathParam(value = "id") final Long id) throws Throwable {
 
 		this.facade.deleteFoodSpecialty(id);
@@ -92,7 +95,7 @@ public class FoodSpecialtyResource {
 	}
 
 	@GET
-	@Path("{id}")
+	@Path(SINGLE_RESOURCE_PATH)
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
@@ -103,7 +106,7 @@ public class FoodSpecialtyResource {
 	}
 
 	@POST
-	@Path(value = "find")
+	@Path("/search")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response find(final @FormParam("code") String code, final @FormParam("label") String label,

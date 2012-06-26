@@ -13,15 +13,22 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.FoodSpecialtyResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class ContentNegotiationSteps {
 
-	private String			responseContentType;
-	private String			requestContentType;
-	private ClientResponse	response;
+	private String				responseContentType;
+	private String				requestContentType;
+	private ClientResponse		response;
+
+	private static final String	CREATE_URI	= WebConstants.BACKEND_PATH
+													+ FoodSpecialtyResource.COLLECTION_RESOURCE_PATH;
+	private static final String	SEARCH_URI	= WebConstants.BACKEND_PATH
+													+ FoodSpecialtyResource.COLLECTION_RESOURCE_PATH + "/search";
 
 	@Then("the response code should be \"$statusCode\"")
 	public void expectStatusCode(@Named("statusCode") final int statusCode) {
@@ -42,16 +49,15 @@ public class ContentNegotiationSteps {
 		String responseFormat = "application/json";
 		String responseLanguage = "en";
 		MidipascherClient.setCredentials("admin@admin.com", "secret");
-		this.response = MidipascherClient.createEntity(TestUtils.validFoodSpecialty(), "/foodspecialty", requestFormat,
+		this.response = MidipascherClient.createEntity(TestUtils.validFoodSpecialty(), CREATE_URI, requestFormat,
 				responseFormat, responseLanguage);
 	}
 
 	@When("I send a search request")
 	public void sendSearchRequest() {
-		final String path = "/foodspecialty/find";
 		final String requestContentType = "application/x-www-form-urlencoded";
 		String queryString = "";
-		this.response = MidipascherClient.findEntityByCriteria(path, queryString, requestContentType,
+		this.response = MidipascherClient.findEntityByCriteria(SEARCH_URI, queryString, requestContentType,
 				this.responseContentType, "en");
 	}
 

@@ -15,16 +15,28 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.AccountsResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class UpdateRestaurantSteps {
 
-	private ClientResponse	response;
-	private String			preferredLanguage;
-	private String			preferredFormat;
-	private final String	restaurantURI	= "/account/3/restaurant/1";
+	private ClientResponse		response;
+	private String				preferredLanguage;
+	private String				preferredFormat;
+
+	private static final String	UPDATE_URI						= WebConstants.BACKEND_PATH
+																		+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH
+																		+ "/3/restaurants/1";
+
+	private static final String	INVALID_ACCOUNT_UPDATE_URI		= WebConstants.BACKEND_PATH
+																		+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH
+																		+ "/-1/restaurants/1";
+	private static final String	INVALID_RESTAURANT_UPDATE_URI	= WebConstants.BACKEND_PATH
+																		+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH
+																		+ "/3/restaurants/-1";
 
 	@Given("I provide \"$uid\" uid and \"$password\" password")
 	public void provideAuthInformations(@Named("uid") String uid, @Named("password") String password) {
@@ -41,8 +53,7 @@ public class UpdateRestaurantSteps {
 		String format = "application/json";
 		String language = "fr";
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UPDATE_URI, requestContentType, format, language);
 	}
 
 	@Then("the response code should be \"$status\"")
@@ -67,7 +78,6 @@ public class UpdateRestaurantSteps {
 
 	@When("I send a \"update restaurant\" request with wrong id \"<wrong_id>\"")
 	public void sendAnUpdateRestaurantRequestWithWrongId(@Named("wrong_id") final Long id) {
-		final String relativePath = "/account/3/restaurant/-1";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
@@ -76,12 +86,12 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.updateEntity(restaurant, INVALID_RESTAURANT_UPDATE_URI, requestContentType,
+				format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong account")
 	public void sendAnUpdateRestaurantRequestWithWrongAccount() {
-		final String relativePath = "/account/-1/restaurant/1";
 		Restaurant restaurant = TestUtils.validRestaurant();
 		restaurant.clearSpecialties();
 		FoodSpecialty foodSpecialty = new FoodSpecialty();
@@ -90,7 +100,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.updateEntity(restaurant, INVALID_ACCOUNT_UPDATE_URI, requestContentType,
+				format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong name \"<wrong_name>\"")
@@ -104,8 +115,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong description \"<wrong_description>\"")
@@ -119,8 +130,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong phone number \"<wrong_phone_number>\"")
@@ -134,8 +145,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong main offer \"<wrong_main_offer>\"")
@@ -149,8 +160,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong street address \"<wrong_street_address>\"")
@@ -165,8 +176,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong city \"<wrong_city>\"")
@@ -180,8 +191,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong postal code \"<wrong_postal_code>\"")
@@ -195,8 +206,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 	@When("I send a \"update restaurant\" request with wrong country code \"<wrong_country_code>\"")
@@ -210,8 +221,8 @@ public class UpdateRestaurantSteps {
 		String format = this.preferredFormat;
 		String language = this.preferredLanguage;
 		String requestContentType = "application/xml";
-		this.response = MidipascherClient.updateEntity(restaurant, this.restaurantURI, requestContentType, format,
-				language);
+		this.response = MidipascherClient.updateEntity(restaurant, UpdateRestaurantSteps.UPDATE_URI,
+				requestContentType, format, language);
 	}
 
 }

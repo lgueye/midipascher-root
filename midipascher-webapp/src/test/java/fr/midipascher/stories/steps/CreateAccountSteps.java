@@ -14,15 +14,20 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestUtils;
+import fr.midipascher.web.AccountsResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class CreateAccountSteps {
 
-	private ClientResponse	response;
-	private String			language;
-	private String			format;
+	private ClientResponse		response;
+	private String				language;
+	private String				format;
+
+	private static final String	CREATE_URI	= WebConstants.BACKEND_PATH
+													+ AccountsResource.ACCOUNT_COLLECTION_RESOURCE_PATH;
 
 	@Then("the message should be \"<message>\"")
 	public void expectedMessage(@Named("message") final String message) {
@@ -51,8 +56,7 @@ public class CreateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/accounts";
-		this.response = MidipascherClient.createEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(account, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create account\" request with wrong last name \"<wrong_last_name>\"")
@@ -63,8 +67,7 @@ public class CreateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/accounts";
-		this.response = MidipascherClient.createEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(account, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create account\" request with wrong uid \"<wrong_uid>\"")
@@ -75,8 +78,7 @@ public class CreateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/accounts";
-		this.response = MidipascherClient.createEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(account, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a \"create account\" request with wrong password \"<wrong_password>\"")
@@ -87,8 +89,7 @@ public class CreateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/accounts";
-		this.response = MidipascherClient.createEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(account, CREATE_URI, requestContentType, format, language);
 	}
 
 	@When("I send a valid \"create account\" request")
@@ -98,8 +99,7 @@ public class CreateAccountSteps {
 		final String requestContentType = "application/json";
 		final String language = this.language;
 		final String format = this.format;
-		String relativePath = "/accounts";
-		this.response = MidipascherClient.createEntity(account, relativePath, requestContentType, format, language);
+		this.response = MidipascherClient.createEntity(account, CREATE_URI, requestContentType, format, language);
 	}
 
 	@Given("I accept \"$format\" format")

@@ -13,15 +13,21 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.web.AuthoritiesResource;
+import fr.midipascher.web.WebConstants;
 
 /**
  * @author louis.gueye@gmail.com
  */
 public class InactivateAuthoritySteps {
 
-	private ClientResponse	response;
-	private String			responseLanguage;
-	private String			responseContentType;
+	private ClientResponse		response;
+	private String				responseLanguage;
+	private String				responseContentType;
+
+	private static final String	INACTIVATE_URI	= WebConstants.BACKEND_PATH
+														+ AuthoritiesResource.COLLECTION_RESOURCE_PATH
+														+ "/3/inactivate";
 
 	@AfterScenario
 	public void afterScenario() {
@@ -47,15 +53,15 @@ public class InactivateAuthoritySteps {
 	@When("I send a valid \"inactivate authority\" request")
 	public void sendValidInactivateAuthorityRequest() {
 		final String requestContentType = "application/json";
-		String relativePath = "/admin/authorities/3/inactivate";
-		this.response = MidipascherClient.inactivateEntity(relativePath, requestContentType, this.responseContentType,
-				this.responseLanguage);
+		this.response = MidipascherClient.inactivateEntity(INACTIVATE_URI, requestContentType,
+				this.responseContentType, this.responseLanguage);
 	}
 
 	@When("I send a \"inactivate authority\" request with wrong id \"<wrong_id>\"")
 	public void sendInactivateAuthorityRequestWithWrongId(@Named("wrong_id") final Long id) {
 		final String requestContentType = "application/json";
-		String relativePath = "/admin/authorities/" + id + "/inactivate";
+		String relativePath = WebConstants.BACKEND_PATH + AuthoritiesResource.COLLECTION_RESOURCE_PATH + "/" + id
+				+ "/inactivate";
 		this.response = MidipascherClient.inactivateEntity(relativePath, requestContentType, this.responseContentType,
 				this.responseLanguage);
 	}

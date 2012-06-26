@@ -27,18 +27,21 @@ import fr.midipascher.domain.business.Facade;
  * @author louis.gueye@gmail.com
  */
 @Component
-@Path(value = "/admin/authorities")
+@Path(value = WebConstants.BACKEND_PATH + AuthoritiesResource.COLLECTION_RESOURCE_PATH)
 @Scope("request")
 public class AuthoritiesResource {
 
 	@Autowired
-	private Facade	facade;
+	private Facade				facade;
 
 	@Context
-	private UriInfo	uriInfo;
+	private UriInfo				uriInfo;
 
 	// private static final Logger LOGGER =
 	// LoggerFactory.getLogger(AuthoritiesResource.class);
+
+	public static final String	COLLECTION_RESOURCE_PATH	= "/authorities";
+	public static final String	SINGLE_RESOURCE_PATH		= "/{id}";
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -53,7 +56,7 @@ public class AuthoritiesResource {
 	}
 
 	@GET
-	@Path("{id}")
+	@Path(AuthoritiesResource.SINGLE_RESOURCE_PATH)
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
@@ -67,7 +70,7 @@ public class AuthoritiesResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Path("{id}/inactivate")
+	@Path(AuthoritiesResource.SINGLE_RESOURCE_PATH + "/inactivate")
 	public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
 
 		this.facade.inactivateAuthority(id);
