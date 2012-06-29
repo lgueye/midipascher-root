@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author louis.gueye@gmail.com
  */
 @Controller
-@RequestMapping("/index")
-public class IndexController {
+@RequestMapping("/restaurants")
+public class RestaurantController {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String displayIndex() {
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String add() {
         return "index";
     }
+
+    @RequestMapping(value = "/{id}/update", method = RequestMethod.GET)
+    public String update() {
+        return "index";
+    }
+
 }

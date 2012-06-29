@@ -15,5 +15,17 @@ Then the response code should be "200"
 
 Examples:
 |http_method|uri|
-|GET|/index.htm|
+|GET|/index|
+|GET|/restaurants/new|
+|GET|/restaurants/12/edit|
+|GET|/restaurants/12/delete|
+|GET|/authenticate|
+|GET|/login|
+|GET|/search|
+|GET|/search/new|
+|GET|/account/louis.gueye@gmail.com/edit|
+|GET|/account/update|
+|GET|/favorites|
+|GET|/favorites/add|
+|GET|/favorites/45/edit|
 
