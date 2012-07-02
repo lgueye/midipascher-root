@@ -15,8 +15,8 @@ import org.junit.Assert;
 import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.ResponseError;
-import fr.midipascher.web.FoodSpecialtiesResource;
 import fr.midipascher.web.WebConstants;
+import fr.midipascher.web.resources.FoodSpecialtiesResource;
 
 /**
  * @author louis.gueye@gmail.com

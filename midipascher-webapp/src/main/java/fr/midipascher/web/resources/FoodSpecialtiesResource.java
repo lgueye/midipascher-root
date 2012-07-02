@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.midipascher.web;
+package fr.midipascher.web.resources;
 
 import java.net.URI;
 import java.util.List;

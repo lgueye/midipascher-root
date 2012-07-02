@@ -12,8 +12,8 @@ import org.jbehave.core.annotations.When;
 
 import com.sun.jersey.api.client.ClientResponse;
 
-import fr.midipascher.web.AuthoritiesResource;
 import fr.midipascher.web.WebConstants;
+import fr.midipascher.web.resources.AuthoritiesResource;
 
 /**
  * @author louis.gueye@gmail.com

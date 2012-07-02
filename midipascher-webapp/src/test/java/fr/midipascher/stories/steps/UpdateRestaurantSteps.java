@@ -17,8 +17,8 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.test.TestUtils;
-import fr.midipascher.web.AccountsResource;
 import fr.midipascher.web.WebConstants;
+import fr.midipascher.web.resources.AccountsResource;
 
 /**
  * @author louis.gueye@gmail.com

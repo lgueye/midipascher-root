@@ -18,14 +18,13 @@ Examples:
 |GET|/index|
 |GET|/restaurants/new|
 |GET|/restaurants/12/edit|
-|GET|/restaurants/12/delete|
 |GET|/authenticate|
-|GET|/login|
-|GET|/search|
 |GET|/search/new|
-|GET|/account/louis.gueye@gmail.com/edit|
-|GET|/account/update|
+|GET|/accounts/louis.gueye@gmail.com/edit|
 |GET|/favorites|
 |GET|/favorites/add|
 |GET|/favorites/45/edit|
+|GET|/legal|
+|GET|/confidentiality|
+|GET|/about|
 
