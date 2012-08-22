@@ -4,3 +4,11 @@
 target/
 .log*
 *.db
+
+*.iml
+*.ipr
+*.iws
+projectFilesBackup
+
+
+
