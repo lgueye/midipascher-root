@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author louis.gueye@gmail.com
  */
 @Controller
-@RequestMapping("/authenticate")
+@RequestMapping(AuthenticationController.PATH)
 public class AuthenticationController {
+
+	public static final String	PATH	= "/authenticate";
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String authenticate() {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.midipascher.stories.backend;
+package fr.midipascher.stories.frontend;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 
-import fr.midipascher.steps.backend.PagesStatusSteps;
+import fr.midipascher.steps.frontend.PagesStatusSteps;
 import fr.midipascher.stories.AbstractJUnitStories;
 
 /**

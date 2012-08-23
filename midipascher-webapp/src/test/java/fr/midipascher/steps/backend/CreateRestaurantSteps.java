@@ -16,6 +16,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
+import fr.midipascher.steps.MidipascherClient;
 import fr.midipascher.test.TestUtils;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.AccountsResource;

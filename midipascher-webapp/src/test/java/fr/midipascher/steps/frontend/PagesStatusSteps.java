@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.midipascher.steps.backend;
+package fr.midipascher.steps.frontend;
 
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -9,6 +9,8 @@ import org.jbehave.core.annotations.When;
 import org.junit.Assert;
 
 import com.sun.jersey.api.client.ClientResponse;
+
+import fr.midipascher.steps.MidipascherClient;
 
 /**
  * @author louis.gueye@gmail.com
