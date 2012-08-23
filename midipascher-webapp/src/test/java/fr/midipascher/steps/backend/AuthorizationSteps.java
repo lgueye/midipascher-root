@@ -5,6 +5,7 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
+import fr.midipascher.test.TestFixtures;
 import org.jbehave.core.annotations.Alias;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -17,7 +18,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.steps.MidipascherClient;
-import fr.midipascher.test.TestUtils;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 
@@ -54,7 +54,7 @@ public class AuthorizationSteps {
     @When("I request a protected resource that require ADMIN rights")
     @Alias("I request a protected resource")
     public void requestProtectedResource() {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         final String path = AuthorizationSteps.URI;
         final String requestContentType = "application/json";
         response = MidipascherClient.createEntity(foodSpecialty, path, requestContentType, responseContentType,

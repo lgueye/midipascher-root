@@ -16,6 +16,7 @@ import java.util.Locale;
 import javax.sql.DataSource;
 import javax.validation.ConstraintViolationException;
 
+import fr.midipascher.test.TestFixtures;
 import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -51,7 +52,6 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.test.TestUtils;
 
 /**
  * Facade integration testing<br/>
@@ -90,7 +90,7 @@ public class FacadeImplTestIT {
     public void createFoodSpecialtyShouldSucceed() throws Throwable {
         authenticateAsAdmin();
         // Given
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         // ensure id nullity
         foodSpecialty.setId(null);
         // When
@@ -107,7 +107,7 @@ public class FacadeImplTestIT {
     public void updateFoodSpecialtyShouldSucceed() throws Throwable {
         authenticateAsAdmin();
         // Given
-        FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         foodSpecialty.setId(null);
         // When
         final Long id = this.facade.createFoodSpecialty(foodSpecialty);
@@ -136,7 +136,7 @@ public class FacadeImplTestIT {
     public void inactivateFoodSpecialtyShouldSucceed() {
         authenticateAsAdmin();
         // Given
-        FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         // ensure id nullity
         foodSpecialty.setId(null);
         // When
@@ -153,7 +153,7 @@ public class FacadeImplTestIT {
     public void deleteFoodSpecialtyShouldSucceed() throws Throwable {
         authenticateAsAdmin();
         // Given
-        FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         foodSpecialty.setId(null);
         // When
         final Long id = this.facade.createFoodSpecialty(foodSpecialty);
@@ -178,7 +178,7 @@ public class FacadeImplTestIT {
     @Test
     public void createAccountShouldSucceed() {
         authenticateAsAdmin();
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long id = this.facade.createAccount(account);
         Account persistedUser = this.facade.readAccount(id, true);
         Assert.assertNotNull(persistedUser);
@@ -194,7 +194,7 @@ public class FacadeImplTestIT {
         Account account;
         Long id;
 
-        account = TestUtils.validAccount();
+        account = TestFixtures.validAccount();
         email = "first@email.org";
         account.setEmail(email);
         id = this.facade.createAccount(account);
@@ -211,12 +211,12 @@ public class FacadeImplTestIT {
     @Test
     public void persistingAccountWithNewRestaurantInCollectionShouldCreateRestaurant() {
         authenticateAsAdmin();
-        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestFixtures.validFoodSpecialty());
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.getSpecialties().clear();
         restaurant.getSpecialties().add(foodSpecialty);
         Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
@@ -237,9 +237,9 @@ public class FacadeImplTestIT {
         Long foodSpecialtyId = 1L;
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.getSpecialties().clear();
         restaurant.getSpecialties().add(foodSpecialty);
         Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
@@ -266,7 +266,7 @@ public class FacadeImplTestIT {
         authenticateAsAdmin();
 
         // Given
-        Long accountId = this.facade.createAccount(TestUtils.validAccount());
+        Long accountId = this.facade.createAccount(TestFixtures.validAccount());
         assertNotNull(this.facade.readAccount(accountId, false));
 
         // When
@@ -293,9 +293,9 @@ public class FacadeImplTestIT {
         Long foodSpecialtyId = 1L;
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.getSpecialties().clear();
         restaurant.getSpecialties().add(foodSpecialty);
         Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
@@ -316,7 +316,7 @@ public class FacadeImplTestIT {
         authenticateAsAdmin();
 
         // Given
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
         Long restaurantId = createRestaurant(accountId);
         assertNotNull(restaurantId);
@@ -368,10 +368,10 @@ public class FacadeImplTestIT {
      * @throws Throwable
      */
     private Long createRestaurant(Long accountId) throws Throwable {
-        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestFixtures.validFoodSpecialty());
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.clearSpecialties();
         restaurant.addSpecialty(foodSpecialty);
         try {
@@ -390,13 +390,13 @@ public class FacadeImplTestIT {
         authenticateAsAdmin();
 
         // Given
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
         Long restaurantId = createRestaurant(accountId);
         assertNotNull(restaurantId);
         Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
         assertEquals(1, restaurant.countSpecialties());
-        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestFixtures.validFoodSpecialty());
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
         restaurant.addSpecialty(foodSpecialty);
@@ -414,14 +414,14 @@ public class FacadeImplTestIT {
         authenticateAsAdmin();
 
         // Given
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
         Long restaurantId = createRestaurant(accountId);
         assertNotNull(restaurantId);
         Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
         assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
-        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestFixtures.validFoodSpecialty());
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
         restaurant.addSpecialty(foodSpecialty);
@@ -443,14 +443,14 @@ public class FacadeImplTestIT {
         authenticateAsAdmin();
 
         // Given
-        Account account = TestUtils.validAccount();
+        Account account = TestFixtures.validAccount();
         Long accountId = this.facade.createAccount(account);
         Long restaurantId = createRestaurant(accountId);
         assertNotNull(restaurantId);
         Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
         assertEquals(1, CollectionUtils.size(restaurant.getSpecialties()));
-        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestUtils.validFoodSpecialty());
+        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestFixtures.validFoodSpecialty());
         FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
         assertNotNull(foodSpecialty);
         restaurant.addSpecialty(foodSpecialty);
@@ -481,7 +481,7 @@ public class FacadeImplTestIT {
     @Test
     public void autorizationOrAuthenticationRequiredRequestShouldFailWhenNotAuthenticatedOrGrantedCorrectAuthority() {
         // Given
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         // ensure id nullity
         foodSpecialty.setId(null);
         try {
@@ -526,7 +526,7 @@ public class FacadeImplTestIT {
         Restaurant restaurant;
 
         accountId = -1L;
-        restaurant = TestUtils.validRestaurant();
+        restaurant = TestFixtures.validRestaurant();
         LocaleContextHolder.setLocale(Locale.FRENCH);
 
         try {

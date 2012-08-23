@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,7 +48,6 @@ import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.exceptions.OwnershipException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
-import fr.midipascher.test.TestUtils;
 
 /**
  * @author louis.gueye@gmail.com
@@ -159,7 +159,7 @@ public class FacadeImplTest {
         account = new Account();
         email = "mail@mail.com";
         account.setEmail(email);
-        results = Arrays.asList(TestUtils.validAccount());
+        results = Arrays.asList(TestFixtures.validAccount());
         LocaleContextHolder.setLocale(Locale.FRENCH);
         messageCode = "account.email.already.used";
         message = "Email already used";
@@ -284,7 +284,7 @@ public class FacadeImplTest {
         authority = new Authority();
         code = "BLABLA";
         authority.setCode(code);
-        results = Arrays.asList(TestUtils.validAuthority());
+        results = Arrays.asList(TestFixtures.validAuthority());
         LocaleContextHolder.setLocale(Locale.FRENCH);
         messageCode = "authority.code.already.used";
         message = "Code already used";
@@ -397,7 +397,7 @@ public class FacadeImplTest {
         foodSpecialty = new FoodSpecialty();
         code = "BLABLA";
         foodSpecialty.setCode(code);
-        results = Arrays.asList(TestUtils.validFoodSpecialty());
+        results = Arrays.asList(TestFixtures.validFoodSpecialty());
         LocaleContextHolder.setLocale(Locale.FRENCH);
         messageCode = "foodSpecialty.code.already.used";
         message = "Code already used";

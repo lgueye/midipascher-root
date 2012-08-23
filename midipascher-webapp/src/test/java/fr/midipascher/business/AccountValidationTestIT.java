@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.test.TestUtils;
 
 /**
  * {@link Account} validation testing<br/>
@@ -77,14 +77,14 @@ public class AccountValidationTestIT extends BaseValidations {
         Set<Authority> wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = null;
         underTest.setAuthorities(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "One authority is required", "authorities");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Un rôle est requis", "authorities");
 
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = Collections.emptySet();
         underTest.setAuthorities(wrongData);
 
@@ -97,7 +97,7 @@ public class AccountValidationTestIT extends BaseValidations {
      */
     private void shouldValidateEmailFormatConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         final String wrongData = "toto.com";
         underTest.setEmail(wrongData);
 
@@ -113,7 +113,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = null;
         underTest.setEmail(wrongData);
 
@@ -121,7 +121,7 @@ public class AccountValidationTestIT extends BaseValidations {
         assertExpectedViolation(underTest, context, Locale.FRENCH, "L'email est requis", "email");
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = "";
         underTest.setEmail(wrongData);
 
@@ -137,7 +137,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = null;
         underTest.setFirstName(wrongData);
 
@@ -145,7 +145,7 @@ public class AccountValidationTestIT extends BaseValidations {
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Le prénom est requis", "firstName");
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = "";
         underTest.setFirstName(wrongData);
 
@@ -161,7 +161,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE + 1);
         underTest.setFirstName(wrongData);
 
@@ -178,7 +178,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = null;
         underTest.setLastName(wrongData);
 
@@ -186,7 +186,7 @@ public class AccountValidationTestIT extends BaseValidations {
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Le nom est requis", "lastName");
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = "";
         underTest.setLastName(wrongData);
 
@@ -201,7 +201,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE + 1);
         underTest.setLastName(wrongData);
 
@@ -218,7 +218,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = null;
         underTest.setPassword(wrongData);
 
@@ -226,7 +226,7 @@ public class AccountValidationTestIT extends BaseValidations {
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Le mot de passe est requis", "password");
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = "";
         underTest.setPassword(wrongData);
 
@@ -241,7 +241,7 @@ public class AccountValidationTestIT extends BaseValidations {
         String wrongData;
 
         // Given
-        underTest = TestUtils.validAccount();
+        underTest = TestFixtures.validAccount();
         wrongData = RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE + 1);
         underTest.setPassword(wrongData);
 

@@ -8,13 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.test.TestUtils;
 
 /**
  * FoodSpecialty database integration testing<br/>
@@ -62,7 +62,7 @@ public class FoodSpecialtyPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldCreateFoodSpecialty() {
         // Given
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
 
         // When
         this.baseDao.persist(foodSpecialty);
@@ -81,7 +81,7 @@ public class FoodSpecialtyPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldDeleteFoodSpecialty() {
         // Given
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
 
         // When
         this.baseDao.persist(foodSpecialty);
@@ -123,7 +123,7 @@ public class FoodSpecialtyPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldUpdateFoodSpecialty() {
         // Given
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         this.baseDao.persist(foodSpecialty);
         this.baseDao.flush();
         this.baseDao.evict(foodSpecialty);

@@ -8,13 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import fr.midipascher.domain.Authority;
-import fr.midipascher.test.TestUtils;
 
 /**
  * Authority database integration testing<br/>
@@ -47,7 +47,7 @@ public class AuthorityPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldCreateAuthority() {
         // Given
-        final Authority authority = TestUtils.validAuthority();
+        final Authority authority = TestFixtures.validAuthority();
 
         // When
         this.baseDao.persist(authority);
@@ -66,7 +66,7 @@ public class AuthorityPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldDeleteAuthority() {
         // Given
-        final Authority authority = TestUtils.validAuthority();
+        final Authority authority = TestFixtures.validAuthority();
 
         // When
         this.baseDao.persist(authority);
@@ -108,7 +108,7 @@ public class AuthorityPersistenceTestIT extends BasePersistenceTestIT {
     @Test
     public void shouldUpdateAuthority() {
         // Given
-        final Authority authority = TestUtils.validAuthority();
+        final Authority authority = TestFixtures.validAuthority();
         this.baseDao.persist(authority);
         this.baseDao.flush();
         this.baseDao.evict(authority);

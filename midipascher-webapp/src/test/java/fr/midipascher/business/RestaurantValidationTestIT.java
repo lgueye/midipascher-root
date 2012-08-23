@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -15,7 +16,6 @@ import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.test.TestUtils;
 
 /**
  * {@link Restaurant} validation testing<br/>
@@ -34,7 +34,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateAddressRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final Address wrongData = null;
         underTest.setAddress(wrongData);
 
@@ -50,7 +50,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCityRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.getAddress().setCity(wrongData);
 
@@ -66,7 +66,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCitySizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE + 1);
         underTest.getAddress().setCity(wrongData);
 
@@ -84,7 +84,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCompanyIdRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.setCompanyId(wrongData);
 
@@ -100,7 +100,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCompanyIdSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE + 1);
         underTest.setCompanyId(wrongData);
 
@@ -118,7 +118,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCountryCodeRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.getAddress().setCountryCode(wrongData);
 
@@ -134,7 +134,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCountryCodeSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE + 1);
         underTest.getAddress().setCountryCode(wrongData);
 
@@ -152,7 +152,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateDescriptionSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE + 1);
         underTest.setDescription(wrongData);
 
@@ -170,7 +170,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateMainOfferSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE + 1);
         underTest.setMainOffer(wrongData);
 
@@ -188,7 +188,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateNameRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.setName(wrongData);
 
@@ -204,7 +204,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateNameSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_NAME_MAX_SIZE + 1);
         underTest.setName(wrongData);
 
@@ -222,7 +222,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidatePhoneNumberRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.setPhoneNumber(wrongData);
 
@@ -238,7 +238,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidatePhoneNumberSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE + 1);
         underTest.setPhoneNumber(wrongData);
 
@@ -256,7 +256,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidatePostalCodeRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.getAddress().setPostalCode(wrongData);
 
@@ -272,7 +272,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidatePostalCodeSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE + 1);
         underTest.getAddress().setPostalCode(wrongData);
 
@@ -378,7 +378,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateSpecialtiesRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final Set<FoodSpecialty> wrongData = null;
         underTest.setSpecialties(wrongData);
 
@@ -395,7 +395,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateStreetAddressRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = null;
         underTest.getAddress().setStreetAddress(wrongData);
 
@@ -413,7 +413,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
      */
     private void shouldValidateStreetAddressSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validRestaurant();
+        underTest = TestFixtures.validRestaurant();
         final String wrongData = RandomStringUtils.random(Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE + 1);
         underTest.getAddress().setStreetAddress(wrongData);
 

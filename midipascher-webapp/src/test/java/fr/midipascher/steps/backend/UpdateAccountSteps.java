@@ -5,6 +5,7 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
+import fr.midipascher.test.TestFixtures;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -16,7 +17,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.steps.MidipascherClient;
-import fr.midipascher.test.TestUtils;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.AccountsResource;
 
@@ -51,7 +51,7 @@ public class UpdateAccountSteps {
 
     @When("I send a \"update account\" request with wrong first name \"<wrong_first_name>\"")
     public void sendUpdateAccountRequestWithWrongFirstName(@Named("wrong_first_name") final String firstName) {
-        final Account account = TestUtils.validAccount();
+        final Account account = TestFixtures.validAccount();
         account.setFirstName(firstName);
         account.setAuthorities(null);
         account.setEmail(uid);
@@ -64,7 +64,7 @@ public class UpdateAccountSteps {
 
     @When("I send a \"update account\" request with wrong last name \"<wrong_last_name>\"")
     public void sendUpdateAccountRequestWithWrongLastName(@Named("wrong_last_name") final String lastName) {
-        final Account account = TestUtils.validAccount();
+        final Account account = TestFixtures.validAccount();
         account.setLastName(lastName);
         account.setAuthorities(null);
         account.setEmail(uid);
@@ -77,7 +77,7 @@ public class UpdateAccountSteps {
 
     @When("I send a \"update account\" request with wrong password \"<wrong_password>\"")
     public void sendUpdateAccountRequestWithWrongPassword(@Named("wrong_password") final String password) {
-        final Account account = TestUtils.validAccount();
+        final Account account = TestFixtures.validAccount();
         account.setPassword(password);
         account.setAuthorities(null);
         account.setEmail(uid);
@@ -90,7 +90,7 @@ public class UpdateAccountSteps {
 
     @When("I send a \"update account\" request with wrong id \"<wrong_id>\"")
     public void sendUpdateAccountRequestWithWrongUID(@Named("wrong_id") final Long id) {
-        final Account account = TestUtils.validAccount();
+        final Account account = TestFixtures.validAccount();
         account.setAuthorities(null);
         account.setEmail(uid);
         final String requestContentType = "application/json";
@@ -102,7 +102,7 @@ public class UpdateAccountSteps {
 
     @When("I send a valid \"update account\" request")
     public void sendValidUpdateAccountRequest() {
-        final Account account = TestUtils.validAccount();
+        final Account account = TestFixtures.validAccount();
         account.setAuthorities(null);
         account.setEmail(uid);
         final String requestContentType = "application/json";

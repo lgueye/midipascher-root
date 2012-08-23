@@ -9,12 +9,11 @@ import static org.junit.Assert.fail;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import fr.midipascher.test.TestUtils;
 
 /**
  * @author louis.gueye@gmail.com
@@ -154,7 +153,7 @@ public class AccountTest {
 
     @Test
     public void removeRestaurantWontFailWithNullProvidedRestaurantId() {
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.setId(9L);
         this.underTest.addRestaurant(restaurant);
 
@@ -167,7 +166,7 @@ public class AccountTest {
 
     @Test
     public void removeRestaurantWontFailWithNullRestaurantIdInCollection() {
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.setId(null);
         this.underTest.addRestaurant(restaurant);
 
@@ -182,7 +181,7 @@ public class AccountTest {
     public void removeRestaurantShouldSucceed() {
         Long id = 4L;
         int countRestaurant;
-        Restaurant restaurant = TestUtils.validRestaurant();
+        Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.setId(id);
         this.underTest.addRestaurant(restaurant);
         countRestaurant = this.underTest.countRestaurants();

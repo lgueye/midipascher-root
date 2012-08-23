@@ -5,6 +5,7 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
+import fr.midipascher.test.TestFixtures;
 import org.jbehave.core.annotations.AfterScenario;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -17,7 +18,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.steps.MidipascherClient;
-import fr.midipascher.test.TestUtils;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 
@@ -65,7 +65,7 @@ public class CreateFoodSpecialtySteps {
 
     @When("I send a \"create food specialty\" request with wrong code \"<wrong_code>\"")
     public void sendCreateFoodSpecialtyRequestWithWrongCode(@Named("wrong_code") final String code) {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         foodSpecialty.setCode(code);
         final String requestContentType = "application/json";
         response = MidipascherClient.createEntity(foodSpecialty, CREATE_URI, requestContentType, responseContentType,
@@ -74,7 +74,7 @@ public class CreateFoodSpecialtySteps {
 
     @When("I send a \"create food specialty\" request with wrong label \"<wrong_label>\"")
     public void sendCreateFoodSpecialtyRequestWithWrongLabel(@Named("wrong_label") final String label) {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         foodSpecialty.setLabel(label);
         final String requestContentType = "application/json";
         response = MidipascherClient.createEntity(foodSpecialty, CREATE_URI, requestContentType, responseContentType,
@@ -83,7 +83,7 @@ public class CreateFoodSpecialtySteps {
 
     @When("I send a valid \"create food specialty\" request")
     public void sendValidCreateFoodSpecialtyRequest() {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         final String requestContentType = "application/json";
         response = MidipascherClient.createEntity(foodSpecialty, CREATE_URI, requestContentType, responseContentType,
             responseLanguage);

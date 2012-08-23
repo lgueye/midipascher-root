@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import javax.validation.ConstraintViolationException;
 
+import fr.midipascher.test.TestFixtures;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -19,7 +20,6 @@ import fr.midipascher.TestConstants;
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.test.TestUtils;
 
 /**
  * Facade integration testing<br/>
@@ -41,8 +41,8 @@ public abstract class BaseValidations {
             validator.validate(type, context);
             fail("Expected " + ConstraintViolationException.class.getName());
         } catch (final ConstraintViolationException constraintViolationException) {
-            TestUtils.assertViolationContainsTemplateAndMessage(constraintViolationException, expectedMessage,
-                expectedPath);
+            TestFixtures.assertViolationContainsTemplateAndMessage(constraintViolationException, expectedMessage,
+                    expectedPath);
         } catch (final Throwable throwable) {
             fail("Expected " + ConstraintViolationException.class.getName() + ", got " + throwable.getClass().getName());
             throwable.printStackTrace();

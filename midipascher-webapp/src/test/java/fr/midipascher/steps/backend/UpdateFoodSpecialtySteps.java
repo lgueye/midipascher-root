@@ -5,6 +5,7 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
+import fr.midipascher.test.TestFixtures;
 import org.jbehave.core.annotations.AfterScenario;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
@@ -17,7 +18,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.steps.MidipascherClient;
-import fr.midipascher.test.TestUtils;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 
@@ -56,7 +56,7 @@ public class UpdateFoodSpecialtySteps {
 
     @When("I send a \"update food specialty\" request with wrong code \"<wrong_code>\"")
     public void sendUpdateFoodSpecialtyRequestWithWrongCode(@Named("wrong_code") final String code) {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         foodSpecialty.setCode(code);
         final String requestContentType = "application/json";
         response = MidipascherClient.updateEntity(foodSpecialty, UPDATE_URI, requestContentType, responseContentType,
@@ -65,7 +65,7 @@ public class UpdateFoodSpecialtySteps {
 
     @When("I send a \"update food specialty\" request with wrong id \"<wrong_id>\"")
     public void sendUpdateFoodSpecialtyRequestWithWrongId(@Named("wrong_id") final Long id) {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         final String requestContentType = "application/json";
         final String relativePath = WebConstants.BACKEND_PATH + FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH + "/"
             + id;
@@ -75,7 +75,7 @@ public class UpdateFoodSpecialtySteps {
 
     @When("I send a \"update food specialty\" request with wrong label \"<wrong_label>\"")
     public void sendUpdateFoodSpecialtyRequestWithWrongLabel(@Named("wrong_label") final String label) {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         foodSpecialty.setLabel(label);
         final String requestContentType = "application/json";
         response = MidipascherClient.updateEntity(foodSpecialty, UPDATE_URI, requestContentType, responseContentType,
@@ -84,7 +84,7 @@ public class UpdateFoodSpecialtySteps {
 
     @When("I send a valid \"update food specialty\" request")
     public void sendValidUpdateFoodSpecialtyRequest() {
-        final FoodSpecialty foodSpecialty = TestUtils.validFoodSpecialty();
+        final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
         final String requestContentType = "application/json";
         response = MidipascherClient.updateEntity(foodSpecialty, UPDATE_URI, requestContentType, responseContentType,
             responseLanguage);

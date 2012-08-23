@@ -50,7 +50,7 @@ import fr.midipascher.domain.Restaurant;
 /**
  * @author louis.gueye@gmail.com
  */
-public abstract class TestUtils {
+public abstract class TestFixtures {
 
     public static final String STANDARD_CHARSET = "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBNéèçàù7894561230";
     private static final String EMAIL_CHARSET = "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN";
@@ -105,7 +105,7 @@ public abstract class TestUtils {
         final String format = "application/json";
         final String language = "fr";
         final String requestContentType = "application/xml";
-        final Account account = TestUtils.validAccount();
+        final Account account = TestFixtures.validAccount();
         final ClientResponse response = webResource.accept(MediaType.valueOf(format))
                 .acceptLanguage(new String[] { language }).header("Content-Type", requestContentType)
                 .post(ClientResponse.class, account);
@@ -193,16 +193,16 @@ public abstract class TestUtils {
      */
     public static Account validAccount() {
         final Account account = new Account();
-        account.setAuthorities(new HashSet<Authority>(Arrays.asList(TestUtils.validAuthority())));
+        account.setAuthorities(new HashSet<Authority>(Arrays.asList(TestFixtures.validAuthority())));
         account.setCreated(new DateTime());
-        account.setEmail(RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + "@"
-            + RandomStringUtils.random(20, TestUtils.EMAIL_CHARSET) + ".com");
+        account.setEmail(RandomStringUtils.random(20, TestFixtures.EMAIL_CHARSET) + "@"
+            + RandomStringUtils.random(20, TestFixtures.EMAIL_CHARSET) + ".com");
         account.setFirstName(RandomStringUtils.random(Account.CONSTRAINT_FIRST_NAME_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
+            TestFixtures.STANDARD_CHARSET));
         account.setLastConnection(new DateTime());
-        account.setLastName(RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        account.setLastName(RandomStringUtils.random(Account.CONSTRAINT_LAST_NAME_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         account.setLocked(false);
-        account.setPassword(RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        account.setPassword(RandomStringUtils.random(Account.CONSTRAINT_PASSWORD_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         return account;
     }
 
@@ -211,12 +211,12 @@ public abstract class TestUtils {
      */
     public static Address validAddress() {
         final Address address = new Address();
-        address.setCity(RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        address.setCity(RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         address.setCountryCode("fr");
         address.setPostalCode(RandomStringUtils.random(Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
+            TestFixtures.STANDARD_CHARSET));
         address.setStreetAddress(RandomStringUtils.random(Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
+            TestFixtures.STANDARD_CHARSET));
         return address;
     }
 
@@ -225,8 +225,8 @@ public abstract class TestUtils {
      */
     public static Authority validAuthority() {
         final Authority authority = new Authority();
-        authority.setCode(RandomStringUtils.random(Authority.CONSTRAINT_CODE_MAX_SIZE, TestUtils.STANDARD_CHARSET));
-        authority.setLabel(RandomStringUtils.random(Authority.CONSTRAINT_LABEL_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        authority.setCode(RandomStringUtils.random(Authority.CONSTRAINT_CODE_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
+        authority.setLabel(RandomStringUtils.random(Authority.CONSTRAINT_LABEL_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         return authority;
     }
 
@@ -235,28 +235,28 @@ public abstract class TestUtils {
      */
     public static FoodSpecialty validFoodSpecialty() {
         final FoodSpecialty specialty = new FoodSpecialty();
-        specialty.setCode(RandomStringUtils.random(FoodSpecialty.CONSTRAINT_CODE_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+        specialty.setCode(RandomStringUtils.random(FoodSpecialty.CONSTRAINT_CODE_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         specialty.setLabel(RandomStringUtils
-                .random(FoodSpecialty.CONSTRAINT_LABEL_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+                .random(FoodSpecialty.CONSTRAINT_LABEL_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         return specialty;
     }
 
     public static Restaurant validRestaurant() {
         final Restaurant restaurant = new Restaurant();
-        restaurant.setAddress(TestUtils.validAddress());
+        restaurant.setAddress(TestFixtures.validAddress());
         restaurant.setDescription(RandomStringUtils.random(Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
+            TestFixtures.STANDARD_CHARSET));
         restaurant.setCompanyId(RandomStringUtils.random(Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
+            TestFixtures.STANDARD_CHARSET));
         restaurant.setHalal(true);
         restaurant.setKosher(false);
         restaurant.setVegetarian(false);
         restaurant.setMainOffer(RandomStringUtils.random(Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
-        restaurant.setName(RandomStringUtils.random(Restaurant.CONSTRAINT_NAME_MAX_SIZE, TestUtils.STANDARD_CHARSET));
+            TestFixtures.STANDARD_CHARSET));
+        restaurant.setName(RandomStringUtils.random(Restaurant.CONSTRAINT_NAME_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
         restaurant.setPhoneNumber(RandomStringUtils.random(Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE,
-            TestUtils.STANDARD_CHARSET));
-        restaurant.setSpecialties(new HashSet<FoodSpecialty>(Arrays.asList(TestUtils.validFoodSpecialty())));
+            TestFixtures.STANDARD_CHARSET));
+        restaurant.setSpecialties(new HashSet<FoodSpecialty>(Arrays.asList(TestFixtures.validFoodSpecialty())));
         return restaurant;
     }
 

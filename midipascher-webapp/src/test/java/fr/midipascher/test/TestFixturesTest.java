@@ -19,10 +19,10 @@ import fr.midipascher.domain.Restaurant;
 /**
  * @author louis.gueye@gmail.com
  */
-public class TestUtilsTest {
+public class TestFixturesTest {
 
     /**
-     * Test method for {@link fr.midipascher.test.TestUtils#fromJson(java.lang.String, java.lang.Class)} .
+     * Test method for {@link TestFixtures#fromJson(java.lang.String, java.lang.Class)} .
      * 
      * @throws IOException
      * @throws JsonMappingException
@@ -33,14 +33,14 @@ public class TestUtilsTest {
         // Given
         final String json = "{\"address\":{\"city\":\"4Vf2nIàvOzSlysrLWJxS8YmtD44MyTeyFkàcchùWa46Y1Zk5éo\",\"countryCode\":\"fr\",\"postalCode\":\"qBBOéSZRhW\",\"streetAddress\":\"CmVNYlZ7zéAbHo99OolgawSfvjQd9elBbéF6VCç5R1jHeBdQQE\"},\"name\":\"3jV3TdAyiks5èçmEàt68uSEvYVwXsw1ouDkuxsAB7Kjçéq3F3\",\"id\":null,\"description\":\"LYHèFvTz9mAmNCULL7ieds3E3oc6Lp6qJWM2SYçMsz31Fh5TIPj3LCçuCL7ErG5HG0V0tFN6x5ùAMpRSGzpbrsGZVDK1vrGkàWYTCùSijhWéy09xCndaHJYIzWSvxErJroùçUdPrMUFxlwpPTsBcQZz4uPfV6nàtè9ZxwgNm5mZPkZ1u6ANCdNFoiuYLMq4oXZM\",\"companyId\":\"552 100 554\",\"mainOffer\":\"ph2gYDZltx7GryAhCDDLLmùèSiçX8UNwTçbjWyUVG1éR5YGùJM11ùtàDh2tcUtRDEXHQàRçKqHwvhGJ4k27leinbt2tnXJ2t78iaUBzNRJGpElhNGFFUdMamH2YxTJXkDu3vnéIvenaKi6éNPDQcys0Azèhnro8Ybx0èS2gVo8CDuùBVviJJww5oGJOQQ1aSCz8K7Yv\",\"phoneNumber\":\"KnwIr7w3qiDXPB9cGYçK\",\"specialties\":[{\"id\":null,\"code\":\"fb5çSuYp3è\",\"label\":\"DcVsLfHzTù5saà8Bn1Rto5EBdd3c5ZaDbd9QTy1sw9GP5r6m0m\",\"active\":true}],\"halal\":true,\"kosher\":false}";
         // When
-        final Restaurant restaurant = TestUtils.fromJson(json, Restaurant.class);
+        final Restaurant restaurant = TestFixtures.fromJson(json, Restaurant.class);
 
         // Then
         Assert.assertNotNull(restaurant);
     }
 
     /**
-     * Test method for {@link fr.midipascher.test.TestUtils#fromXml(java.lang.String, java.lang.Class)} .
+     * Test method for {@link TestFixtures#fromXml(java.lang.String, java.lang.Class)} .
      * 
      * @throws JAXBException
      * @throws UnsupportedEncodingException
@@ -66,14 +66,14 @@ public class TestUtilsTest {
             + "<code>PidKàçedo2</code>" + "<label>VVlSrxY5ALbtXRùèL7W917K58nPèQ8IFmkfJYéyuàVjKrk1d6i</label>"
             + "</specialties>" + "</restaurant>";
         // When
-        final Restaurant restaurant = TestUtils.fromXml(xml, Restaurant.class);
+        final Restaurant restaurant = TestFixtures.fromXml(xml, Restaurant.class);
 
         // Then
         Assert.assertNotNull(restaurant);
     }
 
     /**
-     * Test method for {@link fr.midipascher.test.TestUtils#toJson(java.lang.Object)}.
+     * Test method for {@link TestFixtures#toJson(java.lang.Object)}.
      * 
      * @throws IOException
      * @throws JsonMappingException
@@ -82,10 +82,10 @@ public class TestUtilsTest {
     @Test
     public final void testToJson() throws JsonGenerationException, JsonMappingException, IOException {
         // Given
-        final Restaurant restaurant = TestUtils.validRestaurant();
+        final Restaurant restaurant = TestFixtures.validRestaurant();
 
         // When
-        final String json = TestUtils.toJson(restaurant);
+        final String json = TestFixtures.toJson(restaurant);
         // System.out.println(json);
 
         // Then
@@ -93,7 +93,7 @@ public class TestUtilsTest {
     }
 
     /**
-     * Test method for {@link fr.midipascher.test.TestUtils#toXml(java.lang.Object)}.
+     * Test method for {@link TestFixtures#toXml(java.lang.Object)}.
      * 
      * @throws JAXBException
      * @throws UnsupportedEncodingException
@@ -101,9 +101,9 @@ public class TestUtilsTest {
     @Test
     public final void testToXml() throws UnsupportedEncodingException, JAXBException {
         // Given
-        final Restaurant restaurant = TestUtils.validRestaurant();
+        final Restaurant restaurant = TestFixtures.validRestaurant();
         // When
-        final String xml = TestUtils.toXml(restaurant);
+        final String xml = TestFixtures.toXml(restaurant);
 
         // Then
         // System.out.println(xml);

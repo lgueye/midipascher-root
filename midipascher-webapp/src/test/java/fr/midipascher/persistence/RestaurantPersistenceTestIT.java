@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-import fr.midipascher.test.TestUtils;
 
 /**
  * Restaurant database integration testing<br/>
@@ -369,7 +369,7 @@ public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {
     }
 
     private Restaurant validRestaurant() {
-        final Restaurant restaurant = TestUtils.validRestaurant();
+        final Restaurant restaurant = TestFixtures.validRestaurant();
         restaurant.getSpecialties().clear();
 
         final FoodSpecialty foodSpecialty = baseDao.get(FoodSpecialty.class, 1L);

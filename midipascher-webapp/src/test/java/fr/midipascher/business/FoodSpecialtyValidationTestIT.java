@@ -7,12 +7,12 @@ import java.util.Locale;
 
 import javax.validation.ConstraintViolationException;
 
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.test.TestUtils;
 
 /**
  * FoodSpecialty validation testing<br/>
@@ -31,7 +31,7 @@ public class FoodSpecialtyValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCodeRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validFoodSpecialty();
+        underTest = TestFixtures.validFoodSpecialty();
         final String wrongData = null;
         underTest.setCode(wrongData);
 
@@ -47,7 +47,7 @@ public class FoodSpecialtyValidationTestIT extends BaseValidations {
      */
     private void shouldValidateCodeSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validFoodSpecialty();
+        underTest = TestFixtures.validFoodSpecialty();
         final String wrongData = RandomStringUtils.random(FoodSpecialty.CONSTRAINT_CODE_MAX_SIZE + 1);
         underTest.setCode(wrongData);
 
@@ -101,7 +101,7 @@ public class FoodSpecialtyValidationTestIT extends BaseValidations {
      */
     private void shouldValidateLabelRequiredConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validFoodSpecialty();
+        underTest = TestFixtures.validFoodSpecialty();
         final String wrongData = null;
         underTest.setLabel(wrongData);
 
@@ -117,7 +117,7 @@ public class FoodSpecialtyValidationTestIT extends BaseValidations {
      */
     private void shouldValidateLabelSizeConstraint(final ValidationContext context) {
         // Given
-        underTest = TestUtils.validFoodSpecialty();
+        underTest = TestFixtures.validFoodSpecialty();
         final String wrongData = RandomStringUtils.random(FoodSpecialty.CONSTRAINT_LABEL_MAX_SIZE + 1);
         underTest.setLabel(wrongData);
 

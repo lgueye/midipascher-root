@@ -5,6 +5,7 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
+import fr.midipascher.test.TestFixtures;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -15,7 +16,6 @@ import com.sun.jersey.api.client.ClientResponse;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.steps.MidipascherClient;
-import fr.midipascher.test.TestUtils;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 
@@ -53,7 +53,7 @@ public class ContentNegotiationSteps {
         final String responseFormat = "application/json";
         final String responseLanguage = "en";
         MidipascherClient.setCredentials("admin@admin.com", "secret");
-        response = MidipascherClient.createEntity(TestUtils.validFoodSpecialty(), CREATE_URI, requestFormat,
+        response = MidipascherClient.createEntity(TestFixtures.validFoodSpecialty(), CREATE_URI, requestFormat,
             responseFormat, responseLanguage);
     }
 
