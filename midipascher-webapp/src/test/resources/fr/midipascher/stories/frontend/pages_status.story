@@ -2,7 +2,7 @@ Page status stories
 
 Meta:
 @refs 15
-@progress done
+@progress standby
 
 Narrative:
 Given a valid http request to a ui page

@@ -2,7 +2,7 @@ Page status stories
 
 Meta:
 @refs 16
-@progress wip
+@progress standby
 
 Narrative:
 Given a valid login request
@@ -10,7 +10,7 @@ When I send that request
 It should either succeed or fail
 
 Scenario: sending a login request should succeed
-When I submit a valid "login" form with "laurent.thibaut@gmail.com" as "uid" 
+When I submit a valid "login" form with "laurent.thibaut@gmail.com" as "uid"
 Then I should get redirected to the "index" page
 And the response should not contain a "/authenticate" link
 And the response should contain a "/accounts/laurent.thibaut@gmail.com/edit" link

@@ -1,11 +1,12 @@
 /**
- * 
+ *
  */
 package fr.midipascher.stories.backend;
 
 import java.util.Arrays;
 import java.util.List;
 
+import fr.midipascher.steps.Exchange;
 import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
@@ -21,7 +22,7 @@ public class ContentNegotiationStory extends AbstractJUnitStories {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return new InstanceStepsFactory(configuration(), new ContentNegotiationSteps());
+        return new InstanceStepsFactory(configuration(), new ContentNegotiationSteps(new Exchange()));
     }
 
     @Override
