@@ -11,7 +11,7 @@ import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
 import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.steps.BaseSteps;
+import fr.midipascher.steps.BackendBaseSteps;
 import fr.midipascher.steps.Exchange;
 import fr.midipascher.test.TestFixtures;
 import fr.midipascher.web.WebConstants;
@@ -20,7 +20,7 @@ import fr.midipascher.web.resources.FoodSpecialtiesResource;
 /**
  * @author louis.gueye@gmail.com
  */
-public class ContentNegotiationSteps extends BaseSteps {
+public class ContentNegotiationSteps extends BackendBaseSteps {
 
 	private static final String	CREATE_URI	= UriBuilder.fromPath(WebConstants.BACKEND_PATH)
 													.path(FoodSpecialtiesResource.class).build().toString();

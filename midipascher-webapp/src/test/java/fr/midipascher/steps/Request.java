@@ -5,7 +5,7 @@ import java.util.Locale;
 import javax.ws.rs.core.MediaType;
 
 /**
- * User: louisgueye@gmailcom Date: 24/08/12 Time: 01:30
+ * User: louis.gueye@gmail.com
  */
 public class Request {
 	private String	uri;

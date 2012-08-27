@@ -2,7 +2,7 @@ Content Negotiation story
 
 Meta:
 @refs 1
-@progress wip
+@progress done
 
 Narrative:
 In order to provide content negotiation capabilities to my service

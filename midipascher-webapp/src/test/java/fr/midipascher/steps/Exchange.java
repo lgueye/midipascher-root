@@ -16,6 +16,8 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 
+import fr.midipascher.domain.ResponseError;
+
 /**
  * User: louis.gueye@gmail.com Date: 24/08/12 Time: 01:14
  */
@@ -109,4 +111,32 @@ public class Exchange {
 				.accept(this.request.getRequestedType()).acceptLanguage(this.request.getRequestedLanguage())
 				.post(ClientResponse.class, this.request.getBody());
 	}
+
+	/**
+	 * @param class1
+	 * @param responseMessage
+	 */
+	public void assertExpectedMessage(Class<?> clazz, String expected) {
+
+		Object message = this.clientResponse.getEntity(clazz);
+
+		String actual = null;
+
+		if (message instanceof String) actual = (String) message;
+
+		else
+			actual = ((ResponseError) message).getMessage();
+
+		Assert.assertEquals(expected, actual);
+	}
+
+	/**
+	 * @param string
+	 */
+	public void readURI() {
+		final URI uri = newURI(this.request.getUri());
+		this.clientResponse = this.jerseyClient.resource(uri).accept(this.request.getRequestedType())
+				.acceptLanguage(this.request.getRequestedLanguage()).get(ClientResponse.class);
+	}
+
 }
