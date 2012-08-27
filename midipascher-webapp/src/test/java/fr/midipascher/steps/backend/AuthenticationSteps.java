@@ -5,6 +5,8 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.jbehave.core.annotations.Named;
+import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
 import fr.midipascher.web.WebConstants;
@@ -30,6 +32,11 @@ public class AuthenticationSteps extends BackendBaseSteps {
 		this.getExchange().getRequest().setUri(URI);
 		this.getExchange().getRequest().setRequestedType("application/json");
 		this.getExchange().readURI();
+	}
+
+	@Then("the response message should be \"<message>\"")
+	public void expectResponseMessage(@Named("message") final String responseMessage) {
+		this.exchange.assertExpectedMessage(String.class, responseMessage);
 	}
 
 }

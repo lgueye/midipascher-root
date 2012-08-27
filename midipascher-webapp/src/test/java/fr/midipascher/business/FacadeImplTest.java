@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,6 +47,7 @@ import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.exceptions.OwnershipException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * @author louis.gueye@gmail.com

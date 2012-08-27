@@ -24,11 +24,6 @@ public abstract class BackendBaseSteps {
 		this.exchange.assertExpectedStatus(statusCode);
 	}
 
-	@Then("the response message should be \"<message>\"")
-	public void expectResponseMessage(@Named("message") final String responseMessage) {
-		this.exchange.assertExpectedMessage(String.class, responseMessage);
-	}
-
 	@Given("I authenticate with \"<uid>\" uid and \"<password>\" password")
 	public void authenticate(@Named("uid") final String uid, @Named("password") final String password) {
 		this.exchange.setCredentials(uid, password);
@@ -37,6 +32,16 @@ public abstract class BackendBaseSteps {
 	@Given("I accept \"<responseLanguage>\" language")
 	public void setAcceptLanguage(@Named("responseLanguage") final String requestedLanguage) {
 		this.exchange.getRequest().setRequestedLanguage(requestedLanguage);
+	}
+
+	@Given("I receive \"<responseContentType>\" data")
+	public void setResponseContentType(@Named("responseContentType") final String requestedType) {
+		this.exchange.getRequest().setRequestedType(requestedType);
+	}
+
+	@Given("I send \"<requestContentType>\" data")
+	public void setRequestContentType(@Named("requestContentType") final String type) {
+		this.exchange.getRequest().setType(type);
 	}
 
 }

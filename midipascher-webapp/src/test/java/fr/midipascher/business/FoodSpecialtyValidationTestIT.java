@@ -7,12 +7,12 @@ import java.util.Locale;
 
 import javax.validation.ConstraintViolationException;
 
-import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.validation.ValidationContext;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * FoodSpecialty validation testing<br/>

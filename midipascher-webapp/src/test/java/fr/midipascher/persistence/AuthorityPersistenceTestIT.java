@@ -8,13 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import fr.midipascher.test.TestFixtures;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import fr.midipascher.domain.Authority;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * Authority database integration testing<br/>

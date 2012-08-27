@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import javax.validation.ConstraintViolationException;
 
-import fr.midipascher.test.TestFixtures;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -20,6 +19,7 @@ import fr.midipascher.TestConstants;
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.validation.ValidationContext;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * Facade integration testing<br/>

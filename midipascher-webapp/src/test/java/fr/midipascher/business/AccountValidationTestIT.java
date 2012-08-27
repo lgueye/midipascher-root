@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
-import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.validation.ValidationContext;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * {@link Account} validation testing<br/>

@@ -5,7 +5,6 @@ package fr.midipascher.steps.backend;
 
 import javax.ws.rs.core.UriBuilder;
 
-import fr.midipascher.test.TestFixtures;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -18,6 +17,7 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.steps.MidipascherClient;
+import fr.midipascher.test.TestFixtures;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.AccountsResource;
 

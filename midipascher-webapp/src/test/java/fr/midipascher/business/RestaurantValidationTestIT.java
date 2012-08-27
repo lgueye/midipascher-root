@@ -8,7 +8,6 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
-import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -16,6 +15,7 @@ import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.validation.ValidationContext;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * {@link Restaurant} validation testing<br/>

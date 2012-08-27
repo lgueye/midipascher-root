@@ -16,7 +16,6 @@ import java.util.Locale;
 import javax.sql.DataSource;
 import javax.validation.ConstraintViolationException;
 
-import fr.midipascher.test.TestFixtures;
 import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -52,6 +51,7 @@ import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.test.TestFixtures;
 
 /**
  * Facade integration testing<br/>

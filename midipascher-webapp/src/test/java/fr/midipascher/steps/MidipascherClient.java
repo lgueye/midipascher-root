@@ -3,6 +3,14 @@
  */
 package fr.midipascher.steps;
 
+import java.net.URI;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.junit.Assert;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -12,13 +20,6 @@ import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import org.apache.commons.collections.CollectionUtils;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.junit.Assert;
-
-import java.net.URI;
-import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * @author louis.gueye@gmail.com
