@@ -52,7 +52,7 @@ public class Exchange {
 	 * @param clazz
 	 * @param <T>
 	 */
-	public void assertNewResource(Class clazz) {
+	public void assertNewResource(Class<?> clazz) {
 		this.clientResponse = readLocation();
 		Assert.assertNotNull(this.clientResponse.getEntity(clazz));
 

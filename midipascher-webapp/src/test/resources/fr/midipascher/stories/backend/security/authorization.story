@@ -2,7 +2,7 @@ Security story
 
 Meta:
 @refs 3
-@progress wip
+@progress done
 
 Narrative:
 In order to provide security capabilities to my service
@@ -31,7 +31,4 @@ Then the response code should be "201"
 
 Examples:
 |uid|password|
-|admin@admin.com|secret|
-|admin@admin.com|secret|
-|admin@admin.com|secret|
 |admin@admin.com|secret|
