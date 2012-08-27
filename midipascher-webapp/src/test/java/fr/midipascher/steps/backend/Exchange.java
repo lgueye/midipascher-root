@@ -1,4 +1,4 @@
-package fr.midipascher.steps;
+package fr.midipascher.steps.backend;
 
 import java.net.URI;
 import java.util.ResourceBundle;

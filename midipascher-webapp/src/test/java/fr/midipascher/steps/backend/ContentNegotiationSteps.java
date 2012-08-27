@@ -11,8 +11,6 @@ import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
 import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.steps.BackendBaseSteps;
-import fr.midipascher.steps.Exchange;
 import fr.midipascher.test.TestFixtures;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;

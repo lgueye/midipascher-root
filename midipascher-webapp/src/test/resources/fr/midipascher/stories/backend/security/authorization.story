@@ -2,7 +2,7 @@ Security story
 
 Meta:
 @refs 3
-@progress done
+@progress wip
 
 Narrative:
 In order to provide security capabilities to my service

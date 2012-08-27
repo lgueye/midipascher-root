@@ -11,8 +11,8 @@ import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 
-import fr.midipascher.steps.Exchange;
 import fr.midipascher.steps.backend.AuthenticationSteps;
+import fr.midipascher.steps.backend.Exchange;
 import fr.midipascher.stories.AbstractJUnitStories;
 
 /**
