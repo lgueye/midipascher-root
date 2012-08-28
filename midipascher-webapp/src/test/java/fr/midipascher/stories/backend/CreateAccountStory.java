@@ -12,6 +12,7 @@ import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 
 import fr.midipascher.steps.backend.CreateAccountSteps;
+import fr.midipascher.steps.backend.Exchange;
 import fr.midipascher.stories.AbstractJUnitStories;
 
 /**
@@ -19,14 +20,14 @@ import fr.midipascher.stories.AbstractJUnitStories;
  */
 public class CreateAccountStory extends AbstractJUnitStories {
 
-    @Override
-    public InjectableStepsFactory stepsFactory() {
-        return new InstanceStepsFactory(configuration(), new CreateAccountSteps());
-    }
+	@Override
+	public InjectableStepsFactory stepsFactory() {
+		return new InstanceStepsFactory(configuration(), new CreateAccountSteps(new Exchange()));
+	}
 
-    @Override
-    protected List<String> storyPaths() {
-        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-            Arrays.asList("**/create_account.story"), null);
-    }
+	@Override
+	protected List<String> storyPaths() {
+		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+				Arrays.asList("**/create_account.story"), null);
+	}
 }

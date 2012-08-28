@@ -2,7 +2,7 @@ Create food specialties stories
 
 Meta:
 @refs 4
-@progress wip
+@progress done
 
 Narrative:
 Given I provide a create food specialty request
@@ -27,7 +27,7 @@ Then the response code should be "403"
 And the response message should be "<message>"
 Examples:
 |uid|password||message|responseContentType|responseLanguage|
-|rmgr@rmgr.com|secret||Accès refusé|application/xml|fr
+|rmgr@rmgr.com|secret||Accès refusé|application/xml|fr|
 
 Scenario: create food specialty with wrong code should fail
 Given I authenticate with "<uid>" uid and "<password>" password
