@@ -34,7 +34,7 @@ public abstract class BackendBaseSteps {
 		this.exchange.getRequest().setRequestedLanguage(requestedLanguage);
 	}
 
-	@Given("I receive \"<responseContentType>\" data")
+	@Given("I accept \"<responseContentType>\" format")
 	public void setResponseContentType(@Named("responseContentType") final String requestedType) {
 		this.exchange.getRequest().setRequestedType(requestedType);
 	}

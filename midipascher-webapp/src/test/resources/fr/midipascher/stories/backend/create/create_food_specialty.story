@@ -24,34 +24,34 @@ And I accept "<responseContentType>" format
 And I accept "<responseLanguage>" language
 When I send a valid "create food specialty" request
 Then the response code should be "403"
-And the message should be "<message>"
+And the response message should be "<message>"
 Examples:
 |uid|password||message|responseContentType|responseLanguage|
 |rmgr@rmgr.com|secret||Accès refusé|application/xml|fr
 
 Scenario: create food specialty with wrong code should fail
 Given I authenticate with "<uid>" uid and "<password>" password
-And I accept "en" language
-And I accept "application/json" format
+And I accept "<responseLanguage>" language
+And I accept "<responseContentType>" format
 When I send a "create food specialty" request with wrong code "<wrong_code>"
 Then the response code should be "400"
-And the message should be "<message>"
+And the response message should be "<message>"
 
 Examples:
-|uid|password|wrong_code|message|
-|admin@admin.com|secret||Code is required|
-|admin@admin.com|secret|dlfjyyprpmz|Code max length is 10|
-|admin@admin.com|secret|SDW|Code "SDW" already used|
+|uid|password|wrong_code|message|responseContentType|responseLanguage|
+|admin@admin.com|secret||Code is required|application/json|en|
+|admin@admin.com|secret|dlfjyyprpmz|Code max length is 10|application/json|en|
+|admin@admin.com|secret|SDW|Code "SDW" already used|application/json|en|
 
 Scenario: create food specialty with wrong label should fail
 Given I authenticate with "<uid>" uid and "<password>" password
-And I accept "en" language
-And I accept "application/json" format
+And I accept "<responseLanguage>" language
+And I accept "<responseContentType>" format
 When I send a "create food specialty" request with wrong label "<wrong_label>"
 Then the response code should be "400"
-And the message should be "<message>"
+And the response message should be "<message>"
 
 Examples:
-|uid|password|wrong_label|message|
-|admin@admin.com|secret||Label is required|
-|admin@admin.com|secret|aaaaaaaaaaBBBBBBBBBBuuuuuuuuuu55555555559999999999S|Label max length is 50|
+|uid|password|wrong_label|message|responseContentType|responseLanguage|
+|admin@admin.com|secret||Label is required|application/json|en|
+|admin@admin.com|secret|aaaaaaaaaaBBBBBBBBBBuuuuuuuuuu55555555559999999999S|Label max length is 50|application/json|en|

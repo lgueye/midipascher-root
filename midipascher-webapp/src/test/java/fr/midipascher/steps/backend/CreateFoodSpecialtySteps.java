@@ -10,6 +10,7 @@ import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
 import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.ResponseError;
 import fr.midipascher.test.TestFixtures;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
@@ -58,6 +59,11 @@ public class CreateFoodSpecialtySteps extends BackendBaseSteps {
 		this.exchange.getRequest().setBody(foodSpecialty);
 		this.exchange.getRequest().setUri(CREATE_URI);
 		this.exchange.createEntity();
+	}
+
+	@Then("the response message should be \"<message>\"")
+	public void expectResponseMessage(@Named("message") final String responseMessage) {
+		this.exchange.assertExpectedMessage(ResponseError.class, responseMessage);
 	}
 
 }
