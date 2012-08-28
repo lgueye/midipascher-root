@@ -24,7 +24,7 @@ public abstract class BackendBaseSteps {
 		this.exchange.assertExpectedStatus(statusCode);
 	}
 
-	@Given("I authenticate with \"<uid>\" uid and \"<password>\" password")
+	@Given("I provide \"<uid>\" uid and \"<password>\" password")
 	public void authenticate(@Named("uid") final String uid, @Named("password") final String password) {
 		this.exchange.setCredentials(uid, password);
 	}

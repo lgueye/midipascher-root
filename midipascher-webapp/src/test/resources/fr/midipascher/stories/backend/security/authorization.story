@@ -10,7 +10,7 @@ As a client
 I want to clearly get notified when a security event happens
 
 Scenario: requesting a protected resource with correct uid, correct password and insufficient rights should return 403
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 And I accept "<responseContentType>" format
 And I accept "<responseLanguage>" language
 When I request a protected resource that require ADMIN rights
@@ -25,7 +25,7 @@ Examples:
 |louis@rmgr.com|secret|application/json|fr|Accès refusé|
 
 Scenario: requesting a protected resource with correct uid, correct password sufficient authority should return 201
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 When I request a protected resource that require ADMIN rights
 Then the response code should be "201"
 

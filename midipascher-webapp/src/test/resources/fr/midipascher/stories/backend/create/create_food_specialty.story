@@ -10,7 +10,7 @@ When I send that request
 It should either succeed or fail
 
 Scenario: create food specialty should succeed
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 When I send a valid "create food specialty" request
 Then the response code should be "201"
 And I should be able to read the new resource
@@ -19,7 +19,7 @@ Examples:
 |admin@admin.com|secret|
 
 Scenario: create food specialty as account with wrong role should fail
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 And I accept "<responseContentType>" format
 And I accept "<responseLanguage>" language
 When I send a valid "create food specialty" request
@@ -30,7 +30,7 @@ Examples:
 |rmgr@rmgr.com|secret||Accès refusé|application/xml|fr|
 
 Scenario: create food specialty with wrong code should fail
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 And I accept "<responseLanguage>" language
 And I accept "<responseContentType>" format
 When I send a "create food specialty" request with wrong code "<wrong_code>"
@@ -44,7 +44,7 @@ Examples:
 |admin@admin.com|secret|SDW|Code "SDW" already used|application/json|en|
 
 Scenario: create food specialty with wrong label should fail
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 And I accept "<responseLanguage>" language
 And I accept "<responseContentType>" format
 When I send a "create food specialty" request with wrong label "<wrong_label>"

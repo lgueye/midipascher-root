@@ -68,7 +68,6 @@ public class Exchange {
 	}
 
 	/**
-	 * @param <T>
 	 * @return
 	 */
 	public void createEntity() {
@@ -113,8 +112,6 @@ public class Exchange {
 	}
 
 	/**
-	 * @param class1
-	 * @param responseMessage
 	 */
 	public void assertExpectedMessage(Class<?> clazz, String expected) {
 
@@ -131,7 +128,6 @@ public class Exchange {
 	}
 
 	/**
-	 * @param string
 	 */
 	public void readURI() {
 		final URI uri = newURI(this.request.getUri());

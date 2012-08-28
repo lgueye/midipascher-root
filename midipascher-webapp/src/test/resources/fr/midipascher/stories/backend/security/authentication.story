@@ -10,7 +10,7 @@ As a client
 I want to clearly get notified when a security event happens
 
 Scenario: requesting a protected resource with wrong uid should return 401
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 And I accept "<responseLanguage>" language
 When I request a protected resource
 Then the response code should be "401"
@@ -24,7 +24,7 @@ Examples:
 |unknown-account|whatever|fr|informations de connexion erronées|
 
 Scenario: requesting a protected resource with correct uid and wrong password should return 401
-Given I authenticate with "<uid>" uid and "<password>" password
+Given I provide "<uid>" uid and "<password>" password
 And I accept "<responseLanguage>" language
 When I request a protected resource
 Then the response code should be "401"

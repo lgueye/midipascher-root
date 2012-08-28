@@ -10,12 +10,12 @@ When I send that request
 It should either succeed or fail
 
 Scenario: update food specialty should succeed
-Given I authenticate with "admin@admin.com" uid and "secret" password
+Given I provide "admin@admin.com" uid and "secret" password
 When I send a valid "update food specialty" request
 Then the response code should be "200"
 
 Scenario: update food specialty as account with wrong role should fail
-Given I authenticate with "rmgr@rmgr.com" uid and "secret" password
+Given I provide "rmgr@rmgr.com" uid and "secret" password
 And I accept "fr" language
 And I accept "application/json" format
 When I send a valid "update food specialty" request
@@ -26,7 +26,7 @@ Examples:
 |Accès refusé|
 
 Scenario: update food specialty with wrong id should fail
-Given I authenticate with "admin@admin.com" uid and "secret" password
+Given I provide "admin@admin.com" uid and "secret" password
 And I accept "en" language
 And I accept "application/xml" format
 When I send a "update food specialty" request with wrong id "<wrong_id>"
@@ -37,7 +37,7 @@ Examples:
 |-1|Food specialty [id = -1] was not found|
 
 Scenario: update food specialty with wrong code should fail
-Given I authenticate with "admin@admin.com" uid and "secret" password
+Given I provide "admin@admin.com" uid and "secret" password
 And I accept "en" language
 And I accept "application/json" format
 When I send a "update food specialty" request with wrong code "<wrong_code>"
@@ -50,7 +50,7 @@ Examples:
 |SDW|Code "SDW" already used|
 
 Scenario: update food specialty with wrong label should fail
-Given I authenticate with "admin@admin.com" uid and "secret" password
+Given I provide "admin@admin.com" uid and "secret" password
 And I accept "en" language
 And I accept "application/json" format
 When I send a "update food specialty" request with wrong label "<wrong_label>"
