@@ -11,6 +11,7 @@ import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 
+import fr.midipascher.steps.backend.Exchange;
 import fr.midipascher.steps.backend.InactivateAuthoritySteps;
 import fr.midipascher.stories.AbstractJUnitStories;
 
@@ -21,7 +22,7 @@ public class InactivateAuthorityStory extends AbstractJUnitStories {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
-        return new InstanceStepsFactory(configuration(), new InactivateAuthoritySteps());
+        return new InstanceStepsFactory(configuration(), new InactivateAuthoritySteps(new Exchange()));
     }
 
     @Override

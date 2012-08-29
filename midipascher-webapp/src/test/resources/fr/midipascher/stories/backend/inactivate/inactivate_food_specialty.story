@@ -2,7 +2,7 @@ Inactivate food specialties stories
 
 Meta:
 @refs 10
-@progress wip
+@progress done
 
 Narrative:
 Given I provide an inactivate food specialty request

@@ -2,7 +2,7 @@ Delete restaurant stories
 
 Meta:
 @refs 12
-@progress done
+@progress pending
 
 Narrative:
 Given I provide a delete restaurant request

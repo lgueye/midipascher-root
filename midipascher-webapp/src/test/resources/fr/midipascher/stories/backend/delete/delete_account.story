@@ -2,7 +2,7 @@ Delete account stories
 
 Meta:
 @refs 13
-@progress done
+@progress pending
 
 Narrative:
 Given I provide a delete account request
