@@ -12,6 +12,7 @@ import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
 
 import fr.midipascher.steps.backend.DeleteRestaurantSteps;
+import fr.midipascher.steps.backend.Exchange;
 import fr.midipascher.stories.AbstractJUnitStories;
 
 /**
@@ -19,15 +20,15 @@ import fr.midipascher.stories.AbstractJUnitStories;
  */
 public class DeleteRestaurantStory extends AbstractJUnitStories {
 
-    @Override
-    public InjectableStepsFactory stepsFactory() {
-        return new InstanceStepsFactory(configuration(), new DeleteRestaurantSteps());
-    }
+	@Override
+	public InjectableStepsFactory stepsFactory() {
+		return new InstanceStepsFactory(configuration(), new DeleteRestaurantSteps(new Exchange()));
+	}
 
-    @Override
-    protected List<String> storyPaths() {
-        return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
-            Arrays.asList("**/delete_restaurant.story"), null);
-    }
+	@Override
+	protected List<String> storyPaths() {
+		return new StoryFinder().findPaths(CodeLocations.codeLocationFromClass(this.getClass()).getFile(),
+				Arrays.asList("**/delete_restaurant.story"), null);
+	}
 
 }
