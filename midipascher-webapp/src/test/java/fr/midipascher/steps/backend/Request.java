@@ -8,50 +8,60 @@ import javax.ws.rs.core.MediaType;
  * User: louis.gueye@gmail.com
  */
 public class Request {
-	private String	uri;
-	private Object	body;
-	private String	requestedLanguage	= Locale.ENGLISH.getLanguage();
-	private String	requestedType		= MediaType.APPLICATION_JSON;
-	private String	type				= MediaType.APPLICATION_JSON;
 
-	public String getRequestedType() {
-		return this.requestedType;
-	}
+  private String uri;
+  private Object body;
+  private String requestedLanguage = Locale.ENGLISH.getLanguage();
+  private String requestedType = MediaType.APPLICATION_JSON;
+  private String type = MediaType.APPLICATION_JSON;
+  private String uid;
 
-	public String getRequestedLanguage() {
-		return this.requestedLanguage;
-	}
+  public String getRequestedType() {
+    return this.requestedType;
+  }
 
-	public String getUri() {
-		return this.uri;
-	}
+  public String getRequestedLanguage() {
+    return this.requestedLanguage;
+  }
 
-	public String getType() {
-		return this.type;
-	}
+  public String getUri() {
+    return this.uri;
+  }
 
-	public Object getBody() {
-		return this.body;
-	}
+  public String getType() {
+    return this.type;
+  }
 
-	public void setRequestedLanguage(String requestedLanguage) {
-		this.requestedLanguage = requestedLanguage;
-	}
+  public Object getBody() {
+    return this.body;
+  }
 
-	public void setRequestedType(String requestedType) {
-		this.requestedType = requestedType;
-	}
+  public void setRequestedLanguage(String requestedLanguage) {
+    this.requestedLanguage = requestedLanguage;
+  }
 
-	public void setType(String type) {
+  public void setRequestedType(String requestedType) {
+    this.requestedType = requestedType;
+  }
 
-		this.type = type;
-	}
+  public void setType(String type) {
 
-	public void setBody(Object body) {
-		this.body = body;
-	}
+    this.type = type;
+  }
 
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
+  public void setBody(Object body) {
+    this.body = body;
+  }
+
+  public void setUri(String uri) {
+    this.uri = uri;
+  }
+
+  public String getUid() {
+    return uid;
+  }
+
+  public void setUid(String uid) {
+    this.uid = uid;
+  }
 }

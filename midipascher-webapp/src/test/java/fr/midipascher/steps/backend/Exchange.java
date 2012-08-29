@@ -101,6 +101,7 @@ public class Exchange {
    * @param password
    */
   public void setCredentials(String uid, String password) {
+    this.request.setUid(uid);
     this.jerseyClient.removeAllFilters();
     this.jerseyClient.addFilter(new LoggingFilter());
     this.jerseyClient.addFilter(new HTTPBasicAuthFilter(uid, password));
