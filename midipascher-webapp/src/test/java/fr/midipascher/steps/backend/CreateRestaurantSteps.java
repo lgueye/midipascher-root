@@ -3,12 +3,11 @@
  */
 package fr.midipascher.steps.backend;
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;

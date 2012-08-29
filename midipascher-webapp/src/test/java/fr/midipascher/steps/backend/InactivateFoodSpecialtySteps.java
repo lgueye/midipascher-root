@@ -3,17 +3,13 @@
  */
 package fr.midipascher.steps.backend;
 
-import org.jbehave.core.annotations.AfterScenario;
-import org.jbehave.core.annotations.Given;
+import javax.ws.rs.core.UriBuilder;
+
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
-import org.junit.Assert;
-
-import javax.ws.rs.core.UriBuilder;
 
 import fr.midipascher.domain.ResponseError;
-import fr.midipascher.steps.MidipascherClient;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 

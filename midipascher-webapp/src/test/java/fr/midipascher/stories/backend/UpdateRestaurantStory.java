@@ -3,13 +3,13 @@
  */
 package fr.midipascher.stories.backend;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.jbehave.core.io.CodeLocations;
 import org.jbehave.core.io.StoryFinder;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.InstanceStepsFactory;
-
-import java.util.Arrays;
-import java.util.List;
 
 import fr.midipascher.steps.backend.Exchange;
 import fr.midipascher.steps.backend.UpdateRestaurantSteps;
