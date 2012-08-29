@@ -144,7 +144,7 @@ public class MidipascherClient {
     public static ClientResponse inactivateEntity(String relativePath, String requestContentType,
                                                   String responseContentType, String responseLanguage) {
         final URI uri = URI.create(baseEndPoint + relativePath);
-        return jerseyClient.resource(uri).type(requestContentType).accept(responseContentType)
+        return jerseyClient.resource(uri).accept(responseContentType)
                 .acceptLanguage(responseLanguage).post(ClientResponse.class);
     }
 

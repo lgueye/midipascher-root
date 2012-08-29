@@ -157,4 +157,12 @@ public class Exchange {
         .put(ClientResponse.class, this.request.getBody());
 
   }
+
+  public void inactivateEntity() {
+    final URI uri = newURI(this.request.getUri());
+    this.clientResponse = this.jerseyClient.resource(uri)
+        .accept(this.request.getRequestedType())
+        .acceptLanguage(this.request.getRequestedLanguage())
+        .post(ClientResponse.class);
+  }
 }
