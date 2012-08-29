@@ -39,7 +39,7 @@ public abstract class BackendBaseSteps {
 		this.exchange.getRequest().setRequestedType(requestedType);
 	}
 
-	@Given("I send \"<requestContentType>\" data")
+	@Given("I send \"<requestContentType>\" format")
 	public void setRequestContentType(@Named("requestContentType") final String type) {
 		this.exchange.getRequest().setType(type);
 	}

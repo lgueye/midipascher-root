@@ -2,7 +2,7 @@ Lock account stories
 
 Meta:
 @refs 14
-@progress done
+@progress pending
 
 Narrative:
 Given I provide a lock account request

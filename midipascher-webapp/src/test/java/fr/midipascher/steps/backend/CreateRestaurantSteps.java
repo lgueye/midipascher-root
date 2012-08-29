@@ -56,8 +56,7 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
     this.exchange.getRequest().setUri(INVALID_ACCOUNT_URI);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
+
     this.exchange.createEntity();
   }
 
@@ -71,8 +70,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -87,8 +84,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -103,8 +98,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -119,8 +112,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -135,8 +126,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -151,8 +140,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -168,8 +155,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
     this.exchange.getRequest().setUri(CREATE_URI);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.createEntity();
   }
 
@@ -184,8 +169,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }
@@ -198,8 +181,6 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
     foodSpecialty.setId(1L);
     restaurant.addSpecialty(foodSpecialty);
     this.exchange.getRequest().setBody(restaurant);
-    this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
-    this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
     this.exchange.getRequest().setUri(CREATE_URI);
     this.exchange.createEntity();
   }

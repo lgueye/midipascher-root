@@ -29,7 +29,7 @@ Examples:
 |application/octet-stream|
 
 Scenario: request content negotiation should succeed
-Given I send "<requestContentType>" data
+Given I send "<requestContentType>" format
 When I send a create request
 Then the response code should be "201"
 And I should get my newly created resource

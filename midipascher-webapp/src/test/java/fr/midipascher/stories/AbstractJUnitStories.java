@@ -21,9 +21,6 @@ public abstract class AbstractJUnitStories extends JUnitStories {
 		configuration.usePendingStepStrategy(new FailingUponPendingStep());
 		configuration.storyReporterBuilder() // Configure report builder
 				.withFormats(Format.HTML_TEMPLATE, Format.ANSI_CONSOLE) // Configure
-																		// desired
-																		// output
-																		// formats
 				.withFailureTrace(true) //
 				.withMultiThreading(true);
 
