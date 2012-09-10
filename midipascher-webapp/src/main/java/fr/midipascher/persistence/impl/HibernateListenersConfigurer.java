@@ -7,7 +7,9 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.ejb.HibernateEntityManagerFactory;
-import org.hibernate.impl.SessionFactoryImpl;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -16,32 +18,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 // @Component
 public class HibernateListenersConfigurer {
 
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
+	@Autowired
+	private EntityManagerFactory	entityManagerFactory;
 
-    @Autowired
-    private PreInsertEventListener preInsertEventListener;
+	@Autowired
+	private PreInsertEventListener	preInsertEventListener;
 
-    @Autowired
-    private PreUpdateEventListener preUpdateEventListener;
+	@Autowired
+	private PreUpdateEventListener	preUpdateEventListener;
 
-    @Autowired
-    private PreDeleteEventListener preDeleteEventListener;
+	@Autowired
+	private PreDeleteEventListener	preDeleteEventListener;
 
-    @PostConstruct
-    public void registerListeners() {
+	@PostConstruct
+	public void registerListeners() {
 
-        final HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) entityManagerFactory;
+		HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) this.entityManagerFactory;
+		SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
+		EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry()
+				.getService(EventListenerRegistry.class);
+		registry.getEventListenerGroup(EventType.PRE_INSERT).clear();
+		registry.getEventListenerGroup(EventType.PRE_INSERT).appendListener(this.preInsertEventListener);
 
-        final SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory
-                .getSessionFactory();
+		registry.getEventListenerGroup(EventType.PRE_UPDATE).clear();
+		registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(this.preUpdateEventListener);
 
-        sessionFactoryImpl.getEventListeners().setPreInsertEventListeners(
-            new org.hibernate.event.PreInsertEventListener[] { preInsertEventListener });
-        sessionFactoryImpl.getEventListeners().setPreUpdateEventListeners(
-            new org.hibernate.event.PreUpdateEventListener[] { preUpdateEventListener });
-        sessionFactoryImpl.getEventListeners().setPreDeleteEventListeners(
-            new org.hibernate.event.PreDeleteEventListener[] { preDeleteEventListener });
-    }
+		registry.getEventListenerGroup(EventType.PRE_DELETE).clear();
+		registry.getEventListenerGroup(EventType.PRE_DELETE).appendListener(this.preDeleteEventListener);
+
+		// sessionFactoryImpl.addObserver(observer)setPreInsertEventListeners(
+		// new PreInsertEventListener[] { this.preInsertEventListener });
+		// sessionFactoryImpl.getEventListeners().setPreUpdateEventListeners(
+		// new PreUpdateEventListener[] { this.preUpdateEventListener });
+		// sessionFactoryImpl.getEventListeners().setPreDeleteEventListeners(
+		// new PreDeleteEventListener[] { this.preDeleteEventListener });
+	}
 
 }

@@ -12,34 +12,85 @@
 	<packaging>war</packaging>
 	<name>midipascher-webapp</name>
 	<url>http://midipascher.fr</url>
+
 	<dependencies>
+
+		<!-- COMMONS / UTILS / LOGGING -->
 		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+
+		<!-- PERSISTENCE -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
+			<groupId>org.jadira.usertype</groupId>
+			<artifactId>usertype.core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time-hibernate</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+		</dependency>
+
+		<!-- BUSINESS -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
+			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -52,18 +103,6 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -81,6 +120,30 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
 		</dependency>
+
+		<!-- SECURITY -->
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>jsr250-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+
+		<!-- WEB -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -100,10 +163,6 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-xc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jbehave</groupId>
-			<artifactId>jbehave-spring</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
@@ -130,8 +189,34 @@
 			<artifactId>httpclient</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring3</artifactId>
+		</dependency>
+
+		<!-- TEST -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jbehave</groupId>
@@ -139,6 +224,11 @@
 			<classifier>resources</classifier>
 			<type>zip</type>
 		</dependency>
+		<dependency>
+			<groupId>org.jbehave</groupId>
+			<artifactId>jbehave-core</artifactId>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>${webapp.module.context}</finalName>
@@ -185,7 +275,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.2.1</version>
+						<version>${exec-maven-plugin.version}</version>
 						<dependencies>
 							<dependency>
 								<groupId>com.h2database</groupId>
@@ -228,16 +318,17 @@
 							</execution>
 						</executions>
 					</plugin>
-				    				    
+
 					<!-- Runs tests that end with TestIT (database) tests -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${maven-failsafe-plugin.version}</version>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
-	    	    
+
 		<profile>
 			<id>acceptance-wip</id>
 			<build>
@@ -279,7 +370,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.2.1</version>
+						<version>${exec-maven-plugin.version}</version>
 						<dependencies>
 							<dependency>
 								<groupId>com.h2database</groupId>
@@ -326,15 +417,18 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${maven-failsafe-plugin.version}</version>
 					</plugin>
 					<!-- Starts an embedded container and deploys the war to that container -->
 					<plugin>
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
+						<version>${maven-jetty-plugin.version}</version>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>dbunit-maven-plugin</artifactId>
+						<version>${dbunit-maven-plugin.version}</version>
 						<configuration>
 							<driver>${javax.persistence.jdbc.driver}</driver>
 							<url>${javax.persistence.jdbc.url}</url>
@@ -372,6 +466,7 @@
 					<plugin>
 						<groupId>org.jbehave</groupId>
 						<artifactId>jbehave-maven-plugin</artifactId>
+						<version>${jbehave.version}</version>
 					</plugin>
 				</plugins>
 			</build>
@@ -417,7 +512,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.2.1</version>
+						<version>${exec-maven-plugin.version}</version>
 						<dependencies>
 							<dependency>
 								<groupId>com.h2database</groupId>
@@ -464,15 +559,18 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${maven-failsafe-plugin.version}</version>
 					</plugin>
 					<!-- Starts an embedded container and deploys the war to that container -->
 					<plugin>
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
+						<version>${maven-jetty-plugin.version}</version>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>dbunit-maven-plugin</artifactId>
+						<version>${dbunit-maven-plugin.version}</version>
 						<configuration>
 							<driver>${javax.persistence.jdbc.driver}</driver>
 							<url>${javax.persistence.jdbc.url}</url>
@@ -510,6 +608,7 @@
 					<plugin>
 						<groupId>org.jbehave</groupId>
 						<artifactId>jbehave-maven-plugin</artifactId>
+						<version>${jbehave.version}</version>
 					</plugin>
 				</plugins>
 			</build>
@@ -561,16 +660,19 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>${maven-failsafe-plugin.version}</version>
 					</plugin>
 					<!-- Deploys the war to the running container -->
 					<plugin>
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
+						<version>${maven-jetty-plugin.version}</version>
 					</plugin>
 					<!-- Runs the acceptance tests against the running container -->
 					<plugin>
 						<groupId>org.jbehave</groupId>
 						<artifactId>jbehave-maven-plugin</artifactId>
+						<version>${jbehave.version}</version>
 					</plugin>
 				</plugins>
 			</build>
@@ -603,6 +705,7 @@
 					<plugin>
 						<groupId>org.mortbay.jetty</groupId>
 						<artifactId>maven-jetty-plugin</artifactId>
+						<version>${maven-jetty-plugin.version}</version>
 					</plugin>
 				</plugins>
 			</build>
