@@ -11,11 +11,12 @@ import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author louis.gueye@gmail.com
  */
-// @Component
+@Component
 public class HibernateListenersConfigurer {
 
 	@Autowired
@@ -34,24 +35,18 @@ public class HibernateListenersConfigurer {
 	public void registerListeners() {
 
 		HibernateEntityManagerFactory hibernateEntityManagerFactory = (HibernateEntityManagerFactory) this.entityManagerFactory;
+
 		SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) hibernateEntityManagerFactory.getSessionFactory();
+
 		EventListenerRegistry registry = sessionFactoryImpl.getServiceRegistry()
 				.getService(EventListenerRegistry.class);
-		registry.getEventListenerGroup(EventType.PRE_INSERT).clear();
+
 		registry.getEventListenerGroup(EventType.PRE_INSERT).appendListener(this.preInsertEventListener);
 
-		registry.getEventListenerGroup(EventType.PRE_UPDATE).clear();
 		registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(this.preUpdateEventListener);
 
-		registry.getEventListenerGroup(EventType.PRE_DELETE).clear();
 		registry.getEventListenerGroup(EventType.PRE_DELETE).appendListener(this.preDeleteEventListener);
 
-		// sessionFactoryImpl.addObserver(observer)setPreInsertEventListeners(
-		// new PreInsertEventListener[] { this.preInsertEventListener });
-		// sessionFactoryImpl.getEventListeners().setPreUpdateEventListeners(
-		// new PreUpdateEventListener[] { this.preUpdateEventListener });
-		// sessionFactoryImpl.getEventListeners().setPreDeleteEventListeners(
-		// new PreDeleteEventListener[] { this.preDeleteEventListener });
 	}
 
 }
