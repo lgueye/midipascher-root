@@ -255,7 +255,7 @@ public abstract class TestFixtures {
 				TestFixtures.STANDARD_CHARSET));
 		restaurant.setCompanyId(RandomStringUtils.random(Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE,
 				TestFixtures.STANDARD_CHARSET));
-		restaurant.setHalal(true);
+		restaurant.setHalal(false);
 		restaurant.setKosher(false);
 		restaurant.setVegetarian(false);
 		restaurant.setMainOffer(RandomStringUtils.random(Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE,
