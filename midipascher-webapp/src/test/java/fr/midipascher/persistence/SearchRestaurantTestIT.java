@@ -536,9 +536,11 @@ public class SearchRestaurantTestIT extends AbstractNodesTests {
 		return this.underTest.prepareSearch(INDEX_NAME).setTypes(TYPE_NAME).setQuery(queryString).execute().actionGet();
 	}
 
-	/**
-	 * @param advert
-	 */
+    /**
+     *
+     * @param id
+     * @param restaurant
+     */
 	private void indexRestaurant(final Long id, final Restaurant restaurant) {
 		this.underTest.prepareIndex(INDEX_NAME, TYPE_NAME)//
 				.setRefresh(true) //

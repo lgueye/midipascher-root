@@ -87,11 +87,11 @@ public class Restaurant extends AbstractEntity {
             Create.class, Update.class })
     private String mainOffer;
 
-    private boolean kosher;
+    private Boolean kosher;
 
-    private boolean halal;
+    private Boolean halal;
 
-    private boolean vegetarian;
+    private Boolean vegetarian;
 
     @ManyToMany
     @JoinTable(name = Restaurant.TABLE_NAME_RESTAURANT_FOOD_SPECIALTY, joinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = FoodSpecialty.ID_COLUMN_NAME) })
@@ -197,15 +197,15 @@ public class Restaurant extends AbstractEntity {
         return result;
     }
 
-    public boolean isHalal() {
+    public Boolean isHalal() {
         return halal;
     }
 
-    public boolean isKosher() {
+    public Boolean isKosher() {
         return kosher;
     }
 
-    public boolean isVegetarian() {
+    public Boolean isVegetarian() {
         return vegetarian;
     }
 
@@ -221,7 +221,7 @@ public class Restaurant extends AbstractEntity {
         this.description = description;
     }
 
-    public void setHalal(final boolean halal) {
+    public void setHalal(final Boolean halal) {
         this.halal = halal;
     }
 
@@ -229,7 +229,7 @@ public class Restaurant extends AbstractEntity {
         this.id = id;
     }
 
-    public void setKosher(final boolean kosher) {
+    public void setKosher(final Boolean kosher) {
         this.kosher = kosher;
     }
 
@@ -249,7 +249,7 @@ public class Restaurant extends AbstractEntity {
         this.specialties = specialties;
     }
 
-    public void setVegetarian(final boolean vegetarian) {
+    public void setVegetarian(final Boolean vegetarian) {
         this.vegetarian = vegetarian;
     }
 

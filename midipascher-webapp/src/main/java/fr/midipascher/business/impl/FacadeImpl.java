@@ -9,8 +9,10 @@ import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 
+import fr.midipascher.persistence.SearchEngine;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,9 @@ public class FacadeImpl implements Facade {
     private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FacadeImpl.class);
+
+    @Autowired
+    private SearchEngine searchEngine;
 
     /**
      * @param account
@@ -343,7 +348,7 @@ public class FacadeImpl implements Facade {
         Preconditions
                 .checkArgument(criteria != null, "Illegal call to findRestaurantsByCriteria, criteria is required");
 
-        return this.baseDao.findByExample(criteria);
+        return this.searchEngine.findRestaurantsByCriteria(criteria);
 
     }
 
@@ -560,7 +565,11 @@ public class FacadeImpl implements Facade {
     }
 
     /**
-     * @see fr.midipascher.domain.business.Facade#readRestaurant(java.lang.Long, boolean)
+     *
+     * @param accountId
+     * @param restaurantId
+     * @param initializeCollections
+     * @return
      */
     @Override
     @Transactional(readOnly = true)
@@ -582,7 +591,9 @@ public class FacadeImpl implements Facade {
     }
 
     /**
-     * @see fr.midipascher.domain.business.Facade#updateAccount(fr.midipascher.domain.Account)
+     *
+     * @param accountId
+     * @param detached
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -629,7 +640,10 @@ public class FacadeImpl implements Facade {
     }
 
     /**
-     * @see fr.midipascher.domain.business.Facade#updateRestaurant(fr.midipascher.domain.Restaurant)
+     *
+     * @param accountId
+     * @param restaurantId
+     * @param detached
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)

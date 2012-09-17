@@ -11,6 +11,7 @@ import static org.junit.Assert.fail;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import javax.sql.DataSource;
@@ -24,6 +25,7 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
+import org.elasticsearch.action.search.SearchResponse;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -538,6 +540,50 @@ public class FacadeImplTestIT {
             fail(BusinessException.class.getSimpleName() + " expected, got = " + th);
         }
 
+    }
+
+    @Test
+    public void findRestaurantByByNameShouldSucceed() throws Throwable {
+        final Long id = 8L;
+        int expectedHitsCount;
+        List<Restaurant> actualResponse;
+        Restaurant restaurant;
+        String name;
+        String query;
+        Restaurant criteria;
+
+        // Given I index that data
+        name = "Gouts et saveurs";
+        restaurant = TestFixtures.validRestaurant();
+        restaurant.setName(name);
+        Long accountId = facade.createAccount(TestFixtures.validAccount());
+        facade.createRestaurant(accountId, restaurant);
+        createRestaurant(accountId);
+        expectedHitsCount = 1;
+
+        // When I search
+        query = "gouts";
+        criteria = new Restaurant();
+        criteria.setName(name);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+
+        // When I search
+        query = "goûts";
+        criteria = new Restaurant();
+        criteria.setName(name);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+
+        // When I search
+        query = "saveurs";
+        criteria = new Restaurant();
+        criteria.setName(name);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
     }
 
 }
