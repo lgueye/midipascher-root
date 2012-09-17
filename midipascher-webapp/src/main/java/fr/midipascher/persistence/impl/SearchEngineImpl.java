@@ -26,17 +26,14 @@ import java.util.List;
 @Repository
 public class SearchEngineImpl implements SearchEngine {
 
+    @Autowired
     private Client elasticsearch;
-
-    private static final String				INDEX_NAME	= SearchIndices.midipascher.toString();
-    private static final String				TYPE_NAME	= SearchTypes.restaurant.toString();
 
     @Autowired
     private RestaurantToQueryBuilderConverter restaurantToQueryBuilderConverter;
 
     @Autowired
     private SearchResponseToRestaurantsListConverter searchResponseToRestaurantsListConverter;
-
 
     @Override
     public List<Restaurant> findRestaurantsByCriteria(Restaurant criteria) {

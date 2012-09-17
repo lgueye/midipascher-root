@@ -1,20 +1,19 @@
 package fr.midipascher.persistence.impl;
 
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import org.apache.commons.collections.CollectionUtils;
-import org.elasticsearch.common.base.Function;
-import org.elasticsearch.common.collect.Collections2;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +31,11 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
     public static final String BEAN_ID = "RestaurantToQueryBuilderConverter";
 
-    @Override
     public QueryBuilder convert(Restaurant source) {
 
-        QueryBuilder queryBuilder = null;
+      Map<String, Object> criteria = criteriaAsMap(source);
 
-        Map<String, Object> criteria = criteriaAsMap(source);
+      QueryBuilder queryBuilder;
 
         if (noCriteria(criteria)) {
 
@@ -53,7 +51,7 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
                 Object value = entry.getValue();
 
-                QueryBuilder fieldQueryBuilder = queryBuilderFromField(field, value);
+                QueryBuilder fieldQueryBuilder = resolveQueryBuilder(field, value);
 
                 ((BoolQueryBuilder) queryBuilder).must(fieldQueryBuilder);
 
@@ -65,7 +63,7 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
     }
 
-    private Map<String, Object> criteriaAsMap(Restaurant source) {
+    protected Map<String, Object> criteriaAsMap(Restaurant source) {
 
         if (source == null) return null;
 
@@ -113,16 +111,18 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
         if (CollectionUtils.isNotEmpty(specialties)) {
 
-            Collection<Long> ids = Collections2.transform(specialties, new Function<FoodSpecialty, Long>() {
+            Collection<Long> ids = Collections2
+                .transform(specialties, new Function<FoodSpecialty, Long>() {
 
-                @Override
-                public Long apply(@Nullable FoodSpecialty foodSpecialty) {
+                  public Long apply(FoodSpecialty foodSpecialty) {
 
-                    return foodSpecialty == null || foodSpecialty.getId() == null ? null : foodSpecialty.getId();
+                    return foodSpecialty == null || foodSpecialty.getId() == null ? null
+                                                                                  : foodSpecialty
+                                                                                      .getId();
 
-                }
+                  }
 
-            });
+                });
 
             builder.put("specialties", ids);
 
@@ -132,7 +132,7 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
     }
 
-    private QueryBuilder queryBuilderFromField(String field, Object value) {
+    protected QueryBuilder resolveQueryBuilder(String field, Object value) {
 
         if ("name".equals(field)
                 || "description".equals(field)
@@ -153,7 +153,7 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
     }
 
-    private boolean noCriteria(Map<String, Object> criteria) {
+    protected boolean noCriteria(Map<String, Object> criteria) {
 
         return criteria == null || criteria.size() == 0;
 

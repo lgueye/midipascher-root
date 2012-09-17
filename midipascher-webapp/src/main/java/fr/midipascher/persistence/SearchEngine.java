@@ -14,6 +14,9 @@ import java.util.List;
  */
 public interface SearchEngine {
 
-    List<Restaurant> findRestaurantsByCriteria(Restaurant criteria);
+  String				INDEX_NAME	= SearchIndices.midipascher.toString();
+  String				TYPE_NAME	= SearchTypes.restaurant.toString();
+
+  List<Restaurant> findRestaurantsByCriteria(Restaurant criteria);
 
 }

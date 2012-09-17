@@ -47,6 +47,7 @@ import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.exceptions.OwnershipException;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.persistence.SearchEngine;
 import fr.midipascher.test.TestFixtures;
 
 /**
@@ -63,10 +64,13 @@ public class FacadeImplTest {
     @Mock
     private MessageSource messageSource;
 
+    @Mock
+    private SearchEngine searchEngine;
+
     @InjectMocks
     private final Facade underTest = new FacadeImpl();
 
-    public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
+  public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
 
         // Variables
         Account account;
@@ -704,7 +708,7 @@ public class FacadeImplTest {
         this.underTest.findRestaurantsByCriteria(restaurant);
 
         // Then
-        Mockito.verify(this.baseDao).findByExample(restaurant);
+        Mockito.verify(this.searchEngine).findRestaurantsByCriteria(restaurant);
 
     }
 
