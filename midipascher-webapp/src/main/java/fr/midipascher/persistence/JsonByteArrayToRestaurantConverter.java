@@ -1,17 +1,16 @@
 /**
- * 
+ *
  */
 package fr.midipascher.persistence;
 
-import java.io.IOException;
-
+import fr.midipascher.domain.Restaurant;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.Restaurant;
+import java.io.IOException;
 
 /**
  * @author louis.gueye@gmail.com
@@ -19,29 +18,29 @@ import fr.midipascher.domain.Restaurant;
 @Component(JsonByteArrayToRestaurantConverter.BEAN_ID)
 public class JsonByteArrayToRestaurantConverter implements Converter<byte[], Restaurant> {
 
-	public static final String	BEAN_ID	= "jsonByteArrayToRestaurantConverter";
+    public static final String BEAN_ID = "jsonByteArrayToRestaurantConverter";
 
-	@Autowired
-	private ObjectMapper		jsonMapper;
+    @Autowired
+    private ObjectMapper jsonMapper;
 
-	/**
-	 * @see org.springframework.core.convert.converter.Converter#convert(java.lang.Object)
-	 */
+    /**
+     * @see org.springframework.core.convert.converter.Converter#convert(java.lang.Object)
+     */
 
-	@Override
-	public Restaurant convert(final byte[] source) {
+    @Override
+    public Restaurant convert(final byte[] source) {
 
-		if (source == null || source.length == 0) return null;
+        if (source == null || source.length == 0) return null;
 
-		try {
-			this.jsonMapper.getDeserializationConfig()
-					.without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-			// System.out.write(source);
-			final Restaurant restaurant = this.jsonMapper.readValue(source, Restaurant.class);
-			return restaurant;
-		} catch (final IOException ignored) {
-			throw new IllegalStateException(ignored);
-		}
+        try {
+            this.jsonMapper.getDeserializationConfig()
+                    .without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+            // System.out.write(source);
+            final Restaurant restaurant = this.jsonMapper.readValue(source, Restaurant.class);
+            return restaurant;
+        } catch (final IOException ignored) {
+            throw new IllegalStateException(ignored);
+        }
 
-	}
+    }
 }

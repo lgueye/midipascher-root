@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.controllers;
 
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(AuthenticationController.PATH)
 public class AuthenticationController {
 
-	public static final String	PATH	= "/authenticate";
+    public static final String PATH = "/authenticate";
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String authenticate() {
-		return "authenticate";
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public String authenticate() {
+        return "authenticate";
+    }
 
 }

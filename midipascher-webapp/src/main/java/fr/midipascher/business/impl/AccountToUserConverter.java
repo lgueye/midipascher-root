@@ -1,17 +1,16 @@
 /**
- * 
+ *
  */
 package fr.midipascher.business.impl;
 
-import java.util.Collection;
-
+import fr.midipascher.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.Account;
+import java.util.Collection;
 
 /**
  * @author louis.gueye@gmail.com

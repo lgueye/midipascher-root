@@ -34,9 +34,9 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
     public QueryBuilder convert(Restaurant source) {
 
-      Map<String, Object> criteria = criteriaAsMap(source);
+        Map<String, Object> criteria = criteriaAsMap(source);
 
-      QueryBuilder queryBuilder;
+        QueryBuilder queryBuilder;
 
         if (noCriteria(criteria)) {
 
@@ -83,7 +83,8 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
         if (address != null) {
 
             String streetAddress = address.getStreetAddress();
-            if (!Strings.isNullOrEmpty(streetAddress)) builder.put(RestaurantSearchFieldsRegistry.STREET_ADDRESS, streetAddress);
+            if (!Strings.isNullOrEmpty(streetAddress))
+                builder.put(RestaurantSearchFieldsRegistry.STREET_ADDRESS, streetAddress);
 
             String city = address.getCity();
             if (!Strings.isNullOrEmpty(city)) builder.put(RestaurantSearchFieldsRegistry.CITY, city);
@@ -92,7 +93,8 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
             if (!Strings.isNullOrEmpty(postalCode)) builder.put(RestaurantSearchFieldsRegistry.POSTAL_CODE, postalCode);
 
             String countryCode = address.getCountryCode();
-            if (!Strings.isNullOrEmpty(countryCode)) builder.put(RestaurantSearchFieldsRegistry.COUNTRY_CODE, countryCode);
+            if (!Strings.isNullOrEmpty(countryCode))
+                builder.put(RestaurantSearchFieldsRegistry.COUNTRY_CODE, countryCode);
 
         }
 
@@ -113,17 +115,17 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
         if (CollectionUtils.isNotEmpty(specialties)) {
 
             Collection<Long> ids = Collections2
-                .transform(specialties, new Function<FoodSpecialty, Long>() {
+                    .transform(specialties, new Function<FoodSpecialty, Long>() {
 
-                    public Long apply(FoodSpecialty foodSpecialty) {
+                        public Long apply(FoodSpecialty foodSpecialty) {
 
-                        return foodSpecialty == null || foodSpecialty.getId() == null ? null
-                                : foodSpecialty
-                                .getId();
+                            return foodSpecialty == null || foodSpecialty.getId() == null ? null
+                                    : foodSpecialty
+                                    .getId();
 
-                    }
+                        }
 
-                });
+                    });
 
             builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, ids);
 

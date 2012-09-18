@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.controllers;
 
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/search")
 public class SearchController {
 
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String add() {
-		return "search";
-	}
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String add() {
+        return "search";
+    }
 
 }

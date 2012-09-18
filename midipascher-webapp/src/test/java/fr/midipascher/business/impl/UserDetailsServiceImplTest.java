@@ -1,12 +1,11 @@
 /**
- * 
+ *
  */
 package fr.midipascher.business.impl;
 
-import static org.junit.Assert.assertSame;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import fr.midipascher.domain.Account;
+import fr.midipascher.persistence.BaseDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,10 +16,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
-import fr.midipascher.domain.Account;
-import fr.midipascher.persistence.BaseDao;
+import static org.junit.Assert.assertSame;
 
 /**
  * @author louis.gueye@gmail.com

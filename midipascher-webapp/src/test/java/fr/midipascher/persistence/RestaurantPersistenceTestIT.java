@@ -3,27 +3,26 @@
  */
 package fr.midipascher.persistence;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import fr.midipascher.domain.Address;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fr.midipascher.domain.Address;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
-import fr.midipascher.test.TestFixtures;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Restaurant database integration testing<br/>
  * CRUD operations are tested<br>
  * Finders are tested<br/>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {

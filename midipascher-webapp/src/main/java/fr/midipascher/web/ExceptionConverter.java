@@ -3,20 +3,10 @@
  */
 package fr.midipascher.web;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-
+import fr.midipascher.domain.Constants;
+import fr.midipascher.domain.ResponseError;
+import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.domain.exceptions.OwnershipException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,10 +16,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.LocaleResolver;
 
-import fr.midipascher.domain.Constants;
-import fr.midipascher.domain.ResponseError;
-import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.domain.exceptions.OwnershipException;
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com
@@ -40,7 +38,7 @@ public class ExceptionConverter {
     public static final String BEAN_ID = "ExceptionConverter";
 
     public static final List<String> SUPPORTED_MEDIA_TYPES = Arrays.asList(MediaType.APPLICATION_JSON,
-        MediaType.APPLICATION_XML);
+            MediaType.APPLICATION_XML);
 
     public static final String DEFAULT_MEDIA_TYPE = MediaType.APPLICATION_JSON;
 
@@ -76,7 +74,7 @@ public class ExceptionConverter {
             return HttpServletResponse.SC_FORBIDDEN;
 
         if (th instanceof IllegalArgumentException || th instanceof ValidationException
-            || th instanceof PersistenceException)
+                || th instanceof PersistenceException)
             return HttpServletResponse.SC_BAD_REQUEST;
 
         if (th instanceof BusinessException) {
@@ -116,11 +114,11 @@ public class ExceptionConverter {
 
         if (th instanceof AuthenticationException)
             return this.messageSource.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null,
-                getLocale(request));
+                    getLocale(request));
 
         if (th instanceof AccessDeniedException)
             return this.messageSource.getMessage(String.valueOf(HttpServletResponse.SC_FORBIDDEN), null,
-                getLocale(request));
+                    getLocale(request));
 
         if (th instanceof ConstraintViolationException) {
             final ConstraintViolationException constraintViolationException = (ConstraintViolationException) th;

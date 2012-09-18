@@ -3,10 +3,10 @@
  */
 package fr.midipascher.persistence;
 
-import java.sql.Connection;
-
-import javax.sql.DataSource;
-
+import fr.midipascher.TestConstants;
+import fr.midipascher.domain.Authority;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -23,20 +23,18 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
-import fr.midipascher.TestConstants;
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
 /**
  * Base class for database integration testing<br/>
  * Can not be instantiated<br/>
  * Does all the wiring plumbing<br/>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.VALIDATION_CONTEXT })
+@ContextConfiguration(locations = {TestConstants.SERVER_CONTEXT, TestConstants.VALIDATION_CONTEXT})
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 public abstract class BasePersistenceTestIT {

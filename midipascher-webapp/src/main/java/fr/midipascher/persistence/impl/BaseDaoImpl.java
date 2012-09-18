@@ -1,15 +1,10 @@
 /**
- * 
+ *
  */
 package fr.midipascher.persistence.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.PersistenceContext;
-
+import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.persistence.JpaConstants;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -18,8 +13,11 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.springframework.stereotype.Repository;
 
-import fr.midipascher.persistence.BaseDao;
-import fr.midipascher.persistence.JpaConstants;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author louis.gueye@gmail.com
@@ -65,9 +63,9 @@ public class BaseDaoImpl implements BaseDao {
         final Session session = (Session) this.entityManager.getDelegate();
 
         final Example example = Example.create(exampleInstance).excludeZeroes() // exclude
-                                                                                // zero
-                                                                                // valued
-                                                                                // properties
+                // zero
+                // valued
+                // properties
                 .ignoreCase() // perform case insensitive string comparisons
                 .enableLike(); // use like for string comparisons
 
@@ -110,7 +108,7 @@ public class BaseDaoImpl implements BaseDao {
 
     /**
      * Use this inside subclasses as a convenience method.
-     * 
+     *
      * @param <T>
      * @param entityClass
      * @param criterion
@@ -122,7 +120,7 @@ public class BaseDaoImpl implements BaseDao {
 
     /**
      * Use this inside subclasses as a convenience method.
-     * 
+     *
      * @param <T>
      * @param entityClass
      * @param firstResult
@@ -132,7 +130,7 @@ public class BaseDaoImpl implements BaseDao {
      */
     @SuppressWarnings("unchecked")
     protected <T> List<T> findByCriteria(final Class<T> entityClass, final int firstResult, final int maxResults,
-            final Criterion... criterion) {
+                                         final Criterion... criterion) {
         final Session session = (Session) this.entityManager.getDelegate();
         final Criteria crit = session.createCriteria(entityClass);
 
@@ -159,12 +157,12 @@ public class BaseDaoImpl implements BaseDao {
         final Session session = (Session) this.entityManager.getDelegate();
 
         final Example example = Example.create(exampleInstance).excludeZeroes() // exclude
-                                                                                // zero
-                                                                                // valued
-                                                                                // properties
+                // zero
+                // valued
+                // properties
                 .ignoreCase() // perform case insensitive string comparisons
                 .enableLike(MatchMode.ANYWHERE); // use like for string
-                                                 // comparisons
+        // comparisons
 
         final Criteria criteria = session.createCriteria(exampleInstance.getClass());
 

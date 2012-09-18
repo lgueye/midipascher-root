@@ -1,39 +1,27 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.common.base.Preconditions;
+import fr.midipascher.domain.validation.Create;
+import fr.midipascher.domain.validation.Update;
+import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import com.google.common.base.Preconditions;
-
-import fr.midipascher.domain.validation.Create;
-import fr.midipascher.domain.validation.Update;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com
  */
 @Entity
-@Table(name = Restaurant.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { Restaurant.COLUMN_NAME_COMPANY_ID }) })
+@Table(name = Restaurant.TABLE_NAME, uniqueConstraints = {@UniqueConstraint(columnNames = {Restaurant.COLUMN_NAME_COMPANY_ID})})
 @XmlRootElement
 public class Restaurant extends AbstractEntity {
 
@@ -52,8 +40,8 @@ public class Restaurant extends AbstractEntity {
     public static final int CONSTRAINT_COMPANY_ID_MAX_SIZE = 50;
 
     /**
-	 * 
-	 */
+     *
+     */
     private static final long serialVersionUID = -5952533696555432772L;
 
     @Id
@@ -61,30 +49,30 @@ public class Restaurant extends AbstractEntity {
     @Column(name = Restaurant.COLUMN_NAME_ID)
     private Long id;
 
-    @NotEmpty(message = "{restaurant.name.required}", groups = { Create.class, Update.class })
-    @Size(max = Restaurant.CONSTRAINT_NAME_MAX_SIZE, message = "{restaurant.name.max.size}", groups = { Create.class,
-            Update.class })
+    @NotEmpty(message = "{restaurant.name.required}", groups = {Create.class, Update.class})
+    @Size(max = Restaurant.CONSTRAINT_NAME_MAX_SIZE, message = "{restaurant.name.max.size}", groups = {Create.class,
+            Update.class})
     private String name;
 
     @Size(max = Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE, message = "{restaurant.description.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String description;
 
     @Column(name = Restaurant.COLUMN_NAME_COMPANY_ID)
-    @NotEmpty(message = "{restaurant.companyId.required}", groups = { Create.class, Update.class })
+    @NotEmpty(message = "{restaurant.companyId.required}", groups = {Create.class, Update.class})
     @Size(max = Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE, message = "{restaurant.companyId.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String companyId;
 
     @Column(name = Restaurant.COLUMN_NAME_PHONE_NUMBER)
-    @NotEmpty(message = "{restaurant.phoneNumber.required}", groups = { Create.class, Update.class })
+    @NotEmpty(message = "{restaurant.phoneNumber.required}", groups = {Create.class, Update.class})
     @Size(max = Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE, message = "{restaurant.phoneNumber.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String phoneNumber;
 
     @Column(name = Restaurant.COLUMN_NAME_MAIN_OFFER)
     @Size(max = Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE, message = "{restaurant.mainOffer.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String mainOffer;
 
     private Boolean kosher;
@@ -94,17 +82,17 @@ public class Restaurant extends AbstractEntity {
     private Boolean vegetarian;
 
     @ManyToMany
-    @JoinTable(name = Restaurant.TABLE_NAME_RESTAURANT_FOOD_SPECIALTY, joinColumns = { @JoinColumn(name = Restaurant.COLUMN_NAME_ID) }, inverseJoinColumns = { @JoinColumn(name = FoodSpecialty.ID_COLUMN_NAME) })
-    @NotEmpty(message = "{restaurant.specialties.required}", groups = { Create.class, Update.class })
+    @JoinTable(name = Restaurant.TABLE_NAME_RESTAURANT_FOOD_SPECIALTY, joinColumns = {@JoinColumn(name = Restaurant.COLUMN_NAME_ID)}, inverseJoinColumns = {@JoinColumn(name = FoodSpecialty.ID_COLUMN_NAME)})
+    @NotEmpty(message = "{restaurant.specialties.required}", groups = {Create.class, Update.class})
     private Set<FoodSpecialty> specialties;
 
     @Valid
-    @NotNull(message = "{restaurant.address.required}", groups = { Create.class, Update.class })
+    @NotNull(message = "{restaurant.address.required}", groups = {Create.class, Update.class})
     private Address address;
 
     /**
-	 * 
-	 */
+     *
+     */
     public Restaurant() {
         super();
         setAddress(new Address());
@@ -122,7 +110,7 @@ public class Restaurant extends AbstractEntity {
     }
 
     /**
-     * 
+     *
      */
     public void clearSpecialties() {
         if (specialties == null)

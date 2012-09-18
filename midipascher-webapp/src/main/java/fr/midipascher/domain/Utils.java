@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain;
 
@@ -8,28 +8,28 @@ package fr.midipascher.domain;
  */
 public abstract class Utils {
 
-	public static final String capitalize(final Class<?> type) {
+    public static final String capitalize(final Class<?> type) {
 
-		if (type == null) return null;
+        if (type == null) return null;
 
-		return type.getSimpleName().toUpperCase();
+        return type.getSimpleName().toUpperCase();
 
-	}
+    }
 
-	public static final String minimize(final Class<?> type) {
+    public static final String minimize(final Class<?> type) {
 
-		if (type == null) return null;
+        if (type == null) return null;
 
-		return type.getSimpleName().toLowerCase();
+        return type.getSimpleName().toLowerCase();
 
-	}
+    }
 
-	public static final String pluralize(final Class<?> type) {
+    public static final String pluralize(final Class<?> type) {
 
-		if (type == null) return null;
+        if (type == null) return null;
 
-		return minimize(type).concat("s");
+        return minimize(type).concat("s");
 
-	}
+    }
 
 }

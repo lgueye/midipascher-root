@@ -1,28 +1,19 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.resources;
 
-import java.net.URI;
+import fr.midipascher.domain.Account;
+import fr.midipascher.domain.business.Facade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.business.Facade;
+import java.net.URI;
 
 /**
  * @author louis.gueye@gmail.com
@@ -45,7 +36,7 @@ public class AccountsResource {
     public static final String SINGLE_RESOURCE_PATH = "/{accountId}";
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createAccount(final Account account) throws Throwable {
         final Long id = facade.createAccount(account);
         final URI uri = uriInfo.getAbsolutePathBuilder().path(AccountsResource.SINGLE_RESOURCE_PATH)
@@ -66,7 +57,7 @@ public class AccountsResource {
     }
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path(SINGLE_RESOURCE_PATH + "/lock")
     public Response lockAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
@@ -78,7 +69,7 @@ public class AccountsResource {
 
     @GET
     @Path(SINGLE_RESOURCE_PATH)
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response readAccount(@PathParam(value = "accountId") final Long id) throws Throwable {
 
         final Account account = facade.readAccount(id, true);
@@ -89,7 +80,7 @@ public class AccountsResource {
 
     @PUT
     @Path(SINGLE_RESOURCE_PATH)
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateAccount(@PathParam(value = "accountId") final Long id, final Account account)
             throws Throwable {
 

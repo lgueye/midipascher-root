@@ -1,19 +1,17 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain;
 
-import java.io.Serializable;
+import fr.midipascher.domain.validation.Create;
+import fr.midipascher.domain.validation.Update;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
-import fr.midipascher.domain.validation.Create;
-import fr.midipascher.domain.validation.Update;
+import java.io.Serializable;
 
 /**
  * @author louis.gueye@gmail.com
@@ -32,32 +30,32 @@ public class Address extends AbstractObject implements Serializable {
     public static final int CONSTRAINT_COUNTRY_CODE_MAX_SIZE = 2;
 
     /**
-	 * 
-	 */
+     *
+     */
     private static final long serialVersionUID = -5732718607385874727L;
 
     @Column(name = Address.COLUMN_NAME_STREET_ADDRESS)
-    @NotEmpty(message = "{address.streetAddress.required}", groups = { Create.class, Update.class })
+    @NotEmpty(message = "{address.streetAddress.required}", groups = {Create.class, Update.class})
     @Size(max = Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE, message = "{address.streetAddress.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String streetAddress;
 
     @Column(name = Address.COLUMN_NAME_CITY)
-    @NotEmpty(message = "{address.city.required}", groups = { Create.class, Update.class })
-    @Size(max = Address.CONSTRAINT_CITY_MAX_SIZE, message = "{address.city.max.size}", groups = { Create.class,
-            Update.class })
+    @NotEmpty(message = "{address.city.required}", groups = {Create.class, Update.class})
+    @Size(max = Address.CONSTRAINT_CITY_MAX_SIZE, message = "{address.city.max.size}", groups = {Create.class,
+            Update.class})
     private String city;
 
     @Column(name = Address.COLUMN_NAME_POSTAL_CODE)
-    @NotEmpty(message = "{address.postalCode.required}", groups = { Create.class, Update.class })
+    @NotEmpty(message = "{address.postalCode.required}", groups = {Create.class, Update.class})
     @Size(max = Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE, message = "{address.postalCode.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String postalCode;
 
     @Column(name = Address.COLUMN_NAME_COUNTRY_CODE)
-    @NotNull(message = "{address.countryCode.required}", groups = { Create.class, Update.class })
+    @NotNull(message = "{address.countryCode.required}", groups = {Create.class, Update.class})
     @Size(min = Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, max = Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, message = "{address.countryCode.exact.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String countryCode;
 
     @Override

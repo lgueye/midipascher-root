@@ -3,21 +3,20 @@
  */
 package fr.midipascher.business;
 
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
-
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.test.TestFixtures;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * {@link Account} validation testing<br/>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 public class AccountValidationTestIT extends BaseValidations {
@@ -166,9 +165,9 @@ public class AccountValidationTestIT extends BaseValidations {
         underTest.setFirstName(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "First name max length is "
-            + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "firstName");
+                + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "firstName");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le prénom : "
-            + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "firstName");
+                + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "firstName");
     }
 
     /**
@@ -206,9 +205,9 @@ public class AccountValidationTestIT extends BaseValidations {
         underTest.setLastName(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Last name max length is "
-            + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "lastName");
+                + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "lastName");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le nom : "
-            + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "lastName");
+                + Account.CONSTRAINT_FIRST_NAME_MAX_SIZE, "lastName");
     }
 
     /**
@@ -246,8 +245,8 @@ public class AccountValidationTestIT extends BaseValidations {
         underTest.setPassword(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Password max length is "
-            + Account.CONSTRAINT_PASSWORD_MAX_SIZE, "password");
+                + Account.CONSTRAINT_PASSWORD_MAX_SIZE, "password");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le mot de passe : "
-            + Account.CONSTRAINT_PASSWORD_MAX_SIZE, "password");
+                + Account.CONSTRAINT_PASSWORD_MAX_SIZE, "password");
     }
 }

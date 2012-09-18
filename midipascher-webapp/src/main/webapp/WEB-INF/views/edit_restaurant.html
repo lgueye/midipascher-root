@@ -1,146 +1,181 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<!--[if (gt IE 6)&(lt IE 9)]><html xmlns="http://www.w3.org/1999/xhtml" class="IEgradient oldiesIE" lang="fr"><![endif]-->
-<!--[if gte IE 9]><html xmlns="http://www.w3.org/1999/xhtml" class="IEgradient" lang="fr"><![endif]-->
-<!--[if !IE]><!--><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><!--<![endif]-->
+<!--[if (gt IE 6)&(lt IE 9)]>
+<html xmlns="http://www.w3.org/1999/xhtml" class="IEgradient oldiesIE" lang="fr"><![endif]-->
+<!--[if gte IE 9]>
+<html xmlns="http://www.w3.org/1999/xhtml" class="IEgradient" lang="fr"><![endif]-->
+<!--[if !IE]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><!--<![endif]-->
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Midi Pas Cher - Fiche Restaurant</title>
-<link rel="stylesheet" href="css/charte.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Midi Pas Cher - Fiche Restaurant</title>
+    <link rel="stylesheet" href="css/charte.css"/>
 </head>
 <body>
 <!-- CONTAINER -->
-	<div id="mpc_page">
-  <!-- HEADER -->
+<div id="mpc_page">
+    <!-- HEADER -->
     <div id="mpc_header">
-    	<h1>Midi Pas Cher</h1>
-      <span class="bandeau_left">&nbsp;</span>
-      <div class="mpc_header_content">
-        <div class="mpc_candidat">
-          <p>Espace perso</p>
-          <p><a href="#">Mes recherches enregistrées</a></p>
+        <h1>Midi Pas Cher</h1>
+        <span class="bandeau_left">&nbsp;</span>
+
+        <div class="mpc_header_content">
+            <div class="mpc_candidat">
+                <p>Espace perso</p>
+
+                <p><a href="#">Mes recherches enregistrées</a></p>
+            </div>
+            <a href="index.html" id="mpc_home">Accueil</a>
+
+            <div class="mpc_pro">
+                <p>Espace pro</p>
+
+                <p><a href="#">Mon compte</a><br/><a href="#">Créer un compte</a></p>
+            </div>
         </div>
-        <a href="index.html" id="mpc_home">Accueil</a>
-        <div class="mpc_pro">
-          <p>Espace pro</p>
-          <p><a href="#">Mon compte</a><br/><a href="#">Créer un compte</a></p>
-        </div>
-      </div>
-      <span class="bandeau_right">&nbsp;</span>
+        <span class="bandeau_right">&nbsp;</span>
     </div>
-  <!-- FIN HEADER -->
-  <!-- CONTENT -->
+    <!-- FIN HEADER -->
+    <!-- CONTENT -->
     <div id="mpc_conteneur">
-      <hr class="haut" />
-    	<div id="mpc_content">
-      <!-- FORMULAIRE RESTAURANT -->
-      	<div id="mpc_register">
-        	<h2>Inscrivez votre restaurant en remplissant les champs ci-dessous</h2>
-          <p>Tous les champs marqués d'une <em abbr="étoile">*</em> sont obligatoires</p>
-          <form action="#" method="post" name="" id="register">
-            <h3 class="ribbonRight gradientgreenLinear">Informations Générales</h3>
-          	<fieldset>
-              <ul>
-              	<li>
-                	<label for="firstName">Votre prénom <em>*</em></label>
-                  <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <input type="text" value="" name="firstName" id="firstName" />
-                </li>
-              	<li><label for="description">Description <em>*</em></label>
-                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                <textarea rows="5" id="description">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar dio lorem non turpis. Nullam sit amet enim. Suspendisse id velit vitae ligula volutpat condimentum. Aliquam erat volutpat. Sed quis velit. Nulla facilisi. Nulla libero. Vivamus pharetra posuere sapien. Nam consectetuer. Sed aliquam, nunc eget euismod ullamcorper, lectus nunc ullamcorper orci, fermentum bibendum ...
-                  </textarea>
-               	</li>
-               </ul>
-            </fieldset>
-            <h3 class="ribbonRight gradientgreenLinear">Contact</h3>
-          	<fieldset>
-              <ul>
-              	<li class="floatLeft">
-                	<label for="phone">Votre Numéro de téléphone <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <input type="text" value="" name="phone" id="phone" />
-                </li>
-              	<li class="floatLeft">
-                	<label for="siren">Votre Numéro de SIREN <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <input type="text" value="" name="siren" id="siren" />
-                </li>
-            	</ul>
-            </fieldset>
-            <h3 class="ribbonRight gradientgreenLinear">Localisation</h3>
-          	<fieldset id="tiers">
-              <ul>
-              	<li class="floatLeft">
-                	<label for="adress">Votre adresse <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <input type="text" value="" name="adress" id="adress" />
-                </li>
-              	<li class="floatLeft">
-                	<label for="zipcode">Votre code postal <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <input type="text" value="" name="zipcode" id="zipcode" />
-                </li>
-              	<li class="floatLeft">
-                	<label for="city">Votre ville <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <input type="text" value="" name="city" id="city" />
-                </li>
-              </ul>
-            </fieldset>
-            <h3 class="ribbonRight gradientgreenLinear">Votre offre</h3>
-            <fieldset>
-              <ul>
-              	<li>
-                	<label for="restoType">Type de restaurant <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                	<select name="restoType" id="restoType">
-                  	<option value="0">Indifférent</option>
-                  	<option value="1">Français</option>
-                  	<option value="2">Italien</option>
-                  	<option value="3">Japonais</option>
-                  </select>
-                </li>
-              	<li>
-                	<label for="offre">Offre phare <em>*</em></label>
-                	<span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
-                  <textarea rows="5" id="offre">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar dio lorem non turpis. Nullam sit amet enim. Suspendisse id velit vitae ligula volutpat condimentum. Aliquam erat volutpat. Sed quis velit. Nulla facilisi. Nulla libero. Vivamus pharetra posuere sapien. Nam consectetuer. Sed aliquam, nunc eget euismod ullamcorper, lectus nunc ullamcorper orci, fermentum bibendum ...
-                  </textarea>
-               	</li>
-              	<li>
-                	<label class="resetRadio">Halal <em>*</em></label>
-                  <div class="radio">
-                  	<input type="radio" value="" name="halalYes" id="halalYes" /><label for="halalYes">Oui</label><input type="radio" value="" name="halalNo" id="halalNo" /><label for="halalNo">Non</label>
-                  </div>
-                  <label class="resetRadio">Casher <em>*</em></label>
-                  <div class="radio">
-                  	<input type="radio" value="" name="casherYes" id="casherYes" /><label for="casherYes">Oui</label><input type="radio" value="" name="casherNo" id="casherNo" /><label for="casherNo">Non</label>
-                  </div>
-                	<label class="resetRadio">Végétarien <em>*</em></label>
-                  <div class="radio">
-                  	<input type="radio" value="" name="vegeYes" id="vegeYes" /><label for="vegeYes">Oui</label><input type="radio" value="" name="vegeNo" id="vegeNo" /><label for="vegeNo">Non</label>
-                  </div>
-                </li>
-              </ul>
-            </fieldset>
-            <ul>
-              <li class="floatRight"><button type="submit" class="gradientOrangeLinear btn w100">Valider</button></li>
-            	<li class="floatRight"><button type="reset" class="gradientGreyLinear btn w100">Annuler</button></li>
-            </ul>
-          </form>
+        <hr class="haut"/>
+        <div id="mpc_content">
+            <!-- FORMULAIRE RESTAURANT -->
+            <div id="mpc_register">
+                <h2>Inscrivez votre restaurant en remplissant les champs ci-dessous</h2>
+
+                <p>Tous les champs marqués d'une <em abbr="étoile">*</em> sont obligatoires</p>
+
+                <form action="#" method="post" name="" id="register">
+                    <h3 class="ribbonRight gradientgreenLinear">Informations Générales</h3>
+                    <fieldset>
+                        <ul>
+                            <li>
+                                <label for="firstName">Votre prénom <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <input type="text" value="" name="firstName" id="firstName"/>
+                            </li>
+                            <li><label for="description">Description <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <textarea rows="5" id="description">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                    elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id
+                                    pulvinar dio lorem non turpis. Nullam sit amet enim. Suspendisse id velit vitae
+                                    ligula volutpat condimentum. Aliquam erat volutpat. Sed quis velit. Nulla facilisi.
+                                    Nulla libero. Vivamus pharetra posuere sapien. Nam consectetuer. Sed aliquam, nunc
+                                    eget euismod ullamcorper, lectus nunc ullamcorper orci, fermentum bibendum ...
+                                </textarea>
+                            </li>
+                        </ul>
+                    </fieldset>
+                    <h3 class="ribbonRight gradientgreenLinear">Contact</h3>
+                    <fieldset>
+                        <ul>
+                            <li class="floatLeft">
+                                <label for="phone">Votre Numéro de téléphone <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <input type="text" value="" name="phone" id="phone"/>
+                            </li>
+                            <li class="floatLeft">
+                                <label for="siren">Votre Numéro de SIREN <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <input type="text" value="" name="siren" id="siren"/>
+                            </li>
+                        </ul>
+                    </fieldset>
+                    <h3 class="ribbonRight gradientgreenLinear">Localisation</h3>
+                    <fieldset id="tiers">
+                        <ul>
+                            <li class="floatLeft">
+                                <label for="adress">Votre adresse <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <input type="text" value="" name="adress" id="adress"/>
+                            </li>
+                            <li class="floatLeft">
+                                <label for="zipcode">Votre code postal <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <input type="text" value="" name="zipcode" id="zipcode"/>
+                            </li>
+                            <li class="floatLeft">
+                                <label for="city">Votre ville <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <input type="text" value="" name="city" id="city"/>
+                            </li>
+                        </ul>
+                    </fieldset>
+                    <h3 class="ribbonRight gradientgreenLinear">Votre offre</h3>
+                    <fieldset>
+                        <ul>
+                            <li>
+                                <label for="restoType">Type de restaurant <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <select name="restoType" id="restoType">
+                                    <option value="0">Indifférent</option>
+                                    <option value="1">Français</option>
+                                    <option value="2">Italien</option>
+                                    <option value="3">Japonais</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label for="offre">Offre phare <em>*</em></label>
+                                <span class="aide"><p class="tooltip">Phrase d'aide</p></span><br/>
+                                <textarea rows="5" id="offre">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar dio
+                                    lorem non turpis. Nullam sit amet enim. Suspendisse id velit vitae ligula volutpat
+                                    condimentum. Aliquam erat volutpat. Sed quis velit. Nulla facilisi. Nulla libero.
+                                    Vivamus pharetra posuere sapien. Nam consectetuer. Sed aliquam, nunc eget euismod
+                                    ullamcorper, lectus nunc ullamcorper orci, fermentum bibendum ...
+                                </textarea>
+                            </li>
+                            <li>
+                                <label class="resetRadio">Halal <em>*</em></label>
+
+                                <div class="radio">
+                                    <input type="radio" value="" name="halalYes" id="halalYes"/><label for="halalYes">Oui</label><input
+                                        type="radio" value="" name="halalNo" id="halalNo"/><label
+                                        for="halalNo">Non</label>
+                                </div>
+                                <label class="resetRadio">Casher <em>*</em></label>
+
+                                <div class="radio">
+                                    <input type="radio" value="" name="casherYes" id="casherYes"/><label
+                                        for="casherYes">Oui</label><input type="radio" value="" name="casherNo"
+                                                                          id="casherNo"/><label
+                                        for="casherNo">Non</label>
+                                </div>
+                                <label class="resetRadio">Végétarien <em>*</em></label>
+
+                                <div class="radio">
+                                    <input type="radio" value="" name="vegeYes" id="vegeYes"/><label
+                                        for="vegeYes">Oui</label><input type="radio" value="" name="vegeNo"
+                                                                        id="vegeNo"/><label for="vegeNo">Non</label>
+                                </div>
+                            </li>
+                        </ul>
+                    </fieldset>
+                    <ul>
+                        <li class="floatRight">
+                            <button type="submit" class="gradientOrangeLinear btn w100">Valider</button>
+                        </li>
+                        <li class="floatRight">
+                            <button type="reset" class="gradientGreyLinear btn w100">Annuler</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <!-- FIN FORMULAIRE RESTAURANT -->
         </div>
-      <!-- FIN FORMULAIRE RESTAURANT -->
-      </div>
-      <hr class="bas" />
-   </div>
-  <!-- FIN CONTENT -->
-  <!-- FOOTER -->
-    <div id="mpc_footer">
-      <p><a href="statique.html">Mentions légales</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="statique.html">Confidentialité</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="statique.html">A propos</a></p>
+        <hr class="bas"/>
     </div>
-  <!-- FIN FOOTER -->
-  </div>
+    <!-- FIN CONTENT -->
+    <!-- FOOTER -->
+    <div id="mpc_footer">
+        <p><a href="statique.html">Mentions légales</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+                href="statique.html">Confidentialité</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="statique.html">A propos</a>
+        </p>
+    </div>
+    <!-- FIN FOOTER -->
+</div>
 <!-- FIN CONTAINER -->
 </body>
 </html>

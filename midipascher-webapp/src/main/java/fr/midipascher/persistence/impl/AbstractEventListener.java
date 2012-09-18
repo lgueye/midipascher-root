@@ -1,22 +1,19 @@
 /**
- * 
+ *
  */
 package fr.midipascher.persistence.impl;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.common.base.Preconditions;
+import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.validation.ValidationContext;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.common.base.Preconditions;
-
-import fr.midipascher.domain.AbstractEntity;
-import fr.midipascher.domain.validation.ValidationContext;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com

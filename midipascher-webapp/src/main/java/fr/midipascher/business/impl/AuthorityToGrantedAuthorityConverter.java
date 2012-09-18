@@ -1,19 +1,18 @@
 /**
- * 
+ *
  */
 package fr.midipascher.business.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-
+import fr.midipascher.domain.Authority;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.Authority;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com

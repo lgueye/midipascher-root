@@ -3,21 +3,18 @@
  */
 package fr.midipascher.business.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-
+import com.google.common.base.Preconditions;
+import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.business.Validator;
+import fr.midipascher.domain.validation.ValidationContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Preconditions;
-
-import fr.midipascher.domain.AbstractEntity;
-import fr.midipascher.domain.business.Validator;
-import fr.midipascher.domain.validation.ValidationContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com

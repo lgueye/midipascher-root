@@ -1,15 +1,12 @@
 /**
- * 
+ *
  */
 package fr.midipascher.business.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.Collection;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import fr.midipascher.domain.Account;
+import fr.midipascher.domain.Authority;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,11 +17,10 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.Set;
 
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Authority;
+import static org.junit.Assert.*;
 
 /**
  * @author louis.gueye@gmail.com
@@ -86,7 +82,7 @@ public class AccountToUserConverterTest {
         Mockito.when(account.getAuthorities()).thenReturn(authorities);
         Collection<GrantedAuthority> grantedAuthorities = Lists.newArrayList();
         Mockito.when(this.authorityToGrantedAuthorityConverter.fromAuthorities(authorities)).thenReturn(
-            grantedAuthorities);
+                grantedAuthorities);
 
         // When
         user = this.underTest.convert(account);

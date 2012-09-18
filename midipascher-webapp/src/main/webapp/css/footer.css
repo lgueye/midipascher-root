@@ -1,20 +1,25 @@
 @charset "UTF-8";
 
-#mpc_footer{
-	clear:both;
-	width: 1020px;
-	margin: 0 auto 10px auto;
-	padding:15px 0 25px 0;
-	background-color: #f7e9dc;
+#mpc_footer {
+    clear: both;
+    width: 1020px;
+    margin: 0 auto 10px auto;
+    padding: 15px 0 25px 0;
+    background-color: #f7e9dc;
 }
-#mpc_footer p{
-	text-align:center;
-	color:#674732;
-	font:normal 14px Arial, Helvetica, sans-serif;
+
+#mpc_footer p {
+    text-align: center;
+    color: #674732;
+    font: normal 14px Arial, Helvetica, sans-serif;
 }
-#mpc_footer a{
-	color:#674732;
-	font:normal 12px Arial, Helvetica, sans-serif;
-	padding:0 5px;
+
+#mpc_footer a {
+    color: #674732;
+    font: normal 12px Arial, Helvetica, sans-serif;
+    padding: 0 5px;
 }
-#mpc_footer a:hover{color:#ffd57a; }
+
+#mpc_footer a:hover {
+    color: #ffd57a;
+}

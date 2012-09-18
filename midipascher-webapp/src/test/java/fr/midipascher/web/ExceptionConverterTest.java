@@ -1,12 +1,9 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web;
 
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-
+import fr.midipascher.domain.exceptions.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +18,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.servlet.LocaleResolver;
 
-import fr.midipascher.domain.exceptions.BusinessException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 /**
  * @author louis.gueye@gmail.com
@@ -130,7 +128,7 @@ public class ExceptionConverterTest {
     @Test
     public final void resolveMessageShouldInvokeLocalizedExceptionMessageResolver() {
         String code = "message.code";
-        Object[] args = new Object[] {};
+        Object[] args = new Object[]{};
         Locale locale = Locale.FRENCH;
 
         BusinessException th = Mockito.mock(BusinessException.class);

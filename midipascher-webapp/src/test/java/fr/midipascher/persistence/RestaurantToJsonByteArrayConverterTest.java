@@ -1,14 +1,9 @@
 /**
- * 
+ *
  */
 package fr.midipascher.persistence;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.util.Arrays;
-
+import fr.midipascher.domain.Restaurant;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -20,7 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fr.midipascher.domain.Restaurant;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author louis.gueye@gmail.com
@@ -28,72 +27,72 @@ import fr.midipascher.domain.Restaurant;
 @RunWith(MockitoJUnitRunner.class)
 public class RestaurantToJsonByteArrayConverterTest {
 
-	@Mock
-	ObjectMapper					jsonMapper;
+    @Mock
+    ObjectMapper jsonMapper;
 
-	@InjectMocks
-	RestaurantToJsonByteArrayConverter	underTest	= new RestaurantToJsonByteArrayConverter();
+    @InjectMocks
+    RestaurantToJsonByteArrayConverter underTest = new RestaurantToJsonByteArrayConverter();
 
-	/**
-	 * Test method for
-	 * {@link org.diveintojee.poc.jbehave.persistence.RestaurantToJsonByteArrayConverter#convert(org.diveintojee.poc.jbehave.domain.Restaurant)}
-	 * .
-	 */
-	@Test
-	public final void convertShoulReturnNullWithNullInput() {
+    /**
+     * Test method for
+     * {@link org.diveintojee.poc.jbehave.persistence.RestaurantToJsonByteArrayConverter#convert(org.diveintojee.poc.jbehave.domain.Restaurant)}
+     * .
+     */
+    @Test
+    public final void convertShoulReturnNullWithNullInput() {
 
-		// Variables
-		Restaurant source;
+        // Variables
+        Restaurant source;
 
-		// Given
-		source = null;
+        // Given
+        source = null;
 
-		// When
-		byte[] jsonByteArray = this.underTest.convert(source);
+        // When
+        byte[] jsonByteArray = this.underTest.convert(source);
 
-		// Then
-		assertNull(jsonByteArray);
-	}
+        // Then
+        assertNull(jsonByteArray);
+    }
 
-	/**
-	 * Test method for
-	 * {@link org.diveintojee.poc.jbehave.persistence.RestaurantToJsonByteArrayConverter#convert(org.diveintojee.poc.jbehave.domain.Restaurant)}
-	 * .
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
-	@Test
-	public final void convertShouldSucceed() throws JsonGenerationException, JsonMappingException, IOException {
+    /**
+     * Test method for
+     * {@link org.diveintojee.poc.jbehave.persistence.RestaurantToJsonByteArrayConverter#convert(org.diveintojee.poc.jbehave.domain.Restaurant)}
+     * .
+     *
+     * @throws IOException
+     * @throws JsonMappingException
+     * @throws JsonGenerationException
+     */
+    @Test
+    public final void convertShouldSucceed() throws JsonGenerationException, JsonMappingException, IOException {
 
-		// Variables
-		Restaurant source;
-		SerializationConfig serializationConfig;
-		String jsonString;
-		byte[] jsonByteArray;
+        // Variables
+        Restaurant source;
+        SerializationConfig serializationConfig;
+        String jsonString;
+        byte[] jsonByteArray;
 
-		// Given
-		source = new Restaurant();
-		serializationConfig = Mockito.mock(SerializationConfig.class);
-		jsonString = "{}";
-		jsonByteArray = jsonString.getBytes("utf-8");
+        // Given
+        source = new Restaurant();
+        serializationConfig = Mockito.mock(SerializationConfig.class);
+        jsonString = "{}";
+        jsonByteArray = jsonString.getBytes("utf-8");
 
-		// When
-		Mockito.when(this.jsonMapper.getSerializationConfig()).thenReturn(serializationConfig);
-		Mockito.when(serializationConfig.without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS)).thenReturn(
-				serializationConfig);
-		Mockito.when(this.jsonMapper.writeValueAsString(source)).thenReturn(jsonString);
-		byte[] result = this.underTest.convert(source);
+        // When
+        Mockito.when(this.jsonMapper.getSerializationConfig()).thenReturn(serializationConfig);
+        Mockito.when(serializationConfig.without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS)).thenReturn(
+                serializationConfig);
+        Mockito.when(this.jsonMapper.writeValueAsString(source)).thenReturn(jsonString);
+        byte[] result = this.underTest.convert(source);
 
-		// Then
-		Mockito.verify(this.jsonMapper).getSerializationConfig();
-		Mockito.verify(serializationConfig).without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS);
-		Mockito.verify(this.jsonMapper).writeValueAsString(source);
+        // Then
+        Mockito.verify(this.jsonMapper).getSerializationConfig();
+        Mockito.verify(serializationConfig).without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS);
+        Mockito.verify(this.jsonMapper).writeValueAsString(source);
 
-		Mockito.verifyNoMoreInteractions(this.jsonMapper, serializationConfig);
+        Mockito.verifyNoMoreInteractions(this.jsonMapper, serializationConfig);
 
-		assertTrue(Arrays.equals(jsonByteArray, result));
+        assertTrue(Arrays.equals(jsonByteArray, result));
 
-	}
+    }
 }

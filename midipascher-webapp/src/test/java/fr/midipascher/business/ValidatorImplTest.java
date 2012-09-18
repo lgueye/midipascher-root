@@ -3,12 +3,11 @@
  */
 package fr.midipascher.business;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-
+import fr.midipascher.business.impl.ValidatorImpl;
+import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.business.Validator;
+import fr.midipascher.domain.validation.ValidationContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,11 +15,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import fr.midipascher.business.impl.ValidatorImpl;
-import fr.midipascher.domain.AbstractEntity;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.business.Validator;
-import fr.midipascher.domain.validation.ValidationContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com

@@ -1,7 +1,6 @@
 package fr.midipascher.persistence;
 
 import fr.midipascher.domain.Restaurant;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -14,9 +13,9 @@ import java.util.List;
  */
 public interface SearchEngine {
 
-  String				INDEX_NAME	= SearchIndices.midipascher.toString();
-  String				TYPE_NAME	= SearchTypes.restaurant.toString();
+    String INDEX_NAME = SearchIndices.midipascher.toString();
+    String TYPE_NAME = SearchTypes.restaurant.toString();
 
-  List<Restaurant> findRestaurantsByCriteria(Restaurant criteria);
+    List<Restaurant> findRestaurantsByCriteria(Restaurant criteria);
 
 }

@@ -3,21 +3,19 @@
  */
 package fr.midipascher.business;
 
-import java.util.Locale;
-
-import javax.validation.ConstraintViolationException;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
-
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.test.TestFixtures;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Test;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Locale;
 
 /**
  * Authority validation testing<br/>
  * CRUD operations are tested<br>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 public class AuthorithyValidationTestIT extends BaseValidations {
@@ -88,9 +86,9 @@ public class AuthorithyValidationTestIT extends BaseValidations {
         underTest.setCode(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Code max length is "
-            + Authority.CONSTRAINT_CODE_MAX_SIZE, "code");
+                + Authority.CONSTRAINT_CODE_MAX_SIZE, "code");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour code : "
-            + Authority.CONSTRAINT_CODE_MAX_SIZE, "code");
+                + Authority.CONSTRAINT_CODE_MAX_SIZE, "code");
 
     }
 
@@ -122,9 +120,9 @@ public class AuthorithyValidationTestIT extends BaseValidations {
         underTest.setLabel(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Label max length is "
-            + Authority.CONSTRAINT_LABEL_MAX_SIZE, "label");
+                + Authority.CONSTRAINT_LABEL_MAX_SIZE, "label");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour label : "
-            + Authority.CONSTRAINT_LABEL_MAX_SIZE, "label");
+                + Authority.CONSTRAINT_LABEL_MAX_SIZE, "label");
 
     }
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.persistence;
 
@@ -9,6 +9,6 @@ package fr.midipascher.persistence;
  */
 public enum SearchIndices {
 
-	midipascher;
+    midipascher;
 
 }

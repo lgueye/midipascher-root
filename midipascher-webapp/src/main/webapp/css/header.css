@@ -1,71 +1,80 @@
 @charset "UTF-8";
 
-#mpc_header{
-	width: 1165px;
-	height:239px;
-	margin: 0 auto;
-	background-color: #fbf7f4;
-}
-#mpc_header h1{
-	width: 0;
-	height:0;
-	color:#fbf7f4;
-	position:absolute;
-	top:-1000px
-}
-#mpc_header span.bandeau_left{
-	width: 65px;
-	height:93px;
-	display:block;
-	float:left;
-	background:url(../images/sprite.png)no-repeat 0 -21px;
-	margin: 145px 0 0 8px;
-}
-#mpc_header span.bandeau_right{
-	width: 65px;
-	height:93px;
-	display:block;
-	float:left;
-	background:url(../images/sprite.png)no-repeat -443px -21px;
-	margin: 145px 0 0 0;
-}
-.mpc_header_content{
-	width: 1020px;
-	height:260px;
-	margin: 0;
-	float:left;
-	background:#F7E9DC url(../images/bandeau.png) no-repeat top left;
-}
-#mpc_header p{
-	font:bold 20px Arial, Helvetica, sans-serif;
-	color:#fff;
-	text-shadow: 0 1px 1px #e3e3e3;
-	filter: dropshadow(color=#e3e3e3, offx=1, offy=2);
-}
-#mpc_header a{
-	text-shadow:none;
+#mpc_header {
+    width: 1165px;
+    height: 239px;
+    margin: 0 auto;
+    background-color: #fbf7f4;
 }
 
-a#mpc_home{
-	color: transparent;
-	display:block;
-	position: relative;
-	width: 370px;
-	height: 120px;
-	margin: 80px 0 0 330px;
-	}
-	.mpc_candidat{
-		padding:165px 0 0 105px;
-		float:left;
-		width:400px;
-	}
-	.mpc_pro{
-		padding: 0 0 0 245px;
-		margin-top:-40px;
-		width: 250px;
-		float: left;
-		position:relative;
-	}
-	.mpc_pro p{
-		line-height:0.8!important;
-	}
+#mpc_header h1 {
+    width: 0;
+    height: 0;
+    color: #fbf7f4;
+    position: absolute;
+    top: -1000px
+}
+
+#mpc_header span.bandeau_left {
+    width: 65px;
+    height: 93px;
+    display: block;
+    float: left;
+    background: url(../images/sprite.png) no-repeat 0 -21px;
+    margin: 145px 0 0 8px;
+}
+
+#mpc_header span.bandeau_right {
+    width: 65px;
+    height: 93px;
+    display: block;
+    float: left;
+    background: url(../images/sprite.png) no-repeat -443px -21px;
+    margin: 145px 0 0 0;
+}
+
+.mpc_header_content {
+    width: 1020px;
+    height: 260px;
+    margin: 0;
+    float: left;
+    background: #F7E9DC url(../images/bandeau.png) no-repeat top left;
+}
+
+#mpc_header p {
+    font: bold 20px Arial, Helvetica, sans-serif;
+    color: #fff;
+    text-shadow: 0 1px 1px #e3e3e3;
+    filter: dropshadow(color = #e3e3e3, offx = 1, offy = 2);
+}
+
+#mpc_header a {
+    text-shadow: none;
+}
+
+a#mpc_home {
+    color: transparent;
+    display: block;
+    position: relative;
+    width: 370px;
+    height: 120px;
+    margin: 80px 0 0 330px;
+}
+
+.mpc_candidat {
+    padding: 165px 0 0 105px;
+    float: left;
+    width: 400px;
+}
+
+.mpc_pro {
+    padding: 0 0 0 245px;
+    margin-top: -40px;
+    width: 250px;
+    float: left;
+    position: relative;
+}
+
+.mpc_pro p {
+    line-height: 0.8 !important;
+}

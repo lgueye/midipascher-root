@@ -1,28 +1,25 @@
 /**
- * 
+ *
  */
 package fr.midipascher.business;
 
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import fr.midipascher.business.impl.FacadeImpl;
+import fr.midipascher.domain.*;
+import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.business.Validator;
+import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.domain.exceptions.OwnershipException;
+import fr.midipascher.domain.validation.ValidationContext;
+import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.persistence.SearchEngine;
+import fr.midipascher.test.TestFixtures;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Matchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
@@ -32,23 +29,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.CollectionUtils;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import java.util.*;
 
-import fr.midipascher.business.impl.FacadeImpl;
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Address;
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.business.Facade;
-import fr.midipascher.domain.business.Validator;
-import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.domain.exceptions.OwnershipException;
-import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.persistence.BaseDao;
-import fr.midipascher.persistence.SearchEngine;
-import fr.midipascher.test.TestFixtures;
+import static org.junit.Assert.fail;
 
 /**
  * @author louis.gueye@gmail.com
@@ -70,7 +53,7 @@ public class FacadeImplTest {
     @InjectMocks
     private final Facade underTest = new FacadeImpl();
 
-  public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
+    public void checkUniqueAccountUIDShouldIgnoreEmptyResult() {
 
         // Variables
         Account account;
@@ -171,14 +154,14 @@ public class FacadeImplTest {
         // When
         Mockito.when(this.baseDao.findByExample(Matchers.any(Account.class))).thenReturn(results);
         Mockito.when(
-            this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
-                Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
+                this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+                        Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
         ((FacadeImpl) this.underTest).checkUniqueAccountUID(account);
 
         // Then
         Mockito.verify(this.baseDao).findByExample(Matchers.any(Account.class));
         Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
-            Matchers.eq(LocaleContextHolder.getLocale()));
+                Matchers.eq(LocaleContextHolder.getLocale()));
         Mockito.verifyZeroInteractions(this.validator);
         Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
 
@@ -296,14 +279,14 @@ public class FacadeImplTest {
         // When
         Mockito.when(this.baseDao.findByExample(Matchers.any(Authority.class))).thenReturn(results);
         Mockito.when(
-            this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
-                Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
+                this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+                        Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
         ((FacadeImpl) this.underTest).checkUniqueAuthorityCode(authority);
 
         // Then
         Mockito.verify(this.baseDao).findByExample(Matchers.any(Authority.class));
         Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
-            Matchers.eq(LocaleContextHolder.getLocale()));
+                Matchers.eq(LocaleContextHolder.getLocale()));
         Mockito.verifyZeroInteractions(this.validator);
         Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
 
@@ -409,14 +392,14 @@ public class FacadeImplTest {
         // When
         Mockito.when(this.baseDao.findByExample(Matchers.any(FoodSpecialty.class))).thenReturn(results);
         Mockito.when(
-            this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
-                Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
+                this.messageSource.getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
+                        Matchers.eq(LocaleContextHolder.getLocale()))).thenReturn(message);
         ((FacadeImpl) this.underTest).checkUniqueFoodSpecialtyCode(foodSpecialty);
 
         // Then
         Mockito.verify(this.baseDao).findByExample(Matchers.any(FoodSpecialty.class));
         Mockito.verify(this.messageSource).getMessage(Matchers.eq(messageCode), Matchers.any(Object[].class),
-            Matchers.eq(LocaleContextHolder.getLocale()));
+                Matchers.eq(LocaleContextHolder.getLocale()));
         Mockito.verifyZeroInteractions(this.validator);
         Mockito.verifyNoMoreInteractions(this.baseDao, this.messageSource);
 
@@ -532,7 +515,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void createRestaurantShouldLoadUserThenAddRestaurantToItsRestaurantCollection() {
 
@@ -791,7 +774,7 @@ public class FacadeImplTest {
         this.underTest.readFoodSpecialty(null);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void readRestaurantShouldSucceed() {
 
@@ -861,7 +844,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void readAccountShouldSucceed() {
         // Variables
@@ -908,7 +891,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void updateAccountShouldReadAccountFromRepositoryAndMerge() {
 
@@ -1189,7 +1172,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void updateRestaurantShouldSucceed() {
 
@@ -1408,7 +1391,7 @@ public class FacadeImplTest {
         // Then
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void createRestaurantShouldSucceed() {
 
@@ -1533,7 +1516,7 @@ public class FacadeImplTest {
         // Then
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void deleteRestaurantShouldSucceed() {
 
@@ -1615,7 +1598,7 @@ public class FacadeImplTest {
         // Then
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void deleteAccountShouldSucceed() {
 
@@ -1691,7 +1674,7 @@ public class FacadeImplTest {
         // Then
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void lockAccountShouldSucceed() {
 
@@ -1817,7 +1800,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void checkOwnershipShouldNotThrowOwnershipExceptionIfUserIsAdmin() {
 
@@ -1862,7 +1845,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     public void checkOwnershipShouldNotThrowOwnershipExceptionIfUserIsOwner() {
 
@@ -1912,7 +1895,7 @@ public class FacadeImplTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test(expected = OwnershipException.class)
     public void checkOwnershipShouldThrowOwnershipExceptionIfUserIsNotOwner() {
 

@@ -1,20 +1,18 @@
 /**
- * 
+ *
  */
 package fr.midipascher.test;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import javax.xml.bind.JAXBException;
-
+import fr.midipascher.domain.Restaurant;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import fr.midipascher.domain.Restaurant;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author louis.gueye@gmail.com
@@ -23,7 +21,7 @@ public class TestFixturesTest {
 
     /**
      * Test method for {@link TestFixtures#fromJson(java.lang.String, java.lang.Class)} .
-     * 
+     *
      * @throws IOException
      * @throws JsonMappingException
      * @throws JsonParseException
@@ -41,7 +39,7 @@ public class TestFixturesTest {
 
     /**
      * Test method for {@link TestFixtures#fromXml(java.lang.String, java.lang.Class)} .
-     * 
+     *
      * @throws JAXBException
      * @throws UnsupportedEncodingException
      */
@@ -49,22 +47,22 @@ public class TestFixturesTest {
     public final void testFromXml() throws UnsupportedEncodingException, JAXBException {
         // Given
         final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-            + "<restaurant>"
-            + "<address>"
-            + "<city>wI3yKp8éuéçpTPQAGlP9Bé0èjàààffgLHSOdèè3tsèLdYDwKlI</city>"
-            + "<countryCode>fr</countryCode>"
-            + "<postalCode>6LoiQrlJIq</postalCode>"
-            + "<streetAddress>NI0Oéaakb65gxvVmlbyQvwCé94oZbSYa9JQAéFUgHùAFxxRIùW</streetAddress>"
-            + "</address>"
-            + "<description>LwZOZ9p5N6DTodNF3N2éXy3SUjxHkFMP6BvlUYlTuKNMREcmORhr2làU0MGwBmUGGv3OlmX0IQroJbBrçmBOX6fnoé7jà9Hèè5nWN6b8qeATyunuJelwwu52IàrgxiRL3Fpkàa4rtCh8aztlcCé9AIfSdLqeTfWBaq2LçV232GàiwOèybçOrLDCLMçç4ydUskE4rI</description>"
-            + "<companyId>552 100 554</companyId>"
-            + "<halal>true</halal>"
-            + "<kosher>false</kosher>"
-            + "<mainOffer>myneOmScmzOW7RZ1qeFj4mS5wèWc51bf4t8oRZK8Hvw8ùçft7çd8ébCérw3J3xqUIX5rDCkWLLéUH3mègJbl79HjfXù1HtXoà3AbpqooSswOu1pqqmE5ZMyrgHo8VnsM1a5qcdANRTGs5EKxmfNOGlkVoF99IN4JKVyByWKRùsvxaGHD2nL1JL3T5H1xZ5çiKèD98M</mainOffer>"
-            + "<name>DépGsdDnCCpyxwIéJVOùCoàYgHISYEA5l2yS3daz9U3y8n</name>"
-            + "<phoneNumber>mVVhW2FD4mèJEMkùdRàM</phoneNumber>" + "<specialties>" + "<active>true</active>"
-            + "<code>PidKàçedo2</code>" + "<label>VVlSrxY5ALbtXRùèL7W917K58nPèQ8IFmkfJYéyuàVjKrk1d6i</label>"
-            + "</specialties>" + "</restaurant>";
+                + "<restaurant>"
+                + "<address>"
+                + "<city>wI3yKp8éuéçpTPQAGlP9Bé0èjàààffgLHSOdèè3tsèLdYDwKlI</city>"
+                + "<countryCode>fr</countryCode>"
+                + "<postalCode>6LoiQrlJIq</postalCode>"
+                + "<streetAddress>NI0Oéaakb65gxvVmlbyQvwCé94oZbSYa9JQAéFUgHùAFxxRIùW</streetAddress>"
+                + "</address>"
+                + "<description>LwZOZ9p5N6DTodNF3N2éXy3SUjxHkFMP6BvlUYlTuKNMREcmORhr2làU0MGwBmUGGv3OlmX0IQroJbBrçmBOX6fnoé7jà9Hèè5nWN6b8qeATyunuJelwwu52IàrgxiRL3Fpkàa4rtCh8aztlcCé9AIfSdLqeTfWBaq2LçV232GàiwOèybçOrLDCLMçç4ydUskE4rI</description>"
+                + "<companyId>552 100 554</companyId>"
+                + "<halal>true</halal>"
+                + "<kosher>false</kosher>"
+                + "<mainOffer>myneOmScmzOW7RZ1qeFj4mS5wèWc51bf4t8oRZK8Hvw8ùçft7çd8ébCérw3J3xqUIX5rDCkWLLéUH3mègJbl79HjfXù1HtXoà3AbpqooSswOu1pqqmE5ZMyrgHo8VnsM1a5qcdANRTGs5EKxmfNOGlkVoF99IN4JKVyByWKRùsvxaGHD2nL1JL3T5H1xZ5çiKèD98M</mainOffer>"
+                + "<name>DépGsdDnCCpyxwIéJVOùCoàYgHISYEA5l2yS3daz9U3y8n</name>"
+                + "<phoneNumber>mVVhW2FD4mèJEMkùdRàM</phoneNumber>" + "<specialties>" + "<active>true</active>"
+                + "<code>PidKàçedo2</code>" + "<label>VVlSrxY5ALbtXRùèL7W917K58nPèQ8IFmkfJYéyuàVjKrk1d6i</label>"
+                + "</specialties>" + "</restaurant>";
         // When
         final Restaurant restaurant = TestFixtures.fromXml(xml, Restaurant.class);
 
@@ -74,7 +72,7 @@ public class TestFixturesTest {
 
     /**
      * Test method for {@link TestFixtures#toJson(java.lang.Object)}.
-     * 
+     *
      * @throws IOException
      * @throws JsonMappingException
      * @throws JsonGenerationException
@@ -94,7 +92,7 @@ public class TestFixturesTest {
 
     /**
      * Test method for {@link TestFixtures#toXml(java.lang.Object)}.
-     * 
+     *
      * @throws JAXBException
      * @throws UnsupportedEncodingException
      */

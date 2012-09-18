@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.controllers;
 
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/accounts")
 public class AccountsController {
 
-	@RequestMapping(value = "/{reference}/edit", method = RequestMethod.GET)
-	public String edit(@PathVariable("reference") String reference) {
-		return "edit_account";
-	}
+    @RequestMapping(value = "/{reference}/edit", method = RequestMethod.GET)
+    public String edit(@PathVariable("reference") String reference) {
+        return "edit_account";
+    }
 
 }

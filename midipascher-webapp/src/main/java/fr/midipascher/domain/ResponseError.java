@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain;
 
@@ -15,8 +15,8 @@ public class ResponseError extends AbstractObject {
     private int httpStatus;
 
     /**
-	 * 
-	 */
+     *
+     */
     public ResponseError() {
         super();
     }

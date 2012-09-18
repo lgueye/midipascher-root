@@ -1,27 +1,20 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.resources;
 
-import java.net.URI;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
+import fr.midipascher.domain.Authority;
+import fr.midipascher.domain.business.Facade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.business.Facade;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 /**
  * @author louis.gueye@gmail.com
@@ -45,7 +38,7 @@ public class AuthoritiesResource {
     public static final String SINGLE_RESOURCE_PATH = "/{id}";
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response create(final Authority authority) throws Throwable {
 
         final Long id = facade.createAuthority(authority);
@@ -58,7 +51,7 @@ public class AuthoritiesResource {
 
     @GET
     @Path(AuthoritiesResource.SINGLE_RESOURCE_PATH)
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
         final Authority authority = facade.readAuthority(id);
@@ -71,7 +64,7 @@ public class AuthoritiesResource {
     }
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path(AuthoritiesResource.SINGLE_RESOURCE_PATH + "/inactivate")
     public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
 

@@ -3,14 +3,13 @@
  */
 package fr.midipascher.domain.business;
 
-import java.util.List;
-
-import javax.validation.ConstraintViolationException;
-
 import fr.midipascher.domain.Account;
 import fr.midipascher.domain.Authority;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 /**
  * @author louis.gueye@gmail.com

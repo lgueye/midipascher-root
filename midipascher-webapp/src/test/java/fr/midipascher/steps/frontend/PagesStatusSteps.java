@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.steps.frontend;
 

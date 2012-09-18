@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.stories;
 
@@ -14,19 +14,19 @@ import org.jbehave.core.reporters.Format;
  */
 public abstract class AbstractJUnitStories extends JUnitStories {
 
-	@Override
-	public Configuration configuration() {
+    @Override
+    public Configuration configuration() {
 
-		Configuration configuration = new MostUsefulConfiguration();
-		configuration.usePendingStepStrategy(new FailingUponPendingStep());
-		configuration.storyReporterBuilder() // Configure report builder
-				.withFormats(Format.HTML_TEMPLATE, Format.ANSI_CONSOLE) // Configure
-				.withFailureTrace(true) //
-				.withMultiThreading(true);
+        Configuration configuration = new MostUsefulConfiguration();
+        configuration.usePendingStepStrategy(new FailingUponPendingStep());
+        configuration.storyReporterBuilder() // Configure report builder
+                .withFormats(Format.HTML_TEMPLATE, Format.ANSI_CONSOLE) // Configure
+                .withFailureTrace(true) //
+                .withMultiThreading(true);
 
-		configuration.storyControls().doSkipScenariosAfterFailure(false).doResetStateBeforeStory(true);
+        configuration.storyControls().doSkipScenariosAfterFailure(false).doResetStateBeforeStory(true);
 
-		return configuration;
-	}
+        return configuration;
+    }
 
 }

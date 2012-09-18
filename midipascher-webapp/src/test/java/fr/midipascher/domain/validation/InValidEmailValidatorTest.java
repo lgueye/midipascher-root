@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain.validation;
 
@@ -16,21 +16,21 @@ import org.junit.runner.RunWith;
 @RunWith(Theories.class)
 public class InValidEmailValidatorTest {
 
-	private ValidEmailValidator		underTest;
+    private ValidEmailValidator underTest;
 
-	@DataPoints
-	public static final String[]	INVALID_EMAILS	= { "@company.com", "a.b@", "a.b" };
+    @DataPoints
+    public static final String[] INVALID_EMAILS = {"@company.com", "a.b@", "a.b"};
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		this.underTest = new ValidEmailValidator();
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        this.underTest = new ValidEmailValidator();
+    }
 
-	@Theory
-	public void shouldNotValidate(String validEmail) {
-		Assert.assertFalse(this.underTest.isValid(validEmail, null));
-	}
+    @Theory
+    public void shouldNotValidate(String validEmail) {
+        Assert.assertFalse(this.underTest.isValid(validEmail, null));
+    }
 }

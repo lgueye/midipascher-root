@@ -3,12 +3,7 @@
  */
 package fr.midipascher.business;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletResponse;
-
+import fr.midipascher.TestConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +12,20 @@ import org.springframework.context.MessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fr.midipascher.TestConstants;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Authority database integration testing<br/>
  * CRUD operations are tested<br>
  * Finders are tested<br/>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { TestConstants.VALIDATION_CONTEXT })
+@ContextConfiguration(locations = {TestConstants.VALIDATION_CONTEXT})
 public class MessageSourceTestIT {
 
     @Autowired
@@ -38,7 +36,7 @@ public class MessageSourceTestIT {
     public final void messageSourceShouldConsiderEncoding() {
 
         assertEquals("informations de connexion erronées",
-            this.underTest.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null, Locale.FRENCH));
+                this.underTest.getMessage(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), null, Locale.FRENCH));
 
     }
 

@@ -3,29 +3,21 @@
  */
 package fr.midipascher.business;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
-import javax.sql.DataSource;
-import javax.validation.ConstraintViolationException;
-
+import fr.midipascher.TestConstants;
+import fr.midipascher.domain.Account;
+import fr.midipascher.domain.Authority;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.test.TestFixtures;
 import junit.framework.Assert;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
-import org.elasticsearch.action.search.SearchResponse;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -46,22 +38,23 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
 
-import fr.midipascher.TestConstants;
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.business.Facade;
-import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.test.TestFixtures;
+import javax.sql.DataSource;
+import javax.validation.ConstraintViolationException;
+import java.sql.Connection;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+
+import static org.junit.Assert.*;
 
 /**
  * Facade integration testing<br/>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT,
+@ContextConfiguration(locations = {TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT,
         TestConstants.VALIDATION_CONTEXT, TestConstants.SEARCH_CONTEXT})
 public class FacadeImplTestIT {
 
@@ -382,7 +375,7 @@ public class FacadeImplTestIT {
         } catch (ConstraintViolationException th) {
             System.out
                     .println("----------------------------------------------------------------------------------------------"
-                        + th.getConstraintViolations().iterator().next().getMessage());
+                            + th.getConstraintViolations().iterator().next().getMessage());
             throw th;
         }
     }
@@ -478,7 +471,8 @@ public class FacadeImplTestIT {
     }
 
     @Test
-    public void persistingAccountWithRemovedRestaurantFromCollectionShouldDeleteRestaurant() {}
+    public void persistingAccountWithRemovedRestaurantFromCollectionShouldDeleteRestaurant() {
+    }
 
     @Test
     public void autorizationOrAuthenticationRequiredRequestShouldFailWhenNotAuthenticatedOrGrantedCorrectAuthority() {
@@ -490,7 +484,8 @@ public class FacadeImplTestIT {
             // When
             this.facade.createFoodSpecialty(foodSpecialty);
             Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
-        } catch (AuthenticationCredentialsNotFoundException e) {} catch (Throwable th) {
+        } catch (AuthenticationCredentialsNotFoundException e) {
+        } catch (Throwable th) {
             Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
         }
         authenticateAsRmgr();
@@ -498,7 +493,8 @@ public class FacadeImplTestIT {
             // When
             this.facade.createFoodSpecialty(foodSpecialty);
             Assert.fail(AuthenticationException.class.getSimpleName() + " expected");
-        } catch (AccessDeniedException e) {} catch (Throwable th) {
+        } catch (AccessDeniedException e) {
+        } catch (Throwable th) {
             Assert.fail(AuthenticationException.class.getSimpleName() + " expected,  got = " + th);
         }
 

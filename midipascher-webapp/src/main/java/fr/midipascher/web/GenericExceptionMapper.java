@@ -1,20 +1,19 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web;
+
+import fr.midipascher.domain.ResponseError;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import fr.midipascher.domain.ResponseError;
 
 /**
  * @author louis.gueye@gmail.com
@@ -39,10 +38,10 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
         final String preferredResponseMediaType = this.request.getHeader("Accept");
 
         if (StringUtils.isNotEmpty(preferredResponseMediaType)
-            && !ExceptionConverter.SUPPORTED_MEDIA_TYPES.contains(preferredResponseMediaType)) {
+                && !ExceptionConverter.SUPPORTED_MEDIA_TYPES.contains(preferredResponseMediaType)) {
             LoggerFactory.getLogger(GenericExceptionMapper.class).debug(
-                "Preferred Media type {} not supported, using default {}", preferredResponseMediaType,
-                ExceptionConverter.DEFAULT_MEDIA_TYPE);
+                    "Preferred Media type {} not supported, using default {}", preferredResponseMediaType,
+                    ExceptionConverter.DEFAULT_MEDIA_TYPE);
             return Response.status(error.getHttpStatus()).header("Content-Type", ExceptionConverter.DEFAULT_MEDIA_TYPE)
                     .entity(error).build();
         }

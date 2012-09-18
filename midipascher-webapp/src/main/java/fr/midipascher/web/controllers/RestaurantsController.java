@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.controllers;
 
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/restaurants")
 public class RestaurantsController {
 
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String add() {
-		return "new_restaurant";
-	}
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
+    public String add() {
+        return "new_restaurant";
+    }
 
-	@RequestMapping(value = "/{reference}/edit", method = RequestMethod.GET)
-	public String edit(@PathVariable("reference") String reference) {
-		return "edit_restaurant";
-	}
+    @RequestMapping(value = "/{reference}/edit", method = RequestMethod.GET)
+    public String edit(@PathVariable("reference") String reference) {
+        return "edit_restaurant";
+    }
 
 }

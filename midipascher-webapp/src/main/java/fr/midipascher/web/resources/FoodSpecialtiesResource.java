@@ -1,26 +1,10 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.resources;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.business.Facade;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.business.Facade;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import java.net.URI;
+import java.util.List;
 
 /**
  * @author louis.gueye@gmail.com
@@ -52,7 +38,7 @@ public class FoodSpecialtiesResource {
     public static final String SINGLE_RESOURCE_PATH = "/{id}";
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response create(final FoodSpecialty foodSpecialty) throws Throwable {
 
         final Long id = facade.createFoodSpecialty(foodSpecialty);
@@ -75,14 +61,15 @@ public class FoodSpecialtiesResource {
 
     @POST
     @Path("/search")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response find(final @FormParam("code") String code, final @FormParam("label") String label,
-            final @FormParam("active") boolean active) throws Throwable {
+                         final @FormParam("active") boolean active) throws Throwable {
 
         final List<FoodSpecialty> results = facade.listFoodSpecialties();
 
-        final GenericEntity<List<FoodSpecialty>> entity = new GenericEntity<List<FoodSpecialty>>(results) {};
+        final GenericEntity<List<FoodSpecialty>> entity = new GenericEntity<List<FoodSpecialty>>(results) {
+        };
 
         if (CollectionUtils.isEmpty(results)) {
             FoodSpecialtiesResource.LOGGER.info("No results found");
@@ -94,7 +81,7 @@ public class FoodSpecialtiesResource {
 
     @GET
     @Path(SINGLE_RESOURCE_PATH)
-    @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response get(@PathParam(value = "id") final Long id) throws Throwable {
 
         final FoodSpecialty foodSpecialty = facade.readFoodSpecialty(id);
@@ -104,7 +91,7 @@ public class FoodSpecialtiesResource {
     }
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path(SINGLE_RESOURCE_PATH + "/inactivate")
     public Response inactivate(@PathParam(value = "id") final Long id) throws Throwable {
 
@@ -116,7 +103,7 @@ public class FoodSpecialtiesResource {
 
     @PUT
     @Path(SINGLE_RESOURCE_PATH)
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response update(@PathParam(value = "id") final Long id, final FoodSpecialty foodSpecialty) throws Throwable {
 
         facade.updateFoodSpecialty(id, foodSpecialty);

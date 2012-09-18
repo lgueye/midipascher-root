@@ -3,16 +3,25 @@
  */
 package fr.midipascher.business.impl;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.security.RolesAllowed;
-
+import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+import fr.midipascher.domain.Account;
+import fr.midipascher.domain.Authority;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.business.Validator;
+import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.domain.exceptions.OwnershipException;
+import fr.midipascher.domain.validation.ValidationContext;
+import fr.midipascher.persistence.BaseDao;
 import fr.midipascher.persistence.SearchEngine;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,23 +39,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.business.Facade;
-import fr.midipascher.domain.business.Validator;
-import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.domain.exceptions.OwnershipException;
-import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.persistence.BaseDao;
+import javax.annotation.security.RolesAllowed;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com
@@ -95,14 +91,14 @@ public class FacadeImpl implements Facade {
 
         final String messageCode = "account.email.already.used";
 
-        final String message = this.messageSource.getMessage(messageCode, new Object[] { email },
-            LocaleContextHolder.getLocale());
+        final String message = this.messageSource.getMessage(messageCode, new Object[]{email},
+                LocaleContextHolder.getLocale());
 
         LOGGER.error(message);
 
         final String defaultMessage = "Email already used";
 
-        throw new BusinessException(messageCode, new Object[] { email }, defaultMessage);
+        throw new BusinessException(messageCode, new Object[]{email}, defaultMessage);
 
     }
 
@@ -151,14 +147,14 @@ public class FacadeImpl implements Facade {
 
         final String messageCode = "authority.code.already.used";
 
-        final String message = this.messageSource.getMessage(messageCode, new Object[] { code },
-            LocaleContextHolder.getLocale());
+        final String message = this.messageSource.getMessage(messageCode, new Object[]{code},
+                LocaleContextHolder.getLocale());
 
         LOGGER.error(message);
 
         final String defaultMessage = "Code already used";
 
-        throw new BusinessException(messageCode, new Object[] { code }, defaultMessage);
+        throw new BusinessException(messageCode, new Object[]{code}, defaultMessage);
 
     }
 
@@ -186,14 +182,14 @@ public class FacadeImpl implements Facade {
 
         final String messageCode = "foodSpecialty.code.already.used";
 
-        final String message = this.messageSource.getMessage(messageCode, new Object[] { code },
-            LocaleContextHolder.getLocale());
+        final String message = this.messageSource.getMessage(messageCode, new Object[]{code},
+                LocaleContextHolder.getLocale());
 
         LOGGER.error(message);
 
         final String defaultMessage = "Code already used";
 
-        throw new BusinessException(messageCode, new Object[] { code }, defaultMessage);
+        throw new BusinessException(messageCode, new Object[]{code}, defaultMessage);
 
     }
 
@@ -217,7 +213,7 @@ public class FacadeImpl implements Facade {
         Preconditions.checkState(authorities != null, "Illegal state : 'RMGR' authority expected, found none");
 
         Preconditions.checkState(authorities.size() == 1,
-            "Illegal state : one and one only 'RMGR' authority expected, found " + authorities.size());
+                "Illegal state : one and one only 'RMGR' authority expected, found " + authorities.size());
 
         account.addAuthority(authorities.get(0));
 
@@ -236,7 +232,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_ADMIN})
     public Long createAuthority(final Authority authority) {
 
         Preconditions.checkArgument(authority != null, "Illegal call to createAuthority, authority is required");
@@ -260,7 +256,7 @@ public class FacadeImpl implements Facade {
     public Long createFoodSpecialty(final FoodSpecialty foodSpecialty) {
 
         Preconditions.checkArgument(foodSpecialty != null,
-            "Illegal call to createFoodSpecialty, foodSpecialty is required");
+                "Illegal call to createFoodSpecialty, foodSpecialty is required");
 
         checkUniqueFoodSpecialtyCode(foodSpecialty);
 
@@ -279,7 +275,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_RMGR, Authority.ROLE_ADMIN})
     public Long createRestaurant(final Long accountId, final Restaurant restaurant) {
 
         final Account account = readAccount(accountId);
@@ -299,7 +295,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_RMGR, Authority.ROLE_ADMIN})
     public void deleteAccount(final Long accountId) {
 
         readAccount(accountId);
@@ -317,7 +313,7 @@ public class FacadeImpl implements Facade {
     public void deleteFoodSpecialty(final Long foodSpecialtyId) {
 
         Preconditions.checkArgument(foodSpecialtyId != null,
-            "Illegal call to deleteFoodSpecialty, foodSpecialtyId is required");
+                "Illegal call to deleteFoodSpecialty, foodSpecialtyId is required");
 
         this.baseDao.delete(FoodSpecialty.class, foodSpecialtyId);
 
@@ -328,7 +324,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_RMGR, Authority.ROLE_ADMIN})
     public void deleteRestaurant(final Long accountId, final Long restaurantId) {
 
         final Account account = readAccount(accountId);
@@ -357,7 +353,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_ADMIN})
     public void inactivateFoodSpecialty(final Long foodSpecialtyId) {
 
         final FoodSpecialty foodSpecialty = readFoodSpecialty(foodSpecialtyId);
@@ -382,7 +378,7 @@ public class FacadeImpl implements Facade {
         if (id == null) {
             final String message = "Account id was null";
             LOGGER.error(message);
-            throw new BusinessException("account.not.found", new Object[] { id }, message);
+            throw new BusinessException("account.not.found", new Object[]{id}, message);
         }
 
         final Account account = this.baseDao.get(Account.class, id);
@@ -390,7 +386,7 @@ public class FacadeImpl implements Facade {
         if (account == null) {
             final String message = "Account was not found for id = " + id;
             LOGGER.error(message);
-            throw new BusinessException("account.not.found", new Object[] { id }, message);
+            throw new BusinessException("account.not.found", new Object[]{id}, message);
         }
 
         checkOwnership(account);
@@ -429,7 +425,7 @@ public class FacadeImpl implements Facade {
         if (!requestingEmail.equals(protectedEmail)) {
 
             final String message = String.format("Account [%s] tried to access account [%s] informations",
-                requestingEmail, protectedEmail);
+                    requestingEmail, protectedEmail);
 
             LOGGER.error(message);
 
@@ -506,7 +502,7 @@ public class FacadeImpl implements Facade {
         if (authorityId == null) {
             final String message = "Authority id was null";
             LOGGER.error(message);
-            throw new BusinessException("authority.not.found", new Object[] { authorityId }, message);
+            throw new BusinessException("authority.not.found", new Object[]{authorityId}, message);
         }
 
         final Authority authority = this.baseDao.get(Authority.class, authorityId);
@@ -514,7 +510,7 @@ public class FacadeImpl implements Facade {
         if (authority == null) {
             final String message = "Authority was not found for id = " + authorityId;
             LOGGER.error(message);
-            throw new BusinessException("authority.not.found", new Object[] { authorityId }, message);
+            throw new BusinessException("authority.not.found", new Object[]{authorityId}, message);
         }
 
         return authority;
@@ -530,7 +526,7 @@ public class FacadeImpl implements Facade {
         if (foodSpecialtyId == null) {
             final String message = "FoodSpecialty id was null";
             LOGGER.error(message);
-            throw new BusinessException("foodSpecialty.not.found", new Object[] { foodSpecialtyId }, message);
+            throw new BusinessException("foodSpecialty.not.found", new Object[]{foodSpecialtyId}, message);
         }
 
         final FoodSpecialty foodSpecialty = this.baseDao.get(FoodSpecialty.class, foodSpecialtyId);
@@ -538,7 +534,7 @@ public class FacadeImpl implements Facade {
         if (foodSpecialty == null) {
             final String message = "FoodSpecialty was not found for id = " + foodSpecialtyId;
             LOGGER.error(message);
-            throw new BusinessException("foodSpecialty.not.found", new Object[] { foodSpecialtyId }, message);
+            throw new BusinessException("foodSpecialty.not.found", new Object[]{foodSpecialtyId}, message);
         }
 
         return foodSpecialty;
@@ -550,7 +546,7 @@ public class FacadeImpl implements Facade {
         if (restaurantId == null) {
             final String message = "Restaurant id was null";
             LOGGER.error(message);
-            throw new BusinessException("restaurant.not.found", new Object[] { restaurantId }, message);
+            throw new BusinessException("restaurant.not.found", new Object[]{restaurantId}, message);
         }
 
         final Restaurant restaurant = this.baseDao.get(Restaurant.class, restaurantId);
@@ -558,14 +554,13 @@ public class FacadeImpl implements Facade {
         if (restaurant == null) {
             final String message = "Restaurant was not found for id = " + restaurantId;
             LOGGER.error(message);
-            throw new BusinessException("restaurant.not.found", new Object[] { restaurantId }, message);
+            throw new BusinessException("restaurant.not.found", new Object[]{restaurantId}, message);
         }
 
         return restaurant;
     }
 
     /**
-     *
      * @param accountId
      * @param restaurantId
      * @param initializeCollections
@@ -579,7 +574,7 @@ public class FacadeImpl implements Facade {
 
         if (account.isLocked())
             throw new BusinessException("valid.account.required", null, "Account with id '" + accountId
-                + "' was locked");
+                    + "' was locked");
 
         final Restaurant restaurant = readRestaurant(restaurantId);
 
@@ -591,13 +586,12 @@ public class FacadeImpl implements Facade {
     }
 
     /**
-     *
      * @param accountId
      * @param detached
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_RMGR, Authority.ROLE_ADMIN})
     public void updateAccount(final Long accountId, final Account detached) {
 
         Preconditions.checkArgument(detached != null, "Illegal call to updateAccount, account is required");
@@ -640,14 +634,13 @@ public class FacadeImpl implements Facade {
     }
 
     /**
-     *
      * @param accountId
      * @param restaurantId
      * @param detached
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_RMGR, Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_RMGR, Authority.ROLE_ADMIN})
     public void updateRestaurant(Long accountId, final Long restaurantId, final Restaurant detached) {
 
         Preconditions.checkArgument(detached != null, "Illegal call to updateRestaurant, restaurant is required");
@@ -670,7 +663,7 @@ public class FacadeImpl implements Facade {
         if (persisted == null) {
             final String message = "Restaurant was not found for id = " + restaurantId;
             LOGGER.error(message);
-            throw new BusinessException("restaurant.not.found", new Object[] { restaurantId }, message);
+            throw new BusinessException("restaurant.not.found", new Object[]{restaurantId}, message);
         }
 
         persisted.setAddress(detached.getAddress());
@@ -708,7 +701,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_ADMIN})
     public void inactivateAuthority(Long authorityId) {
 
         final Authority authority = readAuthority(authorityId);
@@ -722,7 +715,7 @@ public class FacadeImpl implements Facade {
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    @RolesAllowed({ Authority.ROLE_ADMIN })
+    @RolesAllowed({Authority.ROLE_ADMIN})
     public void lockAccount(Long accountId) {
 
         final Account account = readAccount(accountId);

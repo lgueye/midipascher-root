@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-3.1.xsd
                            http://www.springframework.org/schema/security  
                            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<context:component-scan
-		base-package="fr.midipascher.domain, fr.midipascher.business" />
+    <context:component-scan
+            base-package="fr.midipascher.domain, fr.midipascher.business"/>
 
-	<sec:global-method-security
-		jsr250-annotations="enabled" />
+    <sec:global-method-security
+            jsr250-annotations="enabled"/>
 
-	<bean
-		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-		<property name="targetClass"
-			value="org.springframework.security.core.context.SecurityContextHolder" />
-		<property name="targetMethod" value="setStrategyName" />
-		<property name="arguments" value="MODE_INHERITABLETHREADLOCAL" />
-	</bean>
- 
-	<bean id="daoAuthenticationProvider"
-		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-		<property name="userDetailsService" ref="userDetailsService" />
-	</bean>
+    <bean
+            class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetClass"
+                  value="org.springframework.security.core.context.SecurityContextHolder"/>
+        <property name="targetMethod" value="setStrategyName"/>
+        <property name="arguments" value="MODE_INHERITABLETHREADLOCAL"/>
+    </bean>
 
-	<bean id="authenticationManager"
-		class="org.springframework.security.authentication.ProviderManager">
-		<property name="providers">
-			<list>
-				<ref bean="daoAuthenticationProvider" />
-			</list>
-		</property>
-	</bean>
+    <bean id="daoAuthenticationProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
 
-	<sec:authentication-manager>
-		<sec:authentication-provider user-service-ref="userDetailsService">
-			<sec:password-encoder hash="plaintext" />
-		</sec:authentication-provider>
-	</sec:authentication-manager>
+    <bean id="authenticationManager"
+          class="org.springframework.security.authentication.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref bean="daoAuthenticationProvider"/>
+            </list>
+        </property>
+    </bean>
+
+    <sec:authentication-manager>
+        <sec:authentication-provider user-service-ref="userDetailsService">
+            <sec:password-encoder hash="plaintext"/>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
 
 
 </beans>

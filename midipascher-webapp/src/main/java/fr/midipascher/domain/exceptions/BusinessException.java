@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain.exceptions;
 
@@ -37,7 +37,7 @@ public class BusinessException extends RuntimeException {
      * @param cause
      */
     public BusinessException(final String messageCode, final Object[] messageArgs, final String defaultMessage,
-            final Throwable cause) {
+                             final Throwable cause) {
         this(messageCode, messageArgs, defaultMessage);
         setCause(cause);
     }

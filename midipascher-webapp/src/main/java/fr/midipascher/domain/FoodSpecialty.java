@@ -1,34 +1,27 @@
 /**
- * 
+ *
  */
 package fr.midipascher.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import fr.midipascher.domain.validation.Create;
 import fr.midipascher.domain.validation.Update;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author louis.gueye@gmail.com
  */
 @Entity
-@Table(name = FoodSpecialty.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { FoodSpecialty.CODE_COLUMN_NAME }) })
+@Table(name = FoodSpecialty.TABLE_NAME, uniqueConstraints = {@UniqueConstraint(columnNames = {FoodSpecialty.CODE_COLUMN_NAME})})
 @XmlRootElement
 public class FoodSpecialty extends AbstractEntity {
 
     /**
-	 * 
-	 */
+     *
+     */
     private static final long serialVersionUID = 8989705365648473442L;
     public static final String TABLE_NAME = "food_specialty";
     public static final String ID_COLUMN_NAME = "food_specialty_id";
@@ -42,15 +35,15 @@ public class FoodSpecialty extends AbstractEntity {
     @Column(name = FoodSpecialty.ID_COLUMN_NAME)
     private Long id;
 
-    @NotEmpty(message = "{foodSpecialty.code.required}", groups = { Create.class, Update.class })
+    @NotEmpty(message = "{foodSpecialty.code.required}", groups = {Create.class, Update.class})
     @Size(max = FoodSpecialty.CONSTRAINT_CODE_MAX_SIZE, message = "{foodSpecialty.code.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     @Column(name = FoodSpecialty.CODE_COLUMN_NAME)
     private String code;
 
-    @NotEmpty(message = "{foodSpecialty.label.required}", groups = { Create.class, Update.class })
+    @NotEmpty(message = "{foodSpecialty.label.required}", groups = {Create.class, Update.class})
     @Size(max = FoodSpecialty.CONSTRAINT_LABEL_MAX_SIZE, message = "{foodSpecialty.label.max.size}", groups = {
-            Create.class, Update.class })
+            Create.class, Update.class})
     private String label;
 
     private boolean active;

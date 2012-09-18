@@ -3,24 +3,22 @@
  */
 package fr.midipascher.business;
 
-import java.util.Locale;
-import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Test;
-
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.validation.ValidationContext;
 import fr.midipascher.test.TestFixtures;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Test;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * {@link Restaurant} validation testing<br/>
  * CRUD operations are tested<br>
- * 
+ *
  * @author louis.gueye@gmail.com
  */
 public class RestaurantValidationTestIT extends BaseValidations {
@@ -71,9 +69,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.getAddress().setCity(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "City max length is "
-            + Address.CONSTRAINT_CITY_MAX_SIZE, "address.city");
+                + Address.CONSTRAINT_CITY_MAX_SIZE, "address.city");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour la ville : "
-            + Address.CONSTRAINT_CITY_MAX_SIZE, "address.city");
+                + Address.CONSTRAINT_CITY_MAX_SIZE, "address.city");
 
     }
 
@@ -105,9 +103,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.setCompanyId(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Company identifier max length is "
-            + Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE, "companyId");
+                + Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE, "companyId");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le SIREN : "
-            + Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE, "companyId");
+                + Restaurant.CONSTRAINT_COMPANY_ID_MAX_SIZE, "companyId");
 
     }
 
@@ -139,9 +137,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.getAddress().setCountryCode(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Country code exact length is "
-            + Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, "address.countryCode");
+                + Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, "address.countryCode");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur exacte pour le code pays : "
-            + Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, "address.countryCode");
+                + Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, "address.countryCode");
 
     }
 
@@ -157,9 +155,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.setDescription(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Description max length is "
-            + Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE, "description");
+                + Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE, "description");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour la description : "
-            + Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE, "description");
+                + Restaurant.CONSTRAINT_DESCRIPTION_MAX_SIZE, "description");
 
     }
 
@@ -175,9 +173,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.setMainOffer(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Main offer max length is "
-            + Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE, "mainOffer");
+                + Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE, "mainOffer");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour l'offre best-seller : "
-            + Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE, "mainOffer");
+                + Restaurant.CONSTRAINT_MAIN_OFFER_MAX_SIZE, "mainOffer");
 
     }
 
@@ -209,9 +207,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.setName(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Name max length is "
-            + Restaurant.CONSTRAINT_NAME_MAX_SIZE, "name");
+                + Restaurant.CONSTRAINT_NAME_MAX_SIZE, "name");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le nom : "
-            + Restaurant.CONSTRAINT_NAME_MAX_SIZE, "name");
+                + Restaurant.CONSTRAINT_NAME_MAX_SIZE, "name");
 
     }
 
@@ -243,9 +241,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.setPhoneNumber(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Phone number max length is "
-            + Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE, "phoneNumber");
+                + Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE, "phoneNumber");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le numéro de téléphone : "
-            + Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE, "phoneNumber");
+                + Restaurant.CONSTRAINT_PHONE_NUMBER_MAX_SIZE, "phoneNumber");
 
     }
 
@@ -277,9 +275,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.getAddress().setPostalCode(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Postal code max length is "
-            + Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE, "address.postalCode");
+                + Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE, "address.postalCode");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour le code postal : "
-            + Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE, "address.postalCode");
+                + Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE, "address.postalCode");
 
     }
 
@@ -383,7 +381,7 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.setSpecialties(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "At least one specialty should be set",
-            "specialties");
+                "specialties");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Au moins une spécialité est requise", "specialties");
 
     }
@@ -400,9 +398,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.getAddress().setStreetAddress(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Street address is required",
-            "address.streetAddress");
+                "address.streetAddress");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "L'adresse postale est requise",
-            "address.streetAddress");
+                "address.streetAddress");
 
     }
 
@@ -418,9 +416,9 @@ public class RestaurantValidationTestIT extends BaseValidations {
         underTest.getAddress().setStreetAddress(wrongData);
 
         assertExpectedViolation(underTest, context, Locale.ENGLISH, "Street address max length is "
-            + Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE, "address.streetAddress");
+                + Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE, "address.streetAddress");
         assertExpectedViolation(underTest, context, Locale.FRENCH, "Longueur max pour l'adresse postale : "
-            + Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE, "address.streetAddress");
+                + Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE, "address.streetAddress");
 
     }
 }

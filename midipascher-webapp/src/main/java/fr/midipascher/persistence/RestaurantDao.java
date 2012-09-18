@@ -3,9 +3,9 @@
  */
 package fr.midipascher.persistence;
 
-import java.util.List;
-
 import fr.midipascher.domain.Restaurant;
+
+import java.util.List;
 
 /**
  * @author louis.gueye@gmail.com

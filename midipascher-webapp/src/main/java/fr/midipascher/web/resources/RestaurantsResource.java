@@ -1,27 +1,19 @@
 /**
- * 
+ *
  */
 package fr.midipascher.web.resources;
 
-import java.net.URI;
+import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.business.Facade;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.business.Facade;
+import java.net.URI;
 
 /**
  * @author louis.gueye@gmail.com
@@ -40,12 +32,12 @@ public class RestaurantsResource {
     // LoggerFactory.getLogger(RestaurantsResource.class);
 
     public static final String COLLECTION_RESOURCE_PATH = AccountsResource.COLLECTION_RESOURCE_PATH
-        + AccountsResource.SINGLE_RESOURCE_PATH + "/restaurants";
+            + AccountsResource.SINGLE_RESOURCE_PATH + "/restaurants";
 
     public static final String SINGLE_RESOURCE_PATH = "/{restaurantId}";
 
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response createRestaurant(@PathParam(value = "accountId") final Long accountId, final Restaurant restaurant)
             throws Throwable {
 
@@ -60,7 +52,7 @@ public class RestaurantsResource {
     @DELETE
     @Path(SINGLE_RESOURCE_PATH)
     public Response deleteRestaurant(@PathParam(value = "accountId") final Long accountId,
-            @PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
+                                     @PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
         facade.deleteRestaurant(accountId, restaurantId);
 
@@ -69,10 +61,10 @@ public class RestaurantsResource {
     }
 
     @GET
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path(SINGLE_RESOURCE_PATH)
     public Response readRestaurant(@PathParam(value = "accountId") final Long accountId,
-            @PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
+                                   @PathParam(value = "restaurantId") final Long restaurantId) throws Throwable {
 
         final Restaurant restaurant = facade.readRestaurant(accountId, restaurantId, true);
 
@@ -81,10 +73,10 @@ public class RestaurantsResource {
     }
 
     @PUT
-    @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path(SINGLE_RESOURCE_PATH)
     public Response updateRestaurant(@PathParam(value = "accountId") final Long accountId,
-            @PathParam(value = "restaurantId") final Long restaurantId, final Restaurant restaurant) throws Throwable {
+                                     @PathParam(value = "restaurantId") final Long restaurantId, final Restaurant restaurant) throws Throwable {
 
         facade.updateRestaurant(accountId, restaurantId, restaurant);
 

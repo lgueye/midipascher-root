@@ -1,16 +1,10 @@
 /**
- * 
+ *
  */
 package fr.midipascher.business.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
+import fr.midipascher.domain.Authority;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.GrantedAuthority;
 
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.Set;
 
-import fr.midipascher.domain.Authority;
+import static org.junit.Assert.*;
 
 /**
  * @author louis.gueye@gmail.com
