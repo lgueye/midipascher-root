@@ -57,8 +57,9 @@
 
 		<!-- SEARCH -->
 		<elasticsearch.version>0.19.9</elasticsearch.version>
+        <spring-elasticsearch.version>0.0.2</spring-elasticsearch.version>
 
-		<!-- SERVICE -->
+        <!-- SERVICE -->
 		<spring.version>3.1.2.RELEASE</spring.version>
 		<validation-api.version>1.0.0.GA</validation-api.version>
 		<hibernate-validator.version>4.3.0.Final</hibernate-validator.version>
@@ -108,7 +109,7 @@
 		<dbunit-maven-plugin.version>1.0-beta-3</dbunit-maven-plugin.version>
 		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
 
-	</properties>
+    </properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -285,6 +286,17 @@
 				<artifactId>elasticsearch</artifactId>
 				<version>${elasticsearch.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>fr.pilato.spring</groupId>
+                <artifactId>spring-elasticsearch</artifactId>
+                <version>${spring-elasticsearch.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.elasticsearch</groupId>
+                        <artifactId>elasticsearch</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
 			<!-- BUSINESS -->
 			<dependency>

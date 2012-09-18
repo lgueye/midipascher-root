@@ -62,7 +62,7 @@ import fr.midipascher.test.TestFixtures;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT,
-        TestConstants.VALIDATION_CONTEXT })
+        TestConstants.VALIDATION_CONTEXT, TestConstants.SEARCH_CONTEXT})
 public class FacadeImplTestIT {
 
     @Autowired

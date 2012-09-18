@@ -83,7 +83,17 @@
 			<artifactId>cglib</artifactId>
 		</dependency>
 
-		<!-- BUSINESS -->
+        <!-- SEARCH -->
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fr.pilato.spring</groupId>
+            <artifactId>spring-elasticsearch</artifactId>
+        </dependency>
+
+        <!-- BUSINESS -->
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>

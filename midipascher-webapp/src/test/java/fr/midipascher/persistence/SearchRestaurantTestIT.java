@@ -56,13 +56,13 @@ public class SearchRestaurantTestIT extends AbstractNodesTests {
 	@Qualifier(JsonByteArrayToRestaurantConverter.BEAN_ID)
 	private Converter<byte[], Restaurant>	jsonByteArrayToRestaurantConverter;
 
-	@Value("classpath:elasticsearch/node.yml")
+	@Value("classpath:es/node.yml")
 	private Resource						nodeSettings;
 
-	@Value("classpath:elasticsearch/midipascher.yml")
+	@Value("classpath:es/midipascher/_settings.json")
 	private Resource						indexSettings;
 
-	@Value("classpath:elasticsearch/restaurant.json")
+	@Value("classpath:es/midipascher/restaurant.json")
 	private Resource						restaurantsMapping;
 
 	private Client							underTest;

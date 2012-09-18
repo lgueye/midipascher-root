@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
+import fr.midipascher.persistence.RestaurantSearchFieldsRegistry;
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -70,42 +71,42 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
         ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
 
         String name = source.getName();
-        if (!Strings.isNullOrEmpty(name)) builder.put("name", name);
+        if (!Strings.isNullOrEmpty(name)) builder.put(RestaurantSearchFieldsRegistry.NAME, name);
 
         String description = source.getDescription();
-        if (!Strings.isNullOrEmpty(description)) builder.put("description", description);
+        if (!Strings.isNullOrEmpty(description)) builder.put(RestaurantSearchFieldsRegistry.DESCRIPTION, description);
 
         String mainOffer = source.getMainOffer();
-        if (!Strings.isNullOrEmpty(mainOffer)) builder.put("mainOffer", mainOffer);
+        if (!Strings.isNullOrEmpty(mainOffer)) builder.put(RestaurantSearchFieldsRegistry.MAIN_OFFER, mainOffer);
 
         Address address = source.getAddress();
         if (address != null) {
 
             String streetAddress = address.getStreetAddress();
-            if (!Strings.isNullOrEmpty(streetAddress)) builder.put("address.streetAddress", streetAddress);
+            if (!Strings.isNullOrEmpty(streetAddress)) builder.put(RestaurantSearchFieldsRegistry.STREET_ADDRESS, streetAddress);
 
             String city = address.getCity();
-            if (!Strings.isNullOrEmpty(city)) builder.put("address.city", city);
+            if (!Strings.isNullOrEmpty(city)) builder.put(RestaurantSearchFieldsRegistry.CITY, city);
 
             String postalCode = address.getPostalCode();
-            if (!Strings.isNullOrEmpty(postalCode)) builder.put("address.postalCode", postalCode);
+            if (!Strings.isNullOrEmpty(postalCode)) builder.put(RestaurantSearchFieldsRegistry.POSTAL_CODE, postalCode);
 
             String countryCode = address.getCountryCode();
-            if (!Strings.isNullOrEmpty(countryCode)) builder.put("address.countryCode", countryCode);
+            if (!Strings.isNullOrEmpty(countryCode)) builder.put(RestaurantSearchFieldsRegistry.COUNTRY_CODE, countryCode);
 
         }
 
         String companyId = source.getCompanyId();
-        if (!Strings.isNullOrEmpty(companyId)) builder.put("companyId", companyId);
+        if (!Strings.isNullOrEmpty(companyId)) builder.put(RestaurantSearchFieldsRegistry.COMPANY_ID, companyId);
 
         Boolean halal = source.isHalal();
-        if (halal != null) builder.put("halal", halal);
+        if (halal != null) builder.put(RestaurantSearchFieldsRegistry.HALAL, halal);
 
         Boolean kosher = source.isKosher();
-        if (kosher != null) builder.put("kosher", kosher);
+        if (kosher != null) builder.put(RestaurantSearchFieldsRegistry.KOSHER, kosher);
 
         Boolean vegetarian = source.isVegetarian();
-        if (vegetarian != null) builder.put("vegetarian", vegetarian);
+        if (vegetarian != null) builder.put(RestaurantSearchFieldsRegistry.VEGETARIAN, vegetarian);
 
         Set<FoodSpecialty> specialties = source.getSpecialties();
 
@@ -114,17 +115,17 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
             Collection<Long> ids = Collections2
                 .transform(specialties, new Function<FoodSpecialty, Long>() {
 
-                  public Long apply(FoodSpecialty foodSpecialty) {
+                    public Long apply(FoodSpecialty foodSpecialty) {
 
-                    return foodSpecialty == null || foodSpecialty.getId() == null ? null
-                                                                                  : foodSpecialty
-                                                                                      .getId();
+                        return foodSpecialty == null || foodSpecialty.getId() == null ? null
+                                : foodSpecialty
+                                .getId();
 
-                  }
+                    }
 
                 });
 
-            builder.put("specialties", ids);
+            builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, ids);
 
         }
 

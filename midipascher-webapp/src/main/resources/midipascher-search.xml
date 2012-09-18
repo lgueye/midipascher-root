@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="esClient"
+          class="fr.pilato.spring.elasticsearch.ElasticsearchTransportClientFactoryBean">
+        <property name="esNodes">
+            <list>
+                <value>localhost:9300</value>
+            </list>
+        </property>
+        <property name="mappings">
+            <list>
+                <value>midipascher/restaurant</value>
+            </list>
+        </property>
+        <property name="forceMapping" value="true"/>
+        <property name="mergeSettings" value="true"/>
+    </bean>
+
+</beans>
