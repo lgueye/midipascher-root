@@ -539,7 +539,7 @@ public class FacadeImplTestIT {
     }
 
     @Test
-    public void findRestaurantByByNameShouldSucceed() throws Throwable {
+    public void findRestaurantByNameShouldSucceed() throws Throwable {
         final Long id = 8L;
         int expectedHitsCount;
         List<Restaurant> actualResponse;
@@ -549,19 +549,17 @@ public class FacadeImplTestIT {
         Restaurant criteria;
 
         // Given I index that data
+        Long accountId = facade.createAccount(TestFixtures.validAccount());
         name = "Gouts et saveurs";
         restaurant = TestFixtures.validRestaurant();
         restaurant.setName(name);
-        authenticateAsRmgr();
-        Long accountId = facade.createAccount(TestFixtures.validAccount());
-        facade.createRestaurant(accountId, restaurant);
-        createRestaurant(accountId);
+        createRestaurant(accountId, restaurant);
         expectedHitsCount = 1;
 
         // When I search
         query = "gouts";
         criteria = new Restaurant();
-        criteria.setName(name);
+        criteria.setName(query);
         actualResponse = facade.findRestaurantsByCriteria(criteria);
         // Then I should get 1 hit
         assertEquals(expectedHitsCount, actualResponse.size());
@@ -569,7 +567,7 @@ public class FacadeImplTestIT {
         // When I search
         query = "goûts";
         criteria = new Restaurant();
-        criteria.setName(name);
+        criteria.setName(query);
         actualResponse = facade.findRestaurantsByCriteria(criteria);
         // Then I should get 1 hit
         assertEquals(expectedHitsCount, actualResponse.size());
@@ -577,10 +575,29 @@ public class FacadeImplTestIT {
         // When I search
         query = "saveurs";
         criteria = new Restaurant();
-        criteria.setName(name);
+        criteria.setName(query);
         actualResponse = facade.findRestaurantsByCriteria(criteria);
         // Then I should get 1 hit
         assertEquals(expectedHitsCount, actualResponse.size());
+    }
+
+    private Long createRestaurant(Long accountId, Restaurant restaurant) {
+        authenticateAsAdmin();
+        Long foodSpecialtyId = this.facade.createFoodSpecialty(TestFixtures.validFoodSpecialty());
+        FoodSpecialty foodSpecialty = this.facade.readFoodSpecialty(foodSpecialtyId);
+        assertNotNull(foodSpecialty);
+        restaurant.clearSpecialties();
+        restaurant.addSpecialty(foodSpecialty);
+        try {
+            Long restaurantId = this.facade.createRestaurant(accountId, restaurant);
+            return restaurantId;
+        } catch (ConstraintViolationException th) {
+            System.out
+                    .println("----------------------------------------------------------------------------------------------"
+                            + th.getConstraintViolations().iterator().next().getMessage());
+            throw th;
+        }
+
     }
 
 }

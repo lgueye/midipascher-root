@@ -5,7 +5,9 @@ package fr.midipascher.persistence.impl;
 
 import org.hibernate.ejb.HibernateEntityManagerFactory;
 import org.hibernate.event.service.spi.EventListenerRegistry;
-import org.hibernate.event.spi.EventType;
+import org.hibernate.event.spi.*;
+import org.hibernate.event.spi.PostDeleteEventListener;
+import org.hibernate.event.spi.PostUpdateEventListener;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,15 @@ public class HibernateListenersConfigurer {
     @Autowired
     private PreDeleteEventListener preDeleteEventListener;
 
+    @Autowired
+    private PostInsertEventListener postInsertEventListener;
+
+    @Autowired
+    private PostUpdateEventListener postUpdateEventListener;
+
+    @Autowired
+    private PostDeleteEventListener postDeleteEventListener;
+
     @PostConstruct
     public void registerListeners() {
 
@@ -46,6 +57,12 @@ public class HibernateListenersConfigurer {
         registry.getEventListenerGroup(EventType.PRE_UPDATE).appendListener(this.preUpdateEventListener);
 
         registry.getEventListenerGroup(EventType.PRE_DELETE).appendListener(this.preDeleteEventListener);
+
+        registry.getEventListenerGroup(EventType.POST_INSERT).appendListener(this.postInsertEventListener);
+
+        registry.getEventListenerGroup(EventType.POST_UPDATE).appendListener(this.postUpdateEventListener);
+
+        registry.getEventListenerGroup(EventType.POST_DELETE).appendListener(this.postDeleteEventListener);
 
     }
 

@@ -5,6 +5,7 @@ package fr.midipascher.persistence;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import fr.midipascher.TestConstants;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.test.TestFixtures;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -41,7 +42,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
-@ContextConfiguration("classpath:midipascher-server.xml")
+@ContextConfiguration( {TestConstants.SERVER_CONTEXT, TestConstants.SEARCH_CONTEXT})
 public class SearchRestaurantTestIT extends AbstractNodesTests {
 
     @Autowired

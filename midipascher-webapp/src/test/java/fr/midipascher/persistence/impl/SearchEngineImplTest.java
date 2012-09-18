@@ -46,7 +46,7 @@ public class SearchEngineImplTest {
         when(restaurantToQueryBuilderConverter.convert(criteria)).thenReturn(queryBuilder);
         SearchRequestBuilder searchRequestBuilder = mock(SearchRequestBuilder.class);
         when(elasticsearch.prepareSearch(SearchEngine.INDEX_NAME)).thenReturn(searchRequestBuilder);
-        when(searchRequestBuilder.setTypes(SearchEngine.TYPE_NAME)).thenReturn(searchRequestBuilder);
+        when(searchRequestBuilder.setTypes(SearchEngine.RESTAURANT_TYPE_NAME)).thenReturn(searchRequestBuilder);
         when(searchRequestBuilder.setQuery(queryBuilder)).thenReturn(searchRequestBuilder);
         ListenableActionFuture<SearchResponse> actionFuture = mock(ListenableActionFuture.class);
         when(searchRequestBuilder.execute()).thenReturn(actionFuture);

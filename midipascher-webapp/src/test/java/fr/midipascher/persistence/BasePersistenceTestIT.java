@@ -34,7 +34,7 @@ import java.sql.Connection;
  * @author louis.gueye@gmail.com
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {TestConstants.SERVER_CONTEXT, TestConstants.VALIDATION_CONTEXT})
+@ContextConfiguration(locations = {TestConstants.SERVER_CONTEXT, TestConstants.VALIDATION_CONTEXT, TestConstants.SEARCH_CONTEXT})
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 public abstract class BasePersistenceTestIT {
