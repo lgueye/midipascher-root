@@ -26,7 +26,7 @@ import static org.junit.Assert.fail;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT,
-        TestConstants.VALIDATION_CONTEXT})
+        TestConstants.VALIDATION_CONTEXT, TestConstants.SEARCH_CONTEXT})
 public abstract class BaseValidations {
 
     @Autowired

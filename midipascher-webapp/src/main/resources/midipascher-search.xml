@@ -5,6 +5,7 @@
 
     <bean id="esClient"
           class="fr.pilato.spring.elasticsearch.ElasticsearchTransportClientFactoryBean">
+        <property name="settingsFile" value="es.properties" />
         <property name="esNodes">
             <list>
                 <value>localhost:9300</value>

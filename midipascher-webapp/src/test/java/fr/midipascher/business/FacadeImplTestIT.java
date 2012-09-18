@@ -552,6 +552,7 @@ public class FacadeImplTestIT {
         name = "Gouts et saveurs";
         restaurant = TestFixtures.validRestaurant();
         restaurant.setName(name);
+        authenticateAsRmgr();
         Long accountId = facade.createAccount(TestFixtures.validAccount());
         facade.createRestaurant(accountId, restaurant);
         createRestaurant(accountId);
