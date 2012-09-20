@@ -12,5 +12,5 @@ public class TestConstants {
     public static final String SECURITY_CONTEXT = "classpath:midipascher-security.xml";
     public static final String VALIDATION_CONTEXT = "classpath:midipascher-validation.xml";
     public static final String PERSISTENCE_TEST_DATA = "classpath:dbunit/persistence-test-data.xml";
-    public static final String SEARCH_CONTEXT = "classpath:midipascher-search.xml";
+    public static final String SEARCH_CONTEXT_TEST = "classpath:midipascher-search-test.xml";
 }

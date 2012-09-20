@@ -55,7 +55,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {TestConstants.SERVER_CONTEXT, TestConstants.SECURITY_CONTEXT,
-        TestConstants.VALIDATION_CONTEXT, TestConstants.SEARCH_CONTEXT})
+        TestConstants.VALIDATION_CONTEXT, TestConstants.SEARCH_CONTEXT_TEST})
 public class FacadeImplTestIT {
 
     @Autowired

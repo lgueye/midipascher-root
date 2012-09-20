@@ -1,0 +1,6 @@
+{
+    "path": {
+        "logs": "target/",
+        "data": "target/"
+    }
+}

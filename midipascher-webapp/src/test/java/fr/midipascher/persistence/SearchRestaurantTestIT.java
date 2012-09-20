@@ -42,8 +42,8 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
-@ContextConfiguration( {TestConstants.SERVER_CONTEXT, TestConstants.SEARCH_CONTEXT})
-public class SearchRestaurantTestIT extends AbstractNodesTests {
+@ContextConfiguration( {TestConstants.SERVER_CONTEXT, TestConstants.SEARCH_CONTEXT_TEST})
+public class SearchRestaurantTestIT {
 
     @Autowired
     @Qualifier(RestaurantToJsonByteArrayConverter.BEAN_ID)
@@ -53,33 +53,20 @@ public class SearchRestaurantTestIT extends AbstractNodesTests {
     @Qualifier(JsonByteArrayToRestaurantConverter.BEAN_ID)
     private Converter<byte[], Restaurant> jsonByteArrayToRestaurantConverter;
 
-    @Value("classpath:es/node.yml")
-    private Resource nodeSettings;
-
     @Value("classpath:es/midipascher/_settings.json")
     private Resource indexSettings;
 
     @Value("classpath:es/midipascher/restaurant.json")
     private Resource restaurantsMapping;
 
+    @Autowired
     private Client underTest;
 
     private static final String INDEX_NAME = SearchIndices.midipascher.toString();
     private static final String TYPE_NAME = SearchTypes.restaurant.toString();
 
-    @After
-    public void closeNodes() {
-        this.underTest.close();
-        closeAllNodes();
-    }
-
     @Before
     public void configureSearchEngine() throws Exception {
-
-        String nodeSettingsAsString = Resources.toString(this.nodeSettings.getURL(), Charsets.UTF_8);
-        final Settings settings = settingsBuilder().loadFromSource(nodeSettingsAsString).build();
-        startNode(SearchRestaurantTestIT.class.getSimpleName(), settings);
-        this.underTest = getClient();
 
         // Deletes index if already exists
         if (this.underTest.admin().indices().prepareExists(INDEX_NAME).execute().actionGet().exists()) {
@@ -585,7 +572,4 @@ public class SearchRestaurantTestIT extends AbstractNodesTests {
 
     }
 
-    protected Client getClient() {
-        return client(SearchRestaurantTestIT.class.getSimpleName());
-    }
 }
