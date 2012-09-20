@@ -5,7 +5,6 @@
 
     <bean class="fr.midipascher.persistence.search.ElasticSearchClientFactoryBean">
         <property name="typology" value="local" />
-        <property name="clusterName" value="lgueye"/>
     </bean>
 
 </beans>

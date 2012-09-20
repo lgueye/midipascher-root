@@ -1,4 +1,7 @@
 {
+    "cluster": {
+        "name":"lgueye"
+    },
     "path": {
         "logs": "target/",
         "data": "target/"

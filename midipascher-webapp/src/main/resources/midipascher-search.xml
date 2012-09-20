@@ -10,7 +10,6 @@
                 <value>localhost:9300</value>
             </list>
         </property>
-        <property name="clusterName" value="lgueye"/>
     </bean>
 
 </beans>
