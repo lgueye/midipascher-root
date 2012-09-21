@@ -169,6 +169,11 @@
 				<version>${commons-collections.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>

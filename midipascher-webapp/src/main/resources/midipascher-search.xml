@@ -10,6 +10,7 @@
                 <value>localhost:9300</value>
             </list>
         </property>
+        <property name="configFormat" value="json"/>
     </bean>
 
 </beans>
