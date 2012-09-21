@@ -1,7 +1,7 @@
 package fr.midipascher.persistence.search;
 
 /**
- * User: lgueye Date: 20/09/12 Time: 14:13
+ * @author louis.gueye@gmail.com
  */
 public enum ElasticSearchClientTypology {
   local, remote;

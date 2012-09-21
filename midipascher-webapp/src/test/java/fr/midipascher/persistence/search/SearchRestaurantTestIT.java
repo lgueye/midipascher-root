@@ -54,10 +54,10 @@ public class SearchRestaurantTestIT {
     @Qualifier(JsonByteArrayToRestaurantConverter.BEAN_ID)
     private JsonByteArrayToRestaurantConverter jsonByteArrayToRestaurantConverter;
 
-    @Value("classpath:es/midipascher/_settings.json")
+    @Value("classpath:/elasticsearch/midipascher/_settings.json")
     private Resource indexSettings;
 
-    @Value("classpath:es/midipascher/restaurant.json")
+    @Value("classpath:/elasticsearch/midipascher/restaurant.json")
     private Resource restaurantsMapping;
 
     @Autowired

@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
  * Not scanned, included in *search.xml and *search-test.xml file<br/> The first one uses 'remote'
  * typology and the second one uses 'local' one<br/>
  *
- * louis.gueye@gmail.com
+ * @author louis.gueye@gmail.com
  */
 public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> {
 
@@ -135,8 +135,8 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
    */
   @Override
   public void afterPropertiesSet() throws Exception {
-    super.afterPropertiesSet();
 
+    super.afterPropertiesSet();
     applyIndicesUpdateStrategy();
 
   }

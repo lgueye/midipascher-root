@@ -12,11 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: louis
- * Date: 14/09/12
- * Time: 23:57
- * To change this template use File | Settings | File Templates.
+ * @author louis.gueye@gmail.com
  */
 @Repository
 public class SearchEngineImpl implements SearchEngine {

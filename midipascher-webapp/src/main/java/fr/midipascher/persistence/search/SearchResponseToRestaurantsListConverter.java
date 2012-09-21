@@ -13,11 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: louis
- * Date: 15/09/12
- * Time: 00:32
- * To change this template use File | Settings | File Templates.
+ * @author louis.gueye@gmail.com
  */
 @Component(SearchResponseToRestaurantsListConverter.BEAN_ID)
 public class SearchResponseToRestaurantsListConverter implements Converter<SearchResponse, List<Restaurant>> {

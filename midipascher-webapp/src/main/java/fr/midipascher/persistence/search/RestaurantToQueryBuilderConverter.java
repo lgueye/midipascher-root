@@ -21,11 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: louis
- * Date: 15/09/12
- * Time: 00:11
- * To change this template use File | Settings | File Templates.
+ * @author louis.gueye@gmail.com
  */
 @Component(RestaurantToQueryBuilderConverter.BEAN_ID)
 public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, QueryBuilder> {

@@ -1,11 +1,7 @@
 package fr.midipascher.persistence.search;
 
 /**
- * Created with IntelliJ IDEA.
- * User: louis
- * Date: 18/09/12
- * Time: 06:14
- * To change this template use File | Settings | File Templates.
+ * @author louis.gueye@gmail.com
  */
 public class RestaurantSearchFieldsRegistry {
 

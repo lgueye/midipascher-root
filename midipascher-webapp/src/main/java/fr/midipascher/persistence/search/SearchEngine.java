@@ -6,11 +6,7 @@ import fr.midipascher.domain.Restaurant;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: louis
- * Date: 14/09/12
- * Time: 23:55
- * To change this template use File | Settings | File Templates.
+ * @author louis.gueye@gmail.com
  */
 public interface SearchEngine {
 

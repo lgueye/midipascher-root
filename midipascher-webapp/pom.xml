@@ -255,8 +255,6 @@
                         <includes>
                             <include>**/*.properties</include>
                             <include>**/log4j.xml</include>
-                            <include>**/*.json</include>
-                            <include>**/*.yml</include>
                         </includes>
                     </resource>
                     <!-- Copy .xml files to output and do not filter them -->
@@ -273,8 +271,6 @@
                         <includes>
                             <include>**/*.properties</include>
                             <include>**/log4j.xml</include>
-                            <include>**/*.json</include>
-                            <include>**/*.yml</include>
                         </includes>
                     </testResource>
                     <!-- Copy .xml files to output and do not filter them -->
