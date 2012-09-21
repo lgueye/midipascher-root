@@ -18,8 +18,9 @@ import fr.midipascher.domain.business.Validator;
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.domain.exceptions.OwnershipException;
 import fr.midipascher.domain.validation.ValidationContext;
-import fr.midipascher.persistence.BaseDao;
-import fr.midipascher.persistence.SearchEngine;
+import fr.midipascher.persistence.store.BaseDao;
+import fr.midipascher.persistence.search.SearchEngine;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;

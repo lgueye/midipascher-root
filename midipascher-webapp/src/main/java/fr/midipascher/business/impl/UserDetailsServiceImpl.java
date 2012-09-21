@@ -4,7 +4,8 @@
 package fr.midipascher.business.impl;
 
 import fr.midipascher.domain.Account;
-import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.persistence.store.BaseDao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.core.userdetails.UserDetails;

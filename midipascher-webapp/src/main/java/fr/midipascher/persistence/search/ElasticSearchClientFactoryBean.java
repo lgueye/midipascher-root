@@ -183,7 +183,7 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
         nodeBuilder.settings().loadFromUrl(nodeConfigLocation.getURL());
         node = nodeBuilder.node();
         client = node.client();
-        return client;
+        break;
 
       case remote:
 
@@ -199,11 +199,11 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
         for (InetSocketTransportAddress address : addresses) {
           ((TransportClient) client).addTransportAddress(address);
         }
-        return client;
+        break;
 
-      default:
-        throw new UnsupportedOperationException("Unknown client typology");
     }
+
+    return client;
 
   }
 

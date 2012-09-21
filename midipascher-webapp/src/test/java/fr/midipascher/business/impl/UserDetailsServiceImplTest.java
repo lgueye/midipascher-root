@@ -5,7 +5,8 @@ package fr.midipascher.business.impl;
 
 import com.google.common.collect.Lists;
 import fr.midipascher.domain.Account;
-import fr.midipascher.persistence.BaseDao;
+import fr.midipascher.persistence.store.BaseDao;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
