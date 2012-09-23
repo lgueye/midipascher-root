@@ -23,8 +23,16 @@ import java.util.List;
  */
 public class DropCreateIndicesCommand {
 
+    public static final String ELASTICSEARCH_CONFIGURATION_ROOT_FOLDER_NAME = "/elasticsearch";
+
+    private FileHelper fileHelper;
+
+    public DropCreateIndicesCommand(FileHelper fileHelper) {
+        this.fileHelper = fileHelper;
+    }
+
     public void execute(final Client client, String configFormat) throws IOException {
-        File rootFolder = new ClassPathResource("/elasticsearch").getFile();
+        File rootFolder = new ClassPathResource(ELASTICSEARCH_CONFIGURATION_ROOT_FOLDER_NAME).getFile();
         List<IndexConfiguration> indicesConfiguration = scanIndexConfigurations(rootFolder, configFormat);
         for (IndexConfiguration indexConfiguration : indicesConfiguration) {
             dropIndex(client, indexConfiguration);
@@ -33,7 +41,7 @@ public class DropCreateIndicesCommand {
         }
     }
 
-    private void putMappings(Client client, IndexConfiguration indexConfiguration) throws IOException {
+    void putMappings(Client client, IndexConfiguration indexConfiguration) throws IOException {
         String indexName = indexConfiguration.getName();
         List<MappingConfiguration> mappingsConfiguration = indexConfiguration.getMappingConfigurations();
         for (MappingConfiguration mappingConfiguration : mappingsConfiguration) {
@@ -51,7 +59,7 @@ public class DropCreateIndicesCommand {
         }
     }
 
-    private void createIndex(Client client, IndexConfiguration indexConfiguration) throws IOException {
+    void createIndex(Client client, IndexConfiguration indexConfiguration) throws IOException {
         String indexName = indexConfiguration.getName();
         String indexConfigLocation = indexConfiguration.getConfigLocation();
         String settings = Resources.toString(new ClassPathResource(indexConfigLocation).getURL(), Charsets.UTF_8);
@@ -63,7 +71,7 @@ public class DropCreateIndicesCommand {
         }
     }
 
-    private void dropIndex(Client client, IndexConfiguration indexConfiguration) {
+    void dropIndex(Client client, IndexConfiguration indexConfiguration) {
         String indexName = indexConfiguration.getName();
         if (client.admin().indices().prepareExists(indexName).execute().actionGet().exists()) {
             DeleteIndexResponse
@@ -90,10 +98,10 @@ public class DropCreateIndicesCommand {
     IndexConfiguration newIndexConfiguration(String rootFolderName, File indexDirectory, String configFormat) {
         IndexConfiguration indexConfiguration = new IndexConfiguration();
         String folderPath = indexDirectory.getPath();
-        String name = folderPath.substring(folderPath.lastIndexOf('/') + 1, folderPath.length());
+        String name = folderPath.substring(folderPath.lastIndexOf(File.separator) + 1, folderPath.length());
         indexConfiguration.setName(name);
-        String configLocation = folderPath + "/_settings." + configFormat;
-        String configPath = configLocation.substring(configLocation.indexOf("/" + rootFolderName), configLocation.length());
+        String configLocation = folderPath + File.separator + "_settings." + configFormat;
+        String configPath = configLocation.substring(configLocation.indexOf(File.separator + rootFolderName), configLocation.length());
         indexConfiguration.setConfigLocation(configPath);
         List<MappingConfiguration> mappingConfigurations = mappingConfigurations(rootFolderName, indexDirectory, configFormat);
         indexConfiguration.setMappingConfigurations(mappingConfigurations);
@@ -101,7 +109,7 @@ public class DropCreateIndicesCommand {
     }
 
     private List<MappingConfiguration> mappingConfigurations(String rootFolderName, File indexDirectory, String configFormat) {
-        Collection<File> indexFiles = FileUtils.listFiles(indexDirectory, new String[]{configFormat}, true);
+        Collection<File> indexFiles = fileHelper.listFilesByFilter(indexDirectory, configFormat);
         Iterator<File> indexFilesIterator = indexFiles.iterator();
         while (indexFilesIterator.hasNext()) {
             File file = indexFilesIterator.next();
@@ -115,12 +123,13 @@ public class DropCreateIndicesCommand {
         return mappingConfigurations;
     }
 
+
     MappingConfiguration newMappingConfiguration(String rootFolderName, File mapping, String format) {
         MappingConfiguration mappingConfiguration = new MappingConfiguration();
         String mappingPath = mapping.getPath();
-        String type = mappingPath.substring(mappingPath.lastIndexOf('/') + 1, mappingPath.indexOf("." + format));
+        String type = mappingPath.substring(mappingPath.lastIndexOf(File.separator) + 1, mappingPath.indexOf("." + format));
         mappingConfiguration.setType(type);
-        String location = mappingPath.substring(mappingPath.indexOf("/" + rootFolderName), mappingPath.length());
+        String location = mappingPath.substring(mappingPath.indexOf(File.separator + rootFolderName), mappingPath.length());
         mappingConfiguration.setLocation(location);
         return mappingConfiguration;
     }

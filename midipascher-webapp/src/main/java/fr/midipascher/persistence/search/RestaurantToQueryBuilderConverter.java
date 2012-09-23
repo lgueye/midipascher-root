@@ -29,35 +29,20 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
     public static final String BEAN_ID = "RestaurantToQueryBuilderConverter";
 
     public QueryBuilder convert(Restaurant source) {
-
         Map<String, Object> criteria = criteriaAsMap(source);
-
         QueryBuilder queryBuilder;
-
         if (noCriteria(criteria)) {
-
             queryBuilder = QueryBuilders.matchAllQuery();
-
         } else {
-
             queryBuilder = QueryBuilders.boolQuery();
-
             for (Map.Entry<String, Object> entry : criteria.entrySet()) {
-
                 String field = entry.getKey();
-
                 Object value = entry.getValue();
-
                 QueryBuilder fieldQueryBuilder = resolveQueryBuilder(field, value);
-
                 ((BoolQueryBuilder) queryBuilder).must(fieldQueryBuilder);
-
             }
-
         }
-
         return queryBuilder;
-
     }
 
     protected Map<String, Object> criteriaAsMap(Restaurant source) {

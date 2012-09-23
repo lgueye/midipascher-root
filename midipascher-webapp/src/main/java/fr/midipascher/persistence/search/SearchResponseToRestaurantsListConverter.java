@@ -25,26 +25,16 @@ public class SearchResponseToRestaurantsListConverter implements Converter<Searc
 
     @Override
     public List<Restaurant> convert(SearchResponse source) {
-
         List<Restaurant> restaurants = Lists.newArrayList();
-
         if (source != null) {
-
             SearchHits searchHits = source.getHits();
-
             for (SearchHit searchHit : searchHits) {
-
                 byte[] restaurantAsBytes = searchHit.source();
-
                 Restaurant restaurant = byteArrayToRestaurantConverter.convert(restaurantAsBytes);
-
                 restaurants.add(restaurant);
             }
-
         }
-
         return restaurants;
-
     }
 
 }

@@ -26,11 +26,8 @@ public class RestaurantToJsonByteArrayConverter implements Converter<Restaurant,
      */
     @Override
     public byte[] convert(final Restaurant source) {
-
         if (source == null) return null;
-
         this.jsonMapper.getSerializationConfig().without(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS);
-
         String string;
         try {
             string = this.jsonMapper.writeValueAsString(source);

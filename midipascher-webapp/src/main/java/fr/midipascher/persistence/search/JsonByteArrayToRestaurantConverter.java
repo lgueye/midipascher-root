@@ -29,9 +29,7 @@ public class JsonByteArrayToRestaurantConverter implements Converter<byte[], Res
 
     @Override
     public Restaurant convert(final byte[] source) {
-
         if (source == null || source.length == 0) return null;
-
         try {
             this.jsonMapper.getDeserializationConfig()
                     .without(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
