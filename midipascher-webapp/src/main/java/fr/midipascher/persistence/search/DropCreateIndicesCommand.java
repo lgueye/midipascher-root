@@ -3,8 +3,7 @@ package fr.midipascher.persistence.search;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
+
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
@@ -12,7 +11,6 @@ import org.elasticsearch.client.Client;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -47,7 +45,7 @@ public class DropCreateIndicesCommand {
         for (MappingConfiguration mappingConfiguration : mappingsConfiguration) {
             String type = mappingConfiguration.getType();
             String mappingLocation = mappingConfiguration.getLocation();
-            String mappingSource = Resources.toString(new ClassPathResource(mappingLocation).getURL(), Charsets.UTF_8);
+            String mappingSource = fileHelper.fileContentAsString(mappingLocation);
             PutMappingResponse
                     putMappingResponse =
                     client.admin().indices().preparePutMapping(indexName).setSource(mappingSource).setType(type)
@@ -62,7 +60,7 @@ public class DropCreateIndicesCommand {
     void createIndex(Client client, IndexConfiguration indexConfiguration) throws IOException {
         String indexName = indexConfiguration.getName();
         String indexConfigLocation = indexConfiguration.getConfigLocation();
-        String settings = Resources.toString(new ClassPathResource(indexConfigLocation).getURL(), Charsets.UTF_8);
+        String settings = fileHelper.fileContentAsString(indexConfigLocation);
         CreateIndexResponse
                 createIndexResponse =
                 client.admin().indices().prepareCreate(indexName).setSettings(settings).execute().actionGet();
@@ -84,7 +82,7 @@ public class DropCreateIndicesCommand {
     }
 
     List<IndexConfiguration> scanIndexConfigurations(File rootFolder, String configFormat) throws IOException {
-        File[] folders = rootFolder.listFiles((FileFilter) FileFilterUtils.directoryFileFilter());
+        File[] folders = fileHelper.listChildrenDirectories(rootFolder);
         List<IndexConfiguration> indexConfigurations = Lists.newArrayList();
         String rootFolderName = rootFolder.getName();
         for (File folder : folders) {
@@ -108,7 +106,7 @@ public class DropCreateIndicesCommand {
         return indexConfiguration;
     }
 
-    private List<MappingConfiguration> mappingConfigurations(String rootFolderName, File indexDirectory, String configFormat) {
+    List<MappingConfiguration> mappingConfigurations(String rootFolderName, File indexDirectory, String configFormat) {
         Collection<File> indexFiles = fileHelper.listFilesByFilter(indexDirectory, configFormat);
         Iterator<File> indexFilesIterator = indexFiles.iterator();
         while (indexFilesIterator.hasNext()) {
@@ -122,7 +120,6 @@ public class DropCreateIndicesCommand {
         }
         return mappingConfigurations;
     }
-
 
     MappingConfiguration newMappingConfiguration(String rootFolderName, File mapping, String format) {
         MappingConfiguration mappingConfiguration = new MappingConfiguration();
