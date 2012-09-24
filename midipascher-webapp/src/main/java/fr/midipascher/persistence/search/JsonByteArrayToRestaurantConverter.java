@@ -26,7 +26,6 @@ public class JsonByteArrayToRestaurantConverter implements Converter<byte[], Res
     /**
      * @see org.springframework.core.convert.converter.Converter#convert(java.lang.Object)
      */
-
     @Override
     public Restaurant convert(final byte[] source) {
         if (source == null || source.length == 0) return null;

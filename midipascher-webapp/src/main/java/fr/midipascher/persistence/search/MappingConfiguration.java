@@ -5,22 +5,22 @@ package fr.midipascher.persistence.search;
  */
 public class MappingConfiguration {
 
-  private String type;
-  private String location;
+    private String type;
+    private String location;
 
-  public String getType() {
-    return type;
-  }
+    public String getType() {
+        return type;
+    }
 
-  public String getLocation() {
-    return location;
-  }
+    public String getLocation() {
+        return location;
+    }
 
-  public void setType(String type) {
-    this.type = type;
-  }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-  public void setLocation(String location) {
-    this.location = location;
-  }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 }

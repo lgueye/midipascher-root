@@ -22,6 +22,11 @@ public class PostUpdateEventListener implements
     @Autowired
     private SearchEngine searchEngine;
 
+    /**
+     * @see org.hibernate.event.spi.PostUpdateEventListener#onPostUpdate(org.hibernate.event.spi.PostUpdateEvent)
+     *
+     * @param event
+     */
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
         searchEngine.index( (AbstractEntity)event.getEntity());

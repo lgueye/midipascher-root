@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Not scanned, included in *search.xml and *search-test.xml file<br/> The first one uses 'remote'
- * typology and the second one uses 'local' one<br/>
+ * Not scanned, included in *search.xml and *search-test.xml file<br/>
+ * The first one uses 'remote' typology and the second one uses 'local' one<br/>
  *
  * @author louis.gueye@gmail.com
  */
@@ -138,10 +138,8 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-
         super.afterPropertiesSet();
         applyIndicesUpdateStrategy();
-
     }
 
     void applyIndicesUpdateStrategy() throws IOException {

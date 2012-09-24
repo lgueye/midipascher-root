@@ -2,7 +2,6 @@ package fr.midipascher.persistence.search;
 
 import com.google.common.collect.Lists;
 import fr.midipascher.domain.Restaurant;
-
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;

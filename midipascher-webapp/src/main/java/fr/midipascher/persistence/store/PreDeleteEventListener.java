@@ -23,7 +23,7 @@ public class PreDeleteEventListener extends AbstractEventListener implements
     private static final long serialVersionUID = 2153376355687873385L;
 
     /**
-     * @see org.hibernate.event.PreDeleteEventListener#onPreDelete(org.hibernate.event.PreDeleteEvent)
+     * @see org.hibernate.event.spi.PreDeleteEventListener#onPreDelete(org.hibernate.event.spi.PreDeleteEvent)
      */
     @Override
     public boolean onPreDelete(PreDeleteEvent event) {

@@ -7,7 +7,7 @@ import org.elasticsearch.client.Client;
  */
 public class MergeIndicesCommand {
 
-  public void execute(Client client, String configFormat) {
-    throw new UnsupportedOperationException("Not yet supported");
-  }
+    public void execute(Client client, String configFormat) {
+        throw new UnsupportedOperationException("Not yet supported");
+    }
 }

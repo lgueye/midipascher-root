@@ -23,7 +23,7 @@ public class PreUpdateEventListener extends AbstractEventListener implements
     private static final long serialVersionUID = 2153376355687873385L;
 
     /**
-     * @see org.hibernate.event.PreUpdateEventListener#onPreUpdate(org.hibernate.event.PreUpdateEvent)
+     * @see org.hibernate.event.spi.PreUpdateEventListener#onPreUpdate(org.hibernate.event.spi.PreUpdateEvent)
      */
     @Override
     public boolean onPreUpdate(PreUpdateEvent event) {

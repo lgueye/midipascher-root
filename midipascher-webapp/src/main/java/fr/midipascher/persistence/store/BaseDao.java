@@ -22,19 +22,22 @@ public interface BaseDao {
 
     /**
      * @param <T>
-     * @param entityClass
      * @param exampleInstance
      * @return
      */
     <T> int countByExample(final T exampleInstance);
 
     /**
-     * @param entity
+     *
+     * @param entityClass
+     * @param id
+     * @param <T>
      */
     <T> void delete(Class<T> entityClass, Object id);
 
     /**
-     * @param object
+     *
+     * @param attachedInstance
      */
     void evict(Object attachedInstance);
 

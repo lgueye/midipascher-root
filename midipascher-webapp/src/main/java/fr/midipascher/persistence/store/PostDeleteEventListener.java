@@ -22,6 +22,10 @@ public class PostDeleteEventListener implements
     @Autowired
     private SearchEngine searchEngine;
 
+    /**
+     * @see org.hibernate.event.spi.PostDeleteEventListener#onPostDelete(org.hibernate.event.spi.PostDeleteEvent)
+     * @param event
+     */
     @Override
     public void onPostDelete(PostDeleteEvent event) {
         searchEngine.removeFromIndex( (AbstractEntity)event.getEntity());

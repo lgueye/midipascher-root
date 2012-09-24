@@ -2,7 +2,6 @@ package fr.midipascher.persistence.search;
 
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.Restaurant;
-
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -40,7 +39,7 @@ public class SearchEngineImpl implements SearchEngine {
     @Override
     public void index(AbstractEntity entity) {
         if (entity instanceof Restaurant) {
-            byte[] restaurantAsBytes = restaurantToByteArrayConverter.convert((Restaurant)entity);
+            byte[] restaurantAsBytes = restaurantToByteArrayConverter.convert((Restaurant) entity);
             elasticsearch.prepareIndex(INDEX_NAME, RESTAURANT_TYPE_NAME).setId(entity.getId().toString()).setSource(restaurantAsBytes).setRefresh(true).execute().actionGet();
         }
     }

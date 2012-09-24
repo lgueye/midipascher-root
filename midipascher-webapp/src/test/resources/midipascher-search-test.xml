@@ -5,6 +5,7 @@
 
     <bean class="fr.midipascher.persistence.search.ElasticSearchClientFactoryBean">
         <property name="typology" value="local" />
+        <property name="fileHelper" ref="fileHelper"/>
     </bean>
 
 </beans>

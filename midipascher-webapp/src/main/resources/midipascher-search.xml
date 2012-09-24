@@ -11,6 +11,7 @@
             </list>
         </property>
         <property name="configFormat" value="json"/>
+        <property name="fileHelper" ref="fileHelper"/>
     </bean>
 
 </beans>

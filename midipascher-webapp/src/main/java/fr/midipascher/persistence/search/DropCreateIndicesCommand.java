@@ -1,9 +1,6 @@
 package fr.midipascher.persistence.search;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import com.google.common.io.Resources;
-
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
@@ -107,7 +104,7 @@ public class DropCreateIndicesCommand {
     }
 
     List<MappingConfiguration> mappingConfigurations(String rootFolderName, File indexDirectory, String configFormat) {
-        Collection<File> indexFiles = fileHelper.listFilesByFilter(indexDirectory, configFormat);
+        Collection<File> indexFiles = fileHelper.listFilesByExtension(indexDirectory, configFormat);
         Iterator<File> indexFilesIterator = indexFiles.iterator();
         while (indexFilesIterator.hasNext()) {
             File file = indexFilesIterator.next();

@@ -6,10 +6,14 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
 import org.elasticsearch.action.ListenableActionFuture;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.exists.IndicesExistsRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.IndicesExistsResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
@@ -26,10 +30,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * User: lgueye Date: 21/09/12 Time: 10:37
@@ -99,10 +100,10 @@ public class DropCreateIndicesCommandTest {
         index1Mappings =
         Collections2
             .transform(index1MappingConfigurations, new Function<MappingConfiguration, String>() {
-              @Override
-              public String apply(MappingConfiguration input) {
-                return input.getType();
-              }
+                @Override
+                public String apply(MappingConfiguration input) {
+                    return input.getType();
+                }
             });
 
     assertEquals(3, index1Mappings.size());
@@ -128,10 +129,10 @@ public class DropCreateIndicesCommandTest {
         index2Mappings =
         Collections2
             .transform(index2MappingConfigurations, new Function<MappingConfiguration, String>() {
-              @Override
-              public String apply(MappingConfiguration input) {
-                return input.getType();
-              }
+                @Override
+                public String apply(MappingConfiguration input) {
+                    return input.getType();
+                }
             });
     assertEquals(1, index2Mappings.size());
     assertTrue(index2Mappings.contains("mapping21"));
@@ -174,14 +175,14 @@ public class DropCreateIndicesCommandTest {
     File mapping11 = mock(File.class);
     File mapping12 = mock(File.class);
     File mapping13 = mock(File.class);
-    when(fileHelper.listFilesByFilter(index1, configFormat))
+    when(fileHelper.listFilesByExtension(index1, configFormat))
         .thenReturn(Lists.<File>newArrayList(index1Settings, mapping11, mapping12, mapping13));
     when(index1Settings.getAbsolutePath()).thenReturn(
-        pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/_settings."
-        + configFormat);
+            pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/_settings."
+                    + configFormat);
     when(mapping11.getAbsolutePath()).thenReturn(
-        pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/mapping11."
-        + configFormat);
+            pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/mapping11."
+                    + configFormat);
     when(mapping12.getAbsolutePath()).thenReturn(
         pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/mapping12."
         + configFormat);
@@ -354,9 +355,9 @@ public class DropCreateIndicesCommandTest {
     File mapping13 = mock(File.class);
     File index2Settings = mock(File.class);
     File mapping21 = mock(File.class);
-    when(fileHelper.listFilesByFilter(index1, configFormat))
+    when(fileHelper.listFilesByExtension(index1, configFormat))
         .thenReturn(Lists.<File>newArrayList(index1Settings, mapping11, mapping12, mapping13));
-    when(fileHelper.listFilesByFilter(index2, configFormat))
+    when(fileHelper.listFilesByExtension(index2, configFormat))
         .thenReturn(Lists.<File>newArrayList(index2Settings, mapping21));
     when(index1Settings.getAbsolutePath()).thenReturn(
         pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/_settings."
@@ -491,7 +492,7 @@ public class DropCreateIndicesCommandTest {
     File mapping11 = mock(File.class);
     File mapping12 = mock(File.class);
     File mapping13 = mock(File.class);
-    when(fileHelper.listFilesByFilter(index1, configFormat))
+    when(fileHelper.listFilesByExtension(index1, configFormat))
         .thenReturn(Lists.<File>newArrayList(index1Settings, mapping11, mapping12, mapping13));
     when(index1Settings.getAbsolutePath()).thenReturn(
         pathToElasticsearchConfigRootFolder + rootFolderName + pathToIndex1 + "/_settings."
@@ -546,5 +547,148 @@ public class DropCreateIndicesCommandTest {
         "/" + rootFolderName + pathToIndex1 + "/" + "mapping13" + "." + configFormat));
   }
 
+    @Test(expected = RuntimeException.class)
+    public void createIndexShouldThrowRuntimeException() throws IOException {
+        Client client = mock(Client.class);
+        IndexConfiguration indexConfiguration = mock(IndexConfiguration.class);
+        String indexName = "idx";
+        when(indexConfiguration.getName()).thenReturn(indexName);
+        String configLocation = "/some/path";
+        when(indexConfiguration.getConfigLocation()).thenReturn(configLocation);
+        String fileContent = "{}";
+        when (fileHelper.fileContentAsString(configLocation)).thenReturn(fileContent);
+
+        AdminClient adminClient = mock(AdminClient.class);
+        when(client.admin()).thenReturn(adminClient);
+        IndicesAdminClient indicesAdminClient = mock(IndicesAdminClient.class);
+        when(adminClient.indices()).thenReturn(indicesAdminClient);
+        CreateIndexRequestBuilder createIndexRequestBuilder = mock(CreateIndexRequestBuilder.class);
+        when(indicesAdminClient.prepareCreate(indexName)).thenReturn(createIndexRequestBuilder);
+        when(createIndexRequestBuilder.setSettings(fileContent)).thenReturn(createIndexRequestBuilder);
+        ListenableActionFuture<CreateIndexResponse> actionFutureListener = mock(ListenableActionFuture.class);
+        when(createIndexRequestBuilder.execute()).thenReturn(actionFutureListener);
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(actionFutureListener.actionGet()).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(false);
+        underTest.createIndex(client, indexConfiguration);
+        verify(createIndexResponse).acknowledged();
+    }
+
+    @Test
+    public void createIndexShouldSucceed() throws IOException {
+        Client client = mock(Client.class);
+        IndexConfiguration indexConfiguration = mock(IndexConfiguration.class);
+        String indexName = "idx";
+        when(indexConfiguration.getName()).thenReturn(indexName);
+        String configLocation = "/some/path";
+        when(indexConfiguration.getConfigLocation()).thenReturn(configLocation);
+        String fileContent = "{}";
+        when (fileHelper.fileContentAsString(configLocation)).thenReturn(fileContent);
+
+        AdminClient adminClient = mock(AdminClient.class);
+        when(client.admin()).thenReturn(adminClient);
+        IndicesAdminClient indicesAdminClient = mock(IndicesAdminClient.class);
+        when(adminClient.indices()).thenReturn(indicesAdminClient);
+        CreateIndexRequestBuilder createIndexRequestBuilder = mock(CreateIndexRequestBuilder.class);
+        when(indicesAdminClient.prepareCreate(indexName)).thenReturn(createIndexRequestBuilder);
+        when(createIndexRequestBuilder.setSettings(fileContent)).thenReturn(createIndexRequestBuilder);
+        ListenableActionFuture<CreateIndexResponse> actionFutureListener = mock(ListenableActionFuture.class);
+        when(createIndexRequestBuilder.execute()).thenReturn(actionFutureListener);
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(actionFutureListener.actionGet()).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(true);
+        underTest.createIndex(client, indexConfiguration);
+        verify(createIndexResponse).acknowledged();
+    }
+
+    @Test
+    public void putMappingsShouldSucceed() throws IOException {
+        Client client = mock(Client.class);
+        IndexConfiguration indexConfiguration = mock(IndexConfiguration.class);
+        String indexName = "idx";
+        when(indexConfiguration.getName()).thenReturn(indexName);
+        MappingConfiguration mappingConfiguration1 = mock(MappingConfiguration.class);
+        MappingConfiguration mappingConfiguration2 = mock(MappingConfiguration.class);
+        List<MappingConfiguration> mappingConfigurations = Lists.newArrayList(mappingConfiguration1, mappingConfiguration2);
+        when(indexConfiguration.getMappingConfigurations()).thenReturn(mappingConfigurations);
+        String mappingConfiguration1Location= "/some/location1";
+        when(mappingConfiguration1.getLocation()).thenReturn(mappingConfiguration1Location);
+        String mappingConfiguration1Type = "type1";
+        when(mappingConfiguration1.getType()).thenReturn(mappingConfiguration1Type);
+        String mappingConfiguration1Content = "{}";
+        when(fileHelper.fileContentAsString(mappingConfiguration1Location)).thenReturn(mappingConfiguration1Content);
+        String mappingConfiguration2Location= "/some/location2";
+        when(mappingConfiguration2.getLocation()).thenReturn(mappingConfiguration2Location);
+        String mappingConfiguration2Type = "type2";
+        when(mappingConfiguration2.getType()).thenReturn(mappingConfiguration2Type);
+        String mappingConfiguration2Content = "{}";
+        when(fileHelper.fileContentAsString(mappingConfiguration2Location)).thenReturn(mappingConfiguration2Content);
+        AdminClient adminClient = mock(AdminClient.class);
+        when(client.admin()).thenReturn(adminClient);
+        IndicesAdminClient indicesAdminClient = mock(IndicesAdminClient.class);
+        when(adminClient.indices()).thenReturn(indicesAdminClient);
+        PutMappingRequestBuilder putMappingRequestBuilder = mock(PutMappingRequestBuilder.class);
+        when(indicesAdminClient.preparePutMapping(indexName)).thenReturn(putMappingRequestBuilder);
+        when(putMappingRequestBuilder.setSource(mappingConfiguration1Content)).thenReturn(putMappingRequestBuilder);
+        when(putMappingRequestBuilder.setType(mappingConfiguration1Type)).thenReturn(putMappingRequestBuilder);
+        when(putMappingRequestBuilder.setSource(mappingConfiguration2Content)).thenReturn(putMappingRequestBuilder);
+        when(putMappingRequestBuilder.setType(mappingConfiguration2Type)).thenReturn(putMappingRequestBuilder);
+        ListenableActionFuture<PutMappingResponse> listenableActionFuture = mock(ListenableActionFuture.class);
+        when(putMappingRequestBuilder.execute()).thenReturn(listenableActionFuture);
+        PutMappingResponse putMappingResponse = mock(PutMappingResponse.class);
+        when(listenableActionFuture.actionGet()).thenReturn(putMappingResponse);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
+        underTest.putMappings(client, indexConfiguration);
+        verify(putMappingResponse, times(2)).acknowledged();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void putMappingsThrowRuntimeExceptionIfPutMappingResponseIsNotAcknowledged() throws IOException {
+        Client client = mock(Client.class);
+        IndexConfiguration indexConfiguration = mock(IndexConfiguration.class);
+        String indexName = "idx";
+        when(indexConfiguration.getName()).thenReturn(indexName);
+        MappingConfiguration mappingConfiguration1 = mock(MappingConfiguration.class);
+        MappingConfiguration mappingConfiguration2 = mock(MappingConfiguration.class);
+        List<MappingConfiguration> mappingConfigurations = Lists.newArrayList(mappingConfiguration1, mappingConfiguration2);
+        when(indexConfiguration.getMappingConfigurations()).thenReturn(mappingConfigurations);
+        String mappingConfiguration1Location= "/some/location1";
+        when(mappingConfiguration1.getLocation()).thenReturn(mappingConfiguration1Location);
+        String mappingConfiguration1Type = "type1";
+        when(mappingConfiguration1.getType()).thenReturn(mappingConfiguration1Type);
+        String mappingConfiguration1Content = "{}";
+        when(fileHelper.fileContentAsString(mappingConfiguration1Location)).thenReturn(mappingConfiguration1Content);
+        String mappingConfiguration2Location= "/some/location2";
+        when(mappingConfiguration2.getLocation()).thenReturn(mappingConfiguration2Location);
+        String mappingConfiguration2Type = "type2";
+        when(mappingConfiguration2.getType()).thenReturn(mappingConfiguration2Type);
+        String mappingConfiguration2Content = "{}";
+        when(fileHelper.fileContentAsString(mappingConfiguration2Location)).thenReturn(mappingConfiguration2Content);
+        AdminClient adminClient = mock(AdminClient.class);
+        when(client.admin()).thenReturn(adminClient);
+        IndicesAdminClient indicesAdminClient = mock(IndicesAdminClient.class);
+        when(adminClient.indices()).thenReturn(indicesAdminClient);
+        PutMappingRequestBuilder putMappingRequestBuilder = mock(PutMappingRequestBuilder.class);
+        PutMappingRequestBuilder putMappingRequestBuilder1 = mock(PutMappingRequestBuilder.class);
+        PutMappingRequestBuilder putMappingRequestBuilder2 = mock(PutMappingRequestBuilder.class);
+        when(indicesAdminClient.preparePutMapping(indexName)).thenReturn(putMappingRequestBuilder);
+        when(putMappingRequestBuilder.setSource(mappingConfiguration1Content)).thenReturn(putMappingRequestBuilder1);
+        when(putMappingRequestBuilder1.setType(mappingConfiguration1Type)).thenReturn(putMappingRequestBuilder1);
+        when(putMappingRequestBuilder.setSource(mappingConfiguration2Content)).thenReturn(putMappingRequestBuilder2);
+        when(putMappingRequestBuilder2.setType(mappingConfiguration2Type)).thenReturn(putMappingRequestBuilder2);
+        ListenableActionFuture<PutMappingResponse> listenableActionFuture1 = mock(ListenableActionFuture.class);
+        ListenableActionFuture<PutMappingResponse> listenableActionFuture2 = mock(ListenableActionFuture.class);
+        when(putMappingRequestBuilder1.execute()).thenReturn(listenableActionFuture1);
+        when(putMappingRequestBuilder2.execute()).thenReturn(listenableActionFuture2);
+        PutMappingResponse putMappingResponse1 = mock(PutMappingResponse.class);
+        PutMappingResponse putMappingResponse2 = mock(PutMappingResponse.class);
+        when(listenableActionFuture1.actionGet()).thenReturn(putMappingResponse1);
+        when(listenableActionFuture2.actionGet()).thenReturn(putMappingResponse2);
+        when(putMappingResponse1.acknowledged()).thenReturn(true);
+        when(putMappingResponse2.acknowledged()).thenReturn(false);
+        underTest.putMappings(client, indexConfiguration);
+        verify(putMappingResponse1).acknowledged();
+        verify(putMappingResponse2).acknowledged();
+    }
 
 }

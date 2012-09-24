@@ -23,10 +23,6 @@ public abstract class AbstractEventListener {
     @Autowired
     private Validator validator;
 
-    /**
-     * @see fr.midipascher.domain.business.Facade#validate(fr.midipascher.domain.AbstractEntity,
-     *      fr.midipascher.domain.validation.ValidationContext)
-     */
     protected final <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
 
         Preconditions.checkArgument(type != null, "Illegal call to validate, object is required");

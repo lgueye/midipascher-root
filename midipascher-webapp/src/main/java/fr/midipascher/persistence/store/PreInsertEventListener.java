@@ -23,7 +23,9 @@ public class PreInsertEventListener extends AbstractEventListener implements
     private static final long serialVersionUID = 2153376355687873385L;
 
     /**
-     * @see org.hibernate.event.PreInsertEventListener#onPreInsert(org.hibernate.event.PreInsertEvent)
+     * @see org.hibernate.event.spi.PreInsertEventListener#onPreInsert(org.hibernate.event.spi.PreInsertEvent)
+     * @param event
+     * @return
      */
     @Override
     public boolean onPreInsert(PreInsertEvent event) {

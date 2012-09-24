@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableMap;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -123,15 +122,18 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
                 || RestaurantSearchFieldsRegistry.MAIN_OFFER.equals(field)
                 || RestaurantSearchFieldsRegistry.STREET_ADDRESS.equals(field)
                 || RestaurantSearchFieldsRegistry.CITY.equals(field)
-                || RestaurantSearchFieldsRegistry.POSTAL_CODE.equals(field)) return QueryBuilders.queryString((String) value).field(field);
+                || RestaurantSearchFieldsRegistry.POSTAL_CODE.equals(field))
+            return QueryBuilders.queryString((String) value).field(field);
 
         if (RestaurantSearchFieldsRegistry.COMPANY_ID.equals(field)
                 || RestaurantSearchFieldsRegistry.KOSHER.equals(field)
                 || RestaurantSearchFieldsRegistry.HALAL.equals(field)
                 || RestaurantSearchFieldsRegistry.COUNTRY_CODE.equals(field)
-                || RestaurantSearchFieldsRegistry.VEGETARIAN.equals(field)) return QueryBuilders.termQuery(field, value);
+                || RestaurantSearchFieldsRegistry.VEGETARIAN.equals(field))
+            return QueryBuilders.termQuery(field, value);
 
-        if (RestaurantSearchFieldsRegistry.SPECIALTIES.equals(field)) return QueryBuilders.termsQuery(field + ".id", ((List<Long>) value).toArray());
+        if (RestaurantSearchFieldsRegistry.SPECIALTIES.equals(field))
+            return QueryBuilders.termsQuery(field + ".id", ((List<Long>) value).toArray());
 
         throw new UnsupportedOperationException("No query builder resolved for field '" + field + "'");
 

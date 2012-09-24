@@ -25,16 +25,16 @@ public class IndexConfiguration {
     }
 
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setConfigLocation(String configLocation) {
-    this.configLocation = configLocation;
-  }
+    public void setConfigLocation(String configLocation) {
+        this.configLocation = configLocation;
+    }
 
 
-  public void setMappingConfigurations(List<MappingConfiguration> mappingConfigurations) {
-    this.mappingConfigurations = mappingConfigurations;
-  }
+    public void setMappingConfigurations(List<MappingConfiguration> mappingConfigurations) {
+        this.mappingConfigurations = mappingConfigurations;
+    }
 }

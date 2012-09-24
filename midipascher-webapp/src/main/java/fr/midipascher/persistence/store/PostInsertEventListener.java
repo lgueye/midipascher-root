@@ -22,6 +22,10 @@ public class PostInsertEventListener implements
     @Autowired
     private SearchEngine searchEngine;
 
+    /**
+     * @see org.hibernate.event.spi.PostInsertEventListener#onPostInsert(org.hibernate.event.spi.PostInsertEvent)
+     * @param event
+     */
     @Override
     public void onPostInsert(PostInsertEvent event) {
         searchEngine.index( (AbstractEntity)event.getEntity());
