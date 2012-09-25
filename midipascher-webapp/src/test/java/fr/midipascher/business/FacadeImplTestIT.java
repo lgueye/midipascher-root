@@ -3,27 +3,29 @@
  */
 package fr.midipascher.business;
 
-import fr.midipascher.TestConstants;
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
-import fr.midipascher.domain.business.Facade;
-import fr.midipascher.domain.exceptions.BusinessException;
-import fr.midipascher.test.TestFixtures;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+
 import junit.framework.Assert;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
+import org.elasticsearch.client.Client;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -38,15 +40,30 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ResourceUtils;
 
-import javax.sql.DataSource;
-import javax.validation.ConstraintViolationException;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import javax.sql.DataSource;
+import javax.validation.ConstraintViolationException;
+
+import fr.midipascher.TestConstants;
+import fr.midipascher.domain.Account;
+import fr.midipascher.domain.Authority;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
+import fr.midipascher.domain.business.Facade;
+import fr.midipascher.domain.exceptions.BusinessException;
+import fr.midipascher.persistence.search.SearchIndices;
+import fr.midipascher.persistence.search.SearchTypes;
+import fr.midipascher.test.TestFixtures;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * Facade integration testing<br/>
@@ -64,6 +81,18 @@ public class FacadeImplTestIT {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private Client elasticsearch;
+
+    @Value("classpath:/elasticsearch/midipascher/_settings.json")
+    private Resource indexSettings;
+
+    @Value("classpath:/elasticsearch/midipascher/restaurant.json")
+    private Resource restaurantsMapping;
+
+    private static final String INDEX_NAME = SearchIndices.midipascher.toString();
+    private static final String TYPE_NAME = SearchTypes.restaurant.toString();
+
     @Before
     public void onSetUpInTransaction() throws Exception {
         final Connection con = DataSourceUtils.getConnection(this.dataSource);
@@ -79,6 +108,23 @@ public class FacadeImplTestIT {
 
         SecurityContextHolder.setContext(new SecurityContextImpl());
 
+        // Deletes index if already exists
+        if (this.elasticsearch.admin().indices().prepareExists(INDEX_NAME).execute().actionGet().exists()) {
+            DeleteIndexResponse deleteIndexResponse = this.elasticsearch.admin().indices().prepareDelete(INDEX_NAME)
+                    .execute().actionGet();
+            deleteIndexResponse.acknowledged();
+        }
+
+        String indexSettingsAsString = Resources
+            .toString(this.indexSettings.getURL(), Charsets.UTF_8);
+        CreateIndexResponse createIndexResponse = this.elasticsearch.admin().indices().prepareCreate(INDEX_NAME)
+                .setSettings(indexSettingsAsString).execute().actionGet();
+        if (!createIndexResponse.acknowledged()) throw new IllegalStateException();
+
+        String restaurantMappingAsString = Resources.toString(this.restaurantsMapping.getURL(), Charsets.UTF_8);
+        PutMappingResponse putMappingResponse = this.elasticsearch.admin().indices().preparePutMapping(INDEX_NAME)
+                .setType(TYPE_NAME).setSource(restaurantMappingAsString).execute().actionGet();
+      if (!putMappingResponse.acknowledged()) throw new IllegalStateException();
     }
 
     @Test
@@ -179,7 +225,8 @@ public class FacadeImplTestIT {
         Assert.assertNotNull(persistedUser);
         // When created associate by default with RMGR authority
         Assert.assertTrue(CollectionUtils.size(persistedUser.getAuthorities()) == 1);
-        Assert.assertTrue(Authority.RMGR.equals(persistedUser.getAuthorities().iterator().next().getCode()));
+        Assert.assertTrue(
+            Authority.RMGR.equals(persistedUser.getAuthorities().iterator().next().getCode()));
     }
 
     @Test
@@ -509,11 +556,13 @@ public class FacadeImplTestIT {
     }
 
     private void authenticateAsAdmin() {
-        authenticateAs("admin@admin.com", "secret", Arrays.asList(new SimpleGrantedAuthority(Authority.ROLE_ADMIN)));
+        authenticateAs("admin@admin.com", "secret",
+                       Arrays.asList(new SimpleGrantedAuthority(Authority.ROLE_ADMIN)));
     }
 
     private void authenticateAsRmgr() {
-        authenticateAs("rmgr@rmgr.com", "secret", Arrays.asList(new SimpleGrantedAuthority(Authority.ROLE_RMGR)));
+        authenticateAs("rmgr@rmgr.com", "secret",
+                       Arrays.asList(new SimpleGrantedAuthority(Authority.ROLE_RMGR)));
     }
 
     @Test
@@ -579,6 +628,363 @@ public class FacadeImplTestIT {
         actualResponse = facade.findRestaurantsByCriteria(criteria);
         // Then I should get 1 hit
         assertEquals(expectedHitsCount, actualResponse.size());
+    }
+
+    @Test
+    public void findRestaurantByDescriptionShouldSucceed() throws Throwable {
+        final Long id = 8L;
+        int expectedHitsCount;
+        List<Restaurant> actualResponse;
+        Restaurant restaurant;
+        String description;
+        String query;
+        Restaurant criteria;
+
+        // Given I index that data
+        Long accountId = facade.createAccount(TestFixtures.validAccount());
+        description = "restaurant awesome description";
+        restaurant = TestFixtures.validRestaurant();
+        restaurant.setDescription(description);
+        createRestaurant(accountId, restaurant);
+        expectedHitsCount = 1;
+
+        // When I search
+        query = "awesome";
+        criteria = new Restaurant();
+        criteria.setDescription(query);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+
+        // When I search
+        query = "restaurant";
+        criteria = new Restaurant();
+        criteria.setDescription(query);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+
+        // When I search
+        query = "description";
+        criteria = new Restaurant();
+        criteria.setDescription(query);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+    }
+
+    @Test
+    public void findRestaurantByMainOfferShouldSucceed() throws Throwable {
+        final Long id = 8L;
+        int expectedHitsCount;
+        List<Restaurant> actualResponse;
+        Restaurant restaurant;
+        String mainOffer;
+        String query;
+        Restaurant criteria;
+
+        // Given I index that data
+        Long accountId = facade.createAccount(TestFixtures.validAccount());
+        mainOffer = "restaurant awesome offer";
+        restaurant = TestFixtures.validRestaurant();
+        restaurant.setMainOffer(mainOffer);
+        createRestaurant(accountId, restaurant);
+        expectedHitsCount = 1;
+
+        // When I search
+        query = "awesome";
+        criteria = new Restaurant();
+        criteria.setMainOffer(query);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+
+        // When I search
+        query = "restaurant";
+        criteria = new Restaurant();
+        criteria.setMainOffer(query);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+
+        // When I search
+        query = "offer";
+        criteria = new Restaurant();
+        criteria.setMainOffer(query);
+        actualResponse = facade.findRestaurantsByCriteria(criteria);
+        // Then I should get 1 hit
+        assertEquals(expectedHitsCount, actualResponse.size());
+    }
+
+  @Test
+  public void findRestaurantByStreetAddressShouldSucceed() throws Throwable {
+    final Long id = 8L;
+    int expectedHitsCount;
+    List<Restaurant> actualResponse;
+    Restaurant restaurant;
+    String streetAddress;
+    String query;
+    Restaurant criteria;
+
+    // Given I index that data
+    Long accountId = facade.createAccount(TestFixtures.validAccount());
+    streetAddress = "Rue Jean Jaurès";
+    restaurant = TestFixtures.validRestaurant();
+    restaurant.getAddress().setStreetAddress(streetAddress);
+    createRestaurant(accountId, restaurant);
+    expectedHitsCount = 1;
+
+    // When I search
+    query = "rue";
+    criteria = new Restaurant();
+    criteria.getAddress().setStreetAddress(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+
+    // When I search
+    query = "jean";
+    criteria = new Restaurant();
+    criteria.getAddress().setStreetAddress(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+
+    // When I search
+    query = "jaures";
+    criteria = new Restaurant();
+    criteria.getAddress().setStreetAddress(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+
+    // When I search
+    query = "jaurès";
+    criteria = new Restaurant();
+    criteria.getAddress().setStreetAddress(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+  }
+
+  @Test
+  public void findRestaurantByCityShouldSucceed() throws Throwable {
+    final Long id = 8L;
+    int expectedHitsCount;
+    List<Restaurant> actualResponse;
+    Restaurant restaurant;
+    String city;
+    String query;
+    Restaurant criteria;
+
+    // Given I index that data
+    Long accountId = facade.createAccount(TestFixtures.validAccount());
+    city = "New-York";
+    restaurant = TestFixtures.validRestaurant();
+    restaurant.getAddress().setCity(city);
+    createRestaurant(accountId, restaurant);
+    expectedHitsCount = 1;
+
+    // When I search
+    query = "new-york";
+    criteria = new Restaurant();
+    criteria.getAddress().setCity(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+
+    // When I search
+    query = "new";
+    criteria = new Restaurant();
+    criteria.getAddress().setCity(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+
+    // When I search
+    query = "york";
+    criteria = new Restaurant();
+    criteria.getAddress().setCity(query);
+    actualResponse = facade.findRestaurantsByCriteria(criteria);
+    // Then I should get 1 hit
+    assertEquals(expectedHitsCount, actualResponse.size());
+
+  }
+
+    @Test
+    public void findRestaurantByPostalCodeShouldSucceed() throws Throwable {
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      String postalCode;
+      String query;
+      Restaurant criteria;
+
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      postalCode = "city 75009";
+      restaurant = TestFixtures.validRestaurant();
+      restaurant.getAddress().setPostalCode(postalCode);
+      createRestaurant(accountId, restaurant);
+
+      // When I search
+      query = "75009";
+      expectedHitsCount = 1;
+      criteria = new Restaurant();
+      criteria.getAddress().setPostalCode(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+    }
+
+    @Test
+    public void findRestaurantByCountryCodeShouldSucceed() throws Throwable {
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      String countryCode;
+      String query;
+      Restaurant criteria;
+
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      countryCode = "GB";
+      restaurant = TestFixtures.validRestaurant();
+      restaurant.getAddress().setCountryCode(countryCode);
+      createRestaurant(accountId, restaurant);
+
+      // When I search
+      query = "GB";
+      expectedHitsCount = 1;
+      criteria = new Restaurant();
+      criteria.getAddress().setCountryCode(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+      // When I search
+      query = "gb";
+      expectedHitsCount = 0;
+      criteria = new Restaurant();
+      criteria.getAddress().setCountryCode(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+    }
+
+    @Test
+    public void findRestaurantByKosherPropertyShouldSucceed() throws Throwable {
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      boolean kosher;
+      boolean query;
+      Restaurant criteria;
+
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      kosher = true;
+      restaurant = TestFixtures.validRestaurant();
+      restaurant.setKosher(kosher);
+      createRestaurant(accountId, restaurant);
+
+      // When I search
+      query = true;
+      expectedHitsCount = 1;
+      criteria = new Restaurant();
+      criteria.setKosher(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+      // When I search
+      query = false;
+      expectedHitsCount = 0;
+      criteria = new Restaurant();
+      criteria.setKosher(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+    }
+
+    @Test
+    public void findRestaurantByHalalPropertyShouldSucceed() throws Throwable {
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      boolean halal;
+      boolean query;
+      Restaurant criteria;
+
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      halal = true;
+      restaurant = TestFixtures.validRestaurant();
+      restaurant.setHalal(halal);
+      createRestaurant(accountId, restaurant);
+
+      // When I search
+      query = true;
+      expectedHitsCount = 1;
+      criteria = new Restaurant();
+      criteria.setHalal(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+      // When I search
+      query = false;
+      expectedHitsCount = 0;
+      criteria = new Restaurant();
+      criteria.setHalal(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+    }
+
+    @Test
+    public void findRestaurantByVegetarianPropertyShouldSucceed() throws Throwable {
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      boolean vegetarian;
+      boolean query;
+      Restaurant criteria;
+
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      vegetarian = true;
+      restaurant = TestFixtures.validRestaurant();
+      restaurant.setVegetarian(vegetarian);
+      createRestaurant(accountId, restaurant);
+
+      // When I search
+      query = true;
+      expectedHitsCount = 1;
+      criteria = new Restaurant();
+      criteria.setVegetarian(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
+      // When I search
+      query = false;
+      expectedHitsCount = 0;
+      criteria = new Restaurant();
+      criteria.setVegetarian(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
+
     }
 
     private Long createRestaurant(Long accountId, Restaurant restaurant) {

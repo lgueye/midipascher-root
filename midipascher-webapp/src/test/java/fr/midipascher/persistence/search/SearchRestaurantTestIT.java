@@ -541,8 +541,8 @@ public class SearchRestaurantTestIT {
         assertNotNull(hits);
 
         final int totalHits = (int) hits.getTotalHits();
-        System.out.println("totalHits = " + totalHits);
-        System.out.println("expectedHitsCount = " + expectedHitsCount);
+//        System.out.println("totalHits = " + totalHits);
+//        System.out.println("expectedHitsCount = " + expectedHitsCount);
         assertTrue(expectedHitsCount == totalHits);
 
     }
