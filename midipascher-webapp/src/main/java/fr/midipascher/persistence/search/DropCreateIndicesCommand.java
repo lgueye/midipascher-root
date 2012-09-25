@@ -5,7 +5,9 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.client.Client;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,14 +18,15 @@ import java.util.List;
 /**
  * @author louis.gueye@gmail.com
  */
+@Component
 public class DropCreateIndicesCommand {
 
     public static final String ELASTICSEARCH_CONFIGURATION_ROOT_FOLDER_NAME = "/elasticsearch";
 
+    @Autowired
     private FileHelper fileHelper;
 
-    public DropCreateIndicesCommand(FileHelper fileHelper) {
-        this.fileHelper = fileHelper;
+    public DropCreateIndicesCommand() {
     }
 
     public void execute(final Client client, String configFormat) throws IOException {

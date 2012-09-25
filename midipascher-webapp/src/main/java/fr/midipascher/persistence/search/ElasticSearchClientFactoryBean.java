@@ -42,7 +42,9 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
 
     private Node node;
 
-    private FileHelper fileHelper;
+    private DropCreateIndicesCommand dropCreateIndicesCommand;
+
+    private MergeIndicesCommand mergeIndicesCommand;
 
     /**
      * Required
@@ -121,11 +123,11 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
         this.configFormat = configFormat;
     }
 
-    public void setFileHelper(FileHelper fileHelper) {
-        this.fileHelper = fileHelper;
+    public void setDropCreateIndicesCommand(DropCreateIndicesCommand dropCreateIndicesCommand) {
+      this.dropCreateIndicesCommand = dropCreateIndicesCommand;
     }
 
-    /**
+  /**
      * @see org.springframework.beans.factory.config.AbstractFactoryBean#getObjectType()
      */
     @Override
@@ -152,10 +154,10 @@ public class ElasticSearchClientFactoryBean extends AbstractFactoryBean<Client> 
 
         switch (indicesUpdateStrategy) {
             case dropcreate:
-                new DropCreateIndicesCommand(fileHelper).execute(client, configFormat);
+                dropCreateIndicesCommand.execute(client, configFormat);
                 break;
             case merge:
-                new MergeIndicesCommand().execute(client, configFormat);
+                mergeIndicesCommand.execute(client, configFormat);
                 break;
         }
     }
