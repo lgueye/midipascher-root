@@ -10,8 +10,7 @@
                 <value>localhost:9300</value>
             </list>
         </property>
-        <property name="configFormat" value="json"/>
-        <property name="fileHelper" ref="fileHelper"/>
+        <property name="dropCreateIndicesCommand" ref="dropCreateIndicesCommand"/>
     </bean>
 
 </beans>

@@ -291,17 +291,6 @@
 				<artifactId>elasticsearch</artifactId>
 				<version>${elasticsearch.version}</version>
 			</dependency>
-            <dependency>
-                <groupId>fr.pilato.spring</groupId>
-                <artifactId>spring-elasticsearch</artifactId>
-                <version>${spring-elasticsearch.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.elasticsearch</groupId>
-                        <artifactId>elasticsearch</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
 			<!-- BUSINESS -->
 			<dependency>

@@ -14,8 +14,7 @@
          - Applied by ContextLoaderListener. -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:midipascher-server.xml classpath:midipascher-security.xml WEB-INF/back-end.xml
-        </param-value>
+        <param-value>classpath:midipascher-server.xml classpath:midipascher-search.xml classpath:midipascher-security.xml WEB-INF/back-end.xml</param-value>
     </context-param>
 
     <listener>
