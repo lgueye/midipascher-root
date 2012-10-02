@@ -12,7 +12,7 @@ It should either succeed or fail
 Scenario: search restaurant by name should succeed
 Given I search for restaurants which name matches "awesome"
 Then I should get the following restaurants:
-|name|description|main offer|address.streetAddress|address.city|address.postalCode|address.countryCode|specialties|companyId|
+|name|description|mainOffer|address.streetAddress|address.city|address.postalCode|address.countryCode|specialties|companyId|
 |awesome name 20|venez découvrir|Salade quinoa 6,20€|12 rue Lafayette|Paris|75009|FR|SDW|552 100 520|
 |awesome name 21|awesome description 21|Salade quinoa 6,20€|12 rue Lafayette|Paris|75009|FR|SLD|552 100 521|
 

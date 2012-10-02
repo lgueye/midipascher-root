@@ -3,6 +3,7 @@ package fr.midipascher.steps.backend;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.client.filter.LoggingFilter;
@@ -10,10 +11,12 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import fr.midipascher.domain.ResponseError;
+import fr.midipascher.domain.Restaurant;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.junit.Assert;
 
 import java.net.URI;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -157,4 +160,7 @@ public class Exchange {
         inactivateEntity();
     }
 
+    public List<Restaurant> fromResponse() {
+        return this.clientResponse.getEntity(new GenericType<List<Restaurant>>() {});
+    }
 }
