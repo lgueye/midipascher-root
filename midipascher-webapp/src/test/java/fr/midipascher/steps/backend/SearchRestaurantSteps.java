@@ -2,17 +2,23 @@ package fr.midipascher.steps.backend;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.persistence.search.RestaurantSearchFieldsRegistry;
 import fr.midipascher.web.WebConstants;
+import fr.midipascher.web.resources.FoodSpecialtiesResource;
 import fr.midipascher.web.resources.SearchRestaurantsResource;
 import org.hamcrest.Matchers;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
+import org.jbehave.core.annotations.When;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.OutcomesTable;
 
@@ -34,7 +40,40 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         super(exchange);
     }
 
-    @Given("I search for restaurants which name matches \"$name\"")
+  @Given("persisted restaurants: $table")
+  public void givenData(ExamplesTable table) {
+    for (Map<String, String> row : table.getRows()) {
+      Restaurant restaurant = fromRow(row);
+
+    }
+  }
+
+  private Restaurant fromRow(Map<String, String> row) {
+    Restaurant restaurant = new Restaurant();
+    restaurant.setName(row.get(RestaurantSearchFieldsRegistry.NAME));
+    restaurant.setDescription(row.get(RestaurantSearchFieldsRegistry.DESCRIPTION));
+    restaurant.setMainOffer(row.get(RestaurantSearchFieldsRegistry.MAIN_OFFER));
+    restaurant.getAddress().setStreetAddress(row.get(RestaurantSearchFieldsRegistry.STREET_ADDRESS));
+    restaurant.getAddress().setCity(row.get(RestaurantSearchFieldsRegistry.CITY));
+    restaurant.getAddress().setPostalCode(row.get(RestaurantSearchFieldsRegistry.POSTAL_CODE));
+    restaurant.getAddress().setCountryCode(row.get(RestaurantSearchFieldsRegistry.COUNTRY_CODE));
+    restaurant.setCompanyId(row.get(RestaurantSearchFieldsRegistry.COMPANY_ID));
+    Iterable<String> codes = Splitter.on(",").trimResults().split(row.get(RestaurantSearchFieldsRegistry.SPECIALTIES));
+    Collection specialties = Collections2.transform(Sets.newHashSet(codes), new Function<String, FoodSpecialty>() {
+      @Override
+      public FoodSpecialty apply(String input) {
+        return loadFodSpecialty(input);
+      }
+    });
+    restaurant.setSpecialties(Sets.<FoodSpecialty>newHashSet(specialties));
+    return restaurant;
+  }
+
+  private FoodSpecialty loadFodSpecialty(String code) {
+    return null;  //To change body of created methods use File | Settings | File Templates.
+  }
+
+  @When("I search for restaurants which name matches \"$name\"")
     public void searchRestaurantByName(@Named("name") String name) {
         Restaurant criteria = new Restaurant();
         criteria.setName(name);
