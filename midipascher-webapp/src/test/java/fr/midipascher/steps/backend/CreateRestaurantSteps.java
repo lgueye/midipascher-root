@@ -13,6 +13,8 @@ import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 
+import java.net.URI;
+
 import javax.ws.rs.core.UriBuilder;
 
 /**
@@ -183,4 +185,10 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
         this.exchange.createEntity();
     }
 
+    public static URI createRestaurant(Exchange exchange, Restaurant restaurant) {
+      exchange.getRequest().setBody(restaurant);
+      exchange.getRequest().setUri(CREATE_URI);
+      exchange.createEntity();
+      return exchange.getLocation();
+    }
 }
