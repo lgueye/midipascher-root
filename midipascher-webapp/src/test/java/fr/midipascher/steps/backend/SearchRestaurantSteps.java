@@ -60,7 +60,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     }
 
-    private Map<String, String> actualRow(Restaurant restaurant) {
+    private Map<String, String> actualRpow(Restaurant restaurant) {
         ImmutableMap.Builder<String, String> builder = new ImmutableMap.Builder<String, String>();
         builder.put(RestaurantSearchFieldsRegistry.NAME, restaurant.getName());
         builder.put(RestaurantSearchFieldsRegistry.DESCRIPTION, restaurant.getDescription());
