@@ -70,6 +70,13 @@ public class Exchange {
     /**
      * @return
      */
+    public URI getLocation() {
+      return this.clientResponse.getLocation();
+    }
+
+    /**
+     * @return
+     */
     public void createEntity() {
         final URI uri = newURI(this.request.getUri());
         this.clientResponse = this.jerseyClient.resource(uri).type(this.request.getType())

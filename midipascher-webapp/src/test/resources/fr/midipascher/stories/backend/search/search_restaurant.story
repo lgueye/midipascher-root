@@ -10,7 +10,8 @@ When I send that request
 It should either succeed or fail
 
 Scenario: search restaurant by name should succeed
-Given I search for restaurants which name matches "awesome"
+Given persisted restaurants:
+When I search for restaurants which name matches "awesome"
 Then I should get the following restaurants:
 |name|description|mainOffer|address.streetAddress|address.city|address.postalCode|address.countryCode|specialties|companyId|
 |awesome name 20|venez découvrir|Salade quinoa 6,20€|12 rue Lafayette|Paris|75009|FR|SDW|552 100 520|
