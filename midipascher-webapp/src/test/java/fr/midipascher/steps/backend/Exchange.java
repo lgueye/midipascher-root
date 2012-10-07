@@ -10,6 +10,7 @@ import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.ResponseError;
 import fr.midipascher.domain.Restaurant;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
@@ -167,7 +168,10 @@ public class Exchange {
         inactivateEntity();
     }
 
-    public List<Restaurant> fromResponse() {
+    public List<Restaurant> restaurantsFromResponse() {
         return this.clientResponse.getEntity(new GenericType<List<Restaurant>>() {});
+    }
+    public List<FoodSpecialty> foodSpcialtiesFromResponse() {
+        return this.clientResponse.getEntity(new GenericType<List<FoodSpecialty>>() {});
     }
 }

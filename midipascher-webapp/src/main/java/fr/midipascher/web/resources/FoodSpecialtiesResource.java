@@ -90,6 +90,14 @@ public class FoodSpecialtiesResource {
 
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response list() throws Throwable {
+        final List<FoodSpecialty> results = facade.listFoodSpecialties();
+        final GenericEntity<List<FoodSpecialty>> entity = new GenericEntity<List<FoodSpecialty>>(results) {};
+        return Response.ok(entity).build();
+    }
+
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path(SINGLE_RESOURCE_PATH + "/inactivate")

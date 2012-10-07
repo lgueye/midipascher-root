@@ -2,15 +2,16 @@ package fr.midipascher.steps.backend;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.persistence.search.RestaurantSearchFieldsRegistry;
 import fr.midipascher.web.WebConstants;
+import fr.midipascher.web.resources.FoodSpecialtiesResource;
 import fr.midipascher.web.resources.SearchRestaurantsResource;
 import org.hamcrest.Matchers;
 import org.jbehave.core.annotations.Given;
@@ -22,11 +23,11 @@ import org.jbehave.core.model.OutcomesTable;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com
@@ -36,48 +37,58 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     private static final String SEARCH_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(SearchRestaurantsResource.class).build().toString();
 
-  private Collection<URI> createdRestaurantUris;
+    private Collection<URI> createdRestaurantUris;
 
-  public SearchRestaurantSteps(Exchange exchange) {
+    public SearchRestaurantSteps(Exchange exchange) {
         super(exchange);
     }
 
-  @Given("persisted restaurants: $table")
-  public void givenData(ExamplesTable table) {
-    Exchange exchange = new Exchange();
-    for (Map<String, String> row : table.getRows()) {
-      Restaurant restaurant = fromRow(row);
-      final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
-      createdRestaurantUris.add(uri);
+    @Given("persisted restaurants: $table")
+    public void givenData(ExamplesTable table) {
+
+        Exchange exchange = new Exchange();
+        exchange.getRequest().setUri(FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH);
+        exchange.readURI();
+        List<FoodSpecialty> allSpecialties = exchange.foodSpcialtiesFromResponse();
+
+        for (Map<String, String> row : table.getRows()) {
+            Restaurant restaurant = fromRow(row, allSpecialties);
+            final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
+            createdRestaurantUris.add(uri);
+        }
+
     }
-  }
 
-  private Restaurant fromRow(Map<String, String> row) {
-    Restaurant restaurant = new Restaurant();
-    restaurant.setName(row.get(RestaurantSearchFieldsRegistry.NAME));
-    restaurant.setDescription(row.get(RestaurantSearchFieldsRegistry.DESCRIPTION));
-    restaurant.setMainOffer(row.get(RestaurantSearchFieldsRegistry.MAIN_OFFER));
-    restaurant.getAddress().setStreetAddress(row.get(RestaurantSearchFieldsRegistry.STREET_ADDRESS));
-    restaurant.getAddress().setCity(row.get(RestaurantSearchFieldsRegistry.CITY));
-    restaurant.getAddress().setPostalCode(row.get(RestaurantSearchFieldsRegistry.POSTAL_CODE));
-    restaurant.getAddress().setCountryCode(row.get(RestaurantSearchFieldsRegistry.COUNTRY_CODE));
-    restaurant.setCompanyId(row.get(RestaurantSearchFieldsRegistry.COMPANY_ID));
-    Iterable<String> codes = Splitter.on(",").trimResults().split(row.get(RestaurantSearchFieldsRegistry.SPECIALTIES));
-    Collection specialties = Collections2.transform(Sets.newHashSet(codes), new Function<String, FoodSpecialty>() {
-      @Override
-      public FoodSpecialty apply(String input) {
-        return loadFoodSpecialty(input);
-      }
-    });
-    restaurant.setSpecialties(Sets.<FoodSpecialty>newHashSet(specialties));
-    return restaurant;
-  }
+    private Restaurant fromRow(Map<String, String> row, List<FoodSpecialty> allSpecialties) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(row.get(RestaurantSearchFieldsRegistry.NAME));
+        restaurant.setDescription(row.get(RestaurantSearchFieldsRegistry.DESCRIPTION));
+        restaurant.setMainOffer(row.get(RestaurantSearchFieldsRegistry.MAIN_OFFER));
+        restaurant.getAddress().setStreetAddress(row.get(RestaurantSearchFieldsRegistry.STREET_ADDRESS));
+        restaurant.getAddress().setCity(row.get(RestaurantSearchFieldsRegistry.CITY));
+        restaurant.getAddress().setPostalCode(row.get(RestaurantSearchFieldsRegistry.POSTAL_CODE));
+        restaurant.getAddress().setCountryCode(row.get(RestaurantSearchFieldsRegistry.COUNTRY_CODE));
+        restaurant.setCompanyId(row.get(RestaurantSearchFieldsRegistry.COMPANY_ID));
+        Iterable<String> codes = Splitter.on(",").trimResults().split(row.get(RestaurantSearchFieldsRegistry.SPECIALTIES));
+        Set<FoodSpecialty> specialties = fromCodes(codes, allSpecialties);
+        restaurant.setSpecialties(specialties);
+        return restaurant;
+    }
 
-  private FoodSpecialty loadFoodSpecialty(String code) {
-    return null;  //To change body of created methods use File | Settings | File Templates.
-  }
+    private Set<FoodSpecialty> fromCodes(Iterable<String> codes, final Collection<FoodSpecialty> allSpecialties) {
+        Set<FoodSpecialty> specialties =  Sets.newHashSet();
+        for (final String code : codes) {
+            specialties.addAll(Collections2.filter(allSpecialties, new Predicate<FoodSpecialty>() {
+                @Override
+                public boolean apply(FoodSpecialty input) {
+                    return input != null && code.equalsIgnoreCase(input.getCode());
+                }
+            }));
+        }
+        return specialties;
+    }
 
-  @When("I search for restaurants which name matches \"$name\"")
+    @When("I search for restaurants which name matches \"$name\"")
     public void searchRestaurantByName(@Named("name") String name) {
         Restaurant criteria = new Restaurant();
         criteria.setName(name);
@@ -90,7 +101,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     @Then("I should get the following restaurants: $table")
     public void theValuesReturnedAre(ExamplesTable table) {
-        List<Restaurant> restaurants = this.exchange.fromResponse();
+        List<Restaurant> restaurants = this.exchange.restaurantsFromResponse();
         for (int i = 0; i < table.getRowCount(); i++) {
             Map<String, String> actualRow = actualRow(restaurants.get(i)); // obtained from another step invocation
             OutcomesTable outcomes = new OutcomesTable();
@@ -103,7 +114,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     }
 
-    private Map<String, String> actualRpow(Restaurant restaurant) {
+    private Map<String, String> actualRow(Restaurant restaurant) {
         ImmutableMap.Builder<String, String> builder = new ImmutableMap.Builder<String, String>();
         builder.put(RestaurantSearchFieldsRegistry.NAME, restaurant.getName());
         builder.put(RestaurantSearchFieldsRegistry.DESCRIPTION, restaurant.getDescription());
