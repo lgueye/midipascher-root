@@ -2,6 +2,14 @@
     "restaurant":{
         "dynamic":"false",
         "properties":{
+            "created":{
+                "type": "date",
+                "format": "date_optional_time"
+            },
+            "updated":{
+                "type": "date",
+                "format": "date_optional_time"
+            },
             "name":{
                 "type":"string",
                 "index":"analyzed"

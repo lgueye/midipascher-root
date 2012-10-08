@@ -6,6 +6,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,22 +39,26 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     private static final String SEARCH_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(SearchRestaurantsResource.class).build().toString();
 
-    private Collection<URI> createdRestaurantUris;
+    private List<URI> createdRestaurantUris;
 
     public SearchRestaurantSteps(Exchange exchange) {
         super(exchange);
     }
 
+
     @Given("persisted restaurants: $table")
     public void givenData(ExamplesTable table) {
-
+        createdRestaurantUris = Lists.newArrayList();
         Exchange exchange = new Exchange();
-        exchange.getRequest().setUri(FoodSpecialtiesResource.COLLECTION_RESOURCE_PATH);
+        exchange.getRequest().setUri(UriBuilder.fromPath(WebConstants.BACKEND_PATH)
+                                         .path(FoodSpecialtiesResource.class).build().toString());
+        exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
         exchange.readURI();
         List<FoodSpecialty> allSpecialties = exchange.foodSpcialtiesFromResponse();
 
         for (Map<String, String> row : table.getRows()) {
             Restaurant restaurant = fromRow(row, allSpecialties);
+            restaurant.setPhoneNumber("0101010106");
             final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
             createdRestaurantUris.add(uri);
         }
@@ -93,7 +99,8 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         Restaurant criteria = new Restaurant();
         criteria.setName(name);
         this.exchange.getRequest().setBody(criteria);
-        this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
+        this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
+        this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
         this.exchange.getRequest().setUri(SEARCH_URI);
         this.exchange.findEntityByCriteria();
 
@@ -130,6 +137,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
                 return input.getCode();
             }
         });
+        Collections.sort(Lists.newArrayList(codes));
         builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, Joiner.on(",").join(codes));
         return builder.build();
     }

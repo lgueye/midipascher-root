@@ -4,8 +4,10 @@
 package fr.midipascher.persistence.store;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.EventAware;
 import fr.midipascher.domain.validation.ValidationContext;
 import org.hibernate.event.spi.PreUpdateEvent;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +29,11 @@ public class PreUpdateEventListener extends AbstractEventListener implements
      */
     @Override
     public boolean onPreUpdate(PreUpdateEvent event) {
-        validate((AbstractEntity) event.getEntity(), ValidationContext.UPDATE);
+        final Object eventEntity = event.getEntity();
+        validate((AbstractEntity) eventEntity, ValidationContext.UPDATE);
+        if (eventEntity instanceof EventAware) {
+          ((EventAware)eventEntity).setUpdated(new DateTime());
+        }
         return false;
     }
 

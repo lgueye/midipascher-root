@@ -187,6 +187,7 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
 
     public static URI createRestaurant(Exchange exchange, Restaurant restaurant) {
       exchange.getRequest().setBody(restaurant);
+      exchange.setCredentials("louis@rmgr.com", "secret");
       exchange.getRequest().setUri(CREATE_URI);
       exchange.createEntity();
       return exchange.getLocation();

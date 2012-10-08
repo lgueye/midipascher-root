@@ -91,7 +91,7 @@ public class FoodSpecialtiesResource {
     }
 
     @GET
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML})
     public Response list() throws Throwable {
         final List<FoodSpecialty> results = facade.listFoodSpecialties();
         final GenericEntity<List<FoodSpecialty>> entity = new GenericEntity<List<FoodSpecialty>>(results) {};

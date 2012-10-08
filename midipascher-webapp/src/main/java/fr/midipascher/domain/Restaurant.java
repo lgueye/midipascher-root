@@ -7,7 +7,11 @@ import com.google.common.base.Preconditions;
 import fr.midipascher.domain.validation.Create;
 import fr.midipascher.domain.validation.Update;
 import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.ext.JodaSerializers;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -23,7 +27,7 @@ import java.util.Set;
 @Entity
 @Table(name = Restaurant.TABLE_NAME, uniqueConstraints = {@UniqueConstraint(columnNames = {Restaurant.COLUMN_NAME_COMPANY_ID})})
 @XmlRootElement
-public class Restaurant extends AbstractEntity {
+public class Restaurant extends AbstractEntity implements EventAware {
 
     public static final String TABLE_NAME = "restaurant";
     public static final String TABLE_NAME_RESTAURANT_FOOD_SPECIALTY = "restaurant_food_specialty";
@@ -89,6 +93,14 @@ public class Restaurant extends AbstractEntity {
     @Valid
     @NotNull(message = "{restaurant.address.required}", groups = {Create.class, Update.class})
     private Address address;
+
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonSerialize(using = JodaSerializers.DateTimeSerializer.class)
+    private DateTime created;
+
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @JsonSerialize(using = JodaSerializers.DateTimeSerializer.class)
+    private DateTime updated;
 
     /**
      *
@@ -241,4 +253,19 @@ public class Restaurant extends AbstractEntity {
         this.vegetarian = vegetarian;
     }
 
+    public DateTime getCreated() {
+      return created;
+    }
+
+    public void setCreated(DateTime created) {
+      this.created = created;
+    }
+
+    public DateTime getUpdated() {
+      return updated;
+    }
+
+    public void setUpdated(DateTime updated) {
+      this.updated = updated;
+    }
 }

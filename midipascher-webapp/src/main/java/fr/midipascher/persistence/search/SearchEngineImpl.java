@@ -5,6 +5,9 @@ import fr.midipascher.domain.Restaurant;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,9 +34,14 @@ public class SearchEngineImpl implements SearchEngine {
     @Override
     public List<Restaurant> findRestaurantsByCriteria(Restaurant criteria) {
         QueryBuilder queryBuilder = restaurantToQueryBuilderConverter.convert(criteria);
-        SearchResponse searchResponse = elasticsearch.prepareSearch(INDEX_NAME).setTypes(RESTAURANT_TYPE_NAME).setQuery(queryBuilder).execute().actionGet();
-        List<Restaurant> results = searchResponseToRestaurantsListConverter.convert(searchResponse);
-        return results;
+        SearchResponse searchResponse = elasticsearch
+            .prepareSearch(INDEX_NAME)
+            .setTypes(RESTAURANT_TYPE_NAME)
+            .setQuery(queryBuilder)
+            .addSort(SortBuilders.fieldSort("created").order(SortOrder.DESC))
+            .addSort(SortBuilders.fieldSort("updated").order(SortOrder.DESC))
+            .execute().actionGet();
+        return searchResponseToRestaurantsListConverter.convert(searchResponse);
     }
 
     @Override
