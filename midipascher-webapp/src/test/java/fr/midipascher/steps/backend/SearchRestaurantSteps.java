@@ -8,28 +8,39 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import org.hamcrest.Matchers;
+import org.jbehave.core.annotations.AfterScenario;
+import org.jbehave.core.annotations.AfterStory;
+import org.jbehave.core.annotations.BeforeScenario;
+import org.jbehave.core.annotations.BeforeStory;
+import org.jbehave.core.annotations.Named;
+import org.jbehave.core.annotations.Then;
+import org.jbehave.core.annotations.When;
+import org.jbehave.core.model.ExamplesTable;
+import org.jbehave.core.model.OutcomesTable;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.persistence.search.RestaurantSearchFieldsRegistry;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 import fr.midipascher.web.resources.SearchRestaurantsResource;
-import org.hamcrest.Matchers;
-import org.jbehave.core.annotations.Given;
-import org.jbehave.core.annotations.Named;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
-import org.jbehave.core.model.ExamplesTable;
-import org.jbehave.core.model.OutcomesTable;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author louis.gueye@gmail.com
@@ -39,43 +50,49 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     private static final String SEARCH_URI = UriBuilder.fromPath(WebConstants.BACKEND_PATH)
             .path(SearchRestaurantsResource.class).build().toString();
 
-    private List<URI> createdRestaurantUris;
+    private List<URI> createdRestaurantUris = Lists.newArrayList();
 
     public SearchRestaurantSteps(Exchange exchange) {
         super(exchange);
     }
 
-
-    @Given("persisted restaurants: $table")
-    public void givenData(ExamplesTable table) {
-        createdRestaurantUris = Lists.newArrayList();
+    @BeforeStory
+    public void beforeStory() throws IOException {
         Exchange exchange = new Exchange();
         exchange.getRequest().setUri(UriBuilder.fromPath(WebConstants.BACKEND_PATH)
                                          .path(FoodSpecialtiesResource.class).build().toString());
         exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
         exchange.readURI();
         List<FoodSpecialty> allSpecialties = exchange.foodSpcialtiesFromResponse();
+        final InputStream searchRestaurantSetupInputStream =
+            new ClassPathResource("fr/midipascher/stories/backend/search/search_restaurant_setup.txt")
+              .getInputStream();
+        CsvReader csvReader = new CsvReader(searchRestaurantSetupInputStream, '|', Charset.forName("UTF-8"));
+        csvReader.readHeaders();
+        while (csvReader.readRecord()) {
+          Restaurant restaurant = fromRow(csvReader, allSpecialties);
+          restaurant.setPhoneNumber("0101010106");
+          final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
+          createdRestaurantUris.add(uri);
 
-        for (Map<String, String> row : table.getRows()) {
-            Restaurant restaurant = fromRow(row, allSpecialties);
-            restaurant.setPhoneNumber("0101010106");
-            final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
-            createdRestaurantUris.add(uri);
         }
-
     }
 
-    private Restaurant fromRow(Map<String, String> row, List<FoodSpecialty> allSpecialties) {
+    private Restaurant fromRow(CsvReader csvReader, List<FoodSpecialty> allSpecialties) throws IOException {
         Restaurant restaurant = new Restaurant();
-        restaurant.setName(row.get(RestaurantSearchFieldsRegistry.NAME));
-        restaurant.setDescription(row.get(RestaurantSearchFieldsRegistry.DESCRIPTION));
-        restaurant.setMainOffer(row.get(RestaurantSearchFieldsRegistry.MAIN_OFFER));
-        restaurant.getAddress().setStreetAddress(row.get(RestaurantSearchFieldsRegistry.STREET_ADDRESS));
-        restaurant.getAddress().setCity(row.get(RestaurantSearchFieldsRegistry.CITY));
-        restaurant.getAddress().setPostalCode(row.get(RestaurantSearchFieldsRegistry.POSTAL_CODE));
-        restaurant.getAddress().setCountryCode(row.get(RestaurantSearchFieldsRegistry.COUNTRY_CODE));
-        restaurant.setCompanyId(row.get(RestaurantSearchFieldsRegistry.COMPANY_ID));
-        Iterable<String> codes = Splitter.on(",").trimResults().split(row.get(RestaurantSearchFieldsRegistry.SPECIALTIES));
+        final String name = csvReader.get(RestaurantSearchFieldsRegistry.NAME);
+        restaurant.setName(name);
+        final String description = csvReader.get(RestaurantSearchFieldsRegistry.DESCRIPTION);
+        restaurant.setDescription(description);
+        final String mainOffer = csvReader.get(RestaurantSearchFieldsRegistry.MAIN_OFFER);
+        restaurant.setMainOffer(mainOffer);
+        restaurant.getAddress().setStreetAddress(csvReader.get(RestaurantSearchFieldsRegistry.STREET_ADDRESS));
+        restaurant.getAddress().setCity(csvReader.get(RestaurantSearchFieldsRegistry.CITY));
+        restaurant.getAddress().setPostalCode(csvReader.get(RestaurantSearchFieldsRegistry.POSTAL_CODE));
+        restaurant.getAddress().setCountryCode(csvReader.get(RestaurantSearchFieldsRegistry.COUNTRY_CODE));
+        restaurant.setCompanyId(csvReader.get(RestaurantSearchFieldsRegistry.COMPANY_ID));
+        final String specialtiesCodes = csvReader.get(RestaurantSearchFieldsRegistry.SPECIALTIES);
+        Iterable<String> codes = Splitter.on(",").trimResults().split(specialtiesCodes);
         Set<FoodSpecialty> specialties = fromCodes(codes, allSpecialties);
         restaurant.setSpecialties(specialties);
         return restaurant;
@@ -98,6 +115,18 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     public void searchRestaurantByName(@Named("name") String name) {
         Restaurant criteria = new Restaurant();
         criteria.setName(name);
+        this.exchange.getRequest().setBody(criteria);
+        this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
+        this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
+        this.exchange.getRequest().setUri(SEARCH_URI);
+        this.exchange.findEntityByCriteria();
+
+    }
+
+    @When("I search for restaurants which description matches \"$description\"")
+    public void searchRestaurantByDescription(@Named("description") String description) {
+        Restaurant criteria = new Restaurant();
+        criteria.setDescription(description);
         this.exchange.getRequest().setBody(criteria);
         this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
         this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
@@ -140,5 +169,15 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         Collections.sort(Lists.newArrayList(codes));
         builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, Joiner.on(",").join(codes));
         return builder.build();
+    }
+
+    @AfterStory
+    public void afterStory() {
+      Exchange exchange = new Exchange();
+      exchange.setCredentials("louis@rmgr.com", "secret");
+      for (URI createdRestaurantUri : createdRestaurantUris) {
+        exchange.getRequest().setUri(createdRestaurantUri.toString());
+        exchange.deleteEntity();
+      }
     }
 }

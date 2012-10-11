@@ -12,9 +12,13 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -51,6 +55,7 @@ public class SearchEngineImplTest {
         SearchRequestBuilder searchRequestBuilder = mock(SearchRequestBuilder.class);
         when(elasticsearch.prepareSearch(SearchEngine.INDEX_NAME)).thenReturn(searchRequestBuilder);
         when(searchRequestBuilder.setTypes(SearchEngine.RESTAURANT_TYPE_NAME)).thenReturn(searchRequestBuilder);
+        when(searchRequestBuilder.addSort(Matchers.<SortBuilder>any(SortBuilder.class))).thenReturn(searchRequestBuilder);
         when(searchRequestBuilder.setQuery(queryBuilder)).thenReturn(searchRequestBuilder);
         ListenableActionFuture<SearchResponse> actionFuture = mock(ListenableActionFuture.class);
         when(searchRequestBuilder.execute()).thenReturn(actionFuture);
@@ -66,4 +71,5 @@ public class SearchEngineImplTest {
         assertSame(restaurants, results);
 
     }
+  
 }

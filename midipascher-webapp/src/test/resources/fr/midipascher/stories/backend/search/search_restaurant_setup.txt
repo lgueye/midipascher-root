@@ -1,0 +1,7 @@
+| name                        | description                | mainOffer                 | address.streetAddress             | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
+| mzaokszdfjkgjdkf            | wpdfjfgidgidfh             | sdfghighdfigudhughgkf     | 25 rue awesome                    | puteaux       | 92800              | FR                  | SLD,SDW     | 552 100 525 |
+| dkgfhlfhi                   | dfkghdkfghdgkudfl          | sfdguhdfgudhudiguidfg     | 24 rue awesome                    | puteaux       | 92800              | FR                  | JPN,SLD     | 552 100 524 |
+| fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk | awesome main offer 23     | 12 rue awesome                    | gdfgdfgdgdkf  | 75004              | FR                  | CHN,JPN     | 552 100 523 |
+| dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22     | dfgdfgdgdgdfgdfg                  | gdfgdfgdgdkf  | 75003              | FR                  | BLG,CHN     | 552 100 522 |
+| awesome name 21             | awesome description 21     | vgmfmdkksksks             | dfgjdgdfjgidfjgdfogidfog          | fkfkfkkfkkfkf | 75002              | FR                  | SDW,BLG     | 552 100 521 |
+| awesome name 20             | fflflflflflflflflflflfl    | s5dfsd86gdfg786gd6gdg6    | dfg4dfg87dfg7dfg5df87g            | vkvjbkfgj     | 75001              | FR                  | SLD,SDW     | 552 100 520 |
