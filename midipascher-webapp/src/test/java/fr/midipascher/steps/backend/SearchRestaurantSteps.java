@@ -111,22 +111,14 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         return specialties;
     }
 
-    @When("I search for restaurants which name matches \"$name\"")
-    public void searchRestaurantByName(@Named("name") String name) {
+    @When("I search for restaurants which \"$criterion\" matches \"$value\"")
+    public void searchRestaurantByName(@Named("criterion") String criterion,  @Named("value") String value) {
         Restaurant criteria = new Restaurant();
-        criteria.setName(name);
-        this.exchange.getRequest().setBody(criteria);
-        this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
-        this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
-        this.exchange.getRequest().setUri(SEARCH_URI);
-        this.exchange.findEntityByCriteria();
+        if (RestaurantSearchFieldsRegistry.NAME.equalsIgnoreCase(criterion)) criteria.setName(value);
+        else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria.setDescription(value);
+        else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria.setMainOffer(value);
+        else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion)) criteria.getAddress().setStreetAddress(value);
 
-    }
-
-    @When("I search for restaurants which description matches \"$description\"")
-    public void searchRestaurantByDescription(@Named("description") String description) {
-        Restaurant criteria = new Restaurant();
-        criteria.setDescription(description);
         this.exchange.getRequest().setBody(criteria);
         this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
         this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
