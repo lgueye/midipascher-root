@@ -20,12 +20,14 @@ import org.jbehave.core.annotations.When;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.OutcomesTable;
 import org.jumpmind.symmetric.csv.CsvReader;
+import org.junit.Assert;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +43,8 @@ import fr.midipascher.persistence.search.RestaurantSearchFieldsRegistry;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 import fr.midipascher.web.resources.SearchRestaurantsResource;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author louis.gueye@gmail.com
@@ -118,6 +122,15 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria.setDescription(value);
         else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria.setMainOffer(value);
         else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion)) criteria.getAddress().setStreetAddress(value);
+        else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
+        else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setPostalCode(value);
+        else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setCountryCode(
+            value);
+        else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
+          Iterable<String> iterable = Splitter.on(",").split(value);
+          Collection<FoodSpecialty>;
+          criteria.getAddress().setCountryCode(value);
+        }
 
         this.exchange.getRequest().setBody(criteria);
         this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
@@ -130,6 +143,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     @Then("I should get the following restaurants: $table")
     public void theValuesReturnedAre(ExamplesTable table) {
         List<Restaurant> restaurants = this.exchange.restaurantsFromResponse();
+        assertEquals(table.getRowCount(), restaurants.size());
         for (int i = 0; i < table.getRowCount(); i++) {
             Map<String, String> actualRow = actualRow(restaurants.get(i)); // obtained from another step invocation
             OutcomesTable outcomes = new OutcomesTable();
@@ -158,8 +172,9 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
                 return input.getCode();
             }
         });
-        Collections.sort(Lists.newArrayList(codes));
-        builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, Joiner.on(",").join(codes));
+        final List sortedCodes = Lists.newArrayList(codes);
+        Collections.sort(sortedCodes);
+        builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, Joiner.on(",").join(sortedCodes));
         return builder.build();
     }
 
