@@ -10,9 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import org.hamcrest.Matchers;
-import org.jbehave.core.annotations.AfterScenario;
 import org.jbehave.core.annotations.AfterStory;
-import org.jbehave.core.annotations.BeforeScenario;
 import org.jbehave.core.annotations.BeforeStory;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
@@ -20,14 +18,12 @@ import org.jbehave.core.annotations.When;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.model.OutcomesTable;
 import org.jumpmind.symmetric.csv.CsvReader;
-import org.junit.Assert;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +52,8 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     private List<URI> createdRestaurantUris = Lists.newArrayList();
 
+    private List<FoodSpecialty> allSpecialties;
+
     public SearchRestaurantSteps(Exchange exchange) {
         super(exchange);
     }
@@ -67,14 +65,14 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
                                          .path(FoodSpecialtiesResource.class).build().toString());
         exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
         exchange.readURI();
-        List<FoodSpecialty> allSpecialties = exchange.foodSpcialtiesFromResponse();
+        allSpecialties = exchange.foodSpcialtiesFromResponse();
         final InputStream searchRestaurantSetupInputStream =
             new ClassPathResource("fr/midipascher/stories/backend/search/search_restaurant_setup.txt")
               .getInputStream();
         CsvReader csvReader = new CsvReader(searchRestaurantSetupInputStream, '|', Charset.forName("UTF-8"));
         csvReader.readHeaders();
         while (csvReader.readRecord()) {
-          Restaurant restaurant = fromRow(csvReader, allSpecialties);
+          Restaurant restaurant = fromRow(csvReader);
           restaurant.setPhoneNumber("0101010106");
           final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
           createdRestaurantUris.add(uri);
@@ -82,7 +80,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         }
     }
 
-    private Restaurant fromRow(CsvReader csvReader, List<FoodSpecialty> allSpecialties) throws IOException {
+    private Restaurant fromRow(CsvReader csvReader) throws IOException {
         Restaurant restaurant = new Restaurant();
         final String name = csvReader.get(RestaurantSearchFieldsRegistry.NAME);
         restaurant.setName(name);
@@ -97,12 +95,12 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         restaurant.setCompanyId(csvReader.get(RestaurantSearchFieldsRegistry.COMPANY_ID));
         final String specialtiesCodes = csvReader.get(RestaurantSearchFieldsRegistry.SPECIALTIES);
         Iterable<String> codes = Splitter.on(",").trimResults().split(specialtiesCodes);
-        Set<FoodSpecialty> specialties = fromCodes(codes, allSpecialties);
+        Set<FoodSpecialty> specialties = fromCodes(codes);
         restaurant.setSpecialties(specialties);
         return restaurant;
     }
 
-    private Set<FoodSpecialty> fromCodes(Iterable<String> codes, final Collection<FoodSpecialty> allSpecialties) {
+    private Set<FoodSpecialty> fromCodes(Iterable<String> codes) {
         Set<FoodSpecialty> specialties =  Sets.newHashSet();
         for (final String code : codes) {
             specialties.addAll(Collections2.filter(allSpecialties, new Predicate<FoodSpecialty>() {
@@ -124,16 +122,16 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion)) criteria.getAddress().setStreetAddress(value);
         else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
         else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setPostalCode(value);
-        else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setCountryCode(
-            value);
+        else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setCountryCode(value);
+        else if (RestaurantSearchFieldsRegistry.COMPANY_ID.equalsIgnoreCase(criterion)) criteria.setCompanyId(value);
         else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
-          Iterable<String> iterable = Splitter.on(",").split(value);
-          Collection<FoodSpecialty>;
-          criteria.getAddress().setCountryCode(value);
+          Iterable<String> codes = Splitter.on(",").trimResults().split(value);
+          Set<FoodSpecialty> specialties = fromCodes(codes);
+          criteria.setSpecialties(specialties);
         }
 
         this.exchange.getRequest().setBody(criteria);
-        this.exchange.getRequest().setType(MediaType.APPLICATION_JSON);
+        this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
         this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
         this.exchange.getRequest().setUri(SEARCH_URI);
         this.exchange.findEntityByCriteria();

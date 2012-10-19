@@ -160,7 +160,7 @@ public class RestaurantToQueryBuilderConverterTest {
     @Test
     public void resolveQueryBuilderShouldResolveTermsQueryBuilderForSpecialtiesField() {
         String field = RestaurantSearchFieldsRegistry.SPECIALTIES;
-        Object value = Lists.newArrayList(1L, 6L);
+        Object value = Lists.newArrayList("SDW", "CHN");
         QueryBuilder queryBuilder = underTest.resolveQueryBuilder(field, value);
         assertTrue(queryBuilder instanceof TermsQueryBuilder);
     }
@@ -318,17 +318,16 @@ public class RestaurantToQueryBuilderConverterTest {
     @Test
     public void criteriaAsMapShouldAddSpecialties() {
         Restaurant source = new Restaurant();
-        Set<FoodSpecialty> input = Sets.newHashSet(TestFixtures.validFoodSpecialty());
-        long id = 5L;
-        input.iterator().next().setId(id);
+      final FoodSpecialty foodSpecialty = TestFixtures.validFoodSpecialty();
+      Set<FoodSpecialty> input = Sets.newHashSet(foodSpecialty);
         source.setSpecialties(input);
         Map<String, Object> criteria = underTest.criteriaAsMap(source);
         assertTrue(criteria.size() == 1);
         String key = RestaurantSearchFieldsRegistry.SPECIALTIES;
         assertTrue(criteria.containsKey(key));
-        Collection ids = (Collection) criteria.get(key);
-        assertTrue(ids.size() == 1);
-        assertTrue(ids.contains(id));
+        Collection<String> codes = (Collection<String>) criteria.get(key);
+        assertTrue(codes.size() == 1);
+        assertTrue(codes.contains(foodSpecialty.getCode()));
     }
 
     @Test

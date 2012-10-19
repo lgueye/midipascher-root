@@ -94,20 +94,20 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
 
         if (CollectionUtils.isNotEmpty(specialties)) {
 
-            Collection<Long> ids = Collections2
-                    .transform(specialties, new Function<FoodSpecialty, Long>() {
+            Collection<String> codes = Collections2
+                    .transform(specialties, new Function<FoodSpecialty, String>() {
 
-                        public Long apply(FoodSpecialty foodSpecialty) {
+                        public String apply(FoodSpecialty foodSpecialty) {
 
-                            return foodSpecialty == null || foodSpecialty.getId() == null ? null
+                            return foodSpecialty == null || foodSpecialty.getCode() == null ? null
                                     : foodSpecialty
-                                    .getId();
+                                    .getCode();
 
                         }
 
                     });
 
-            builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, ids);
+            builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, codes);
 
         }
 
@@ -133,7 +133,7 @@ public class RestaurantToQueryBuilderConverter implements Converter<Restaurant, 
             return QueryBuilders.termQuery(field, value);
 
         if (RestaurantSearchFieldsRegistry.SPECIALTIES.equals(field))
-            return QueryBuilders.termsQuery(field + ".id", ((List<Long>) value).toArray());
+            return QueryBuilders.termsQuery(field + ".code", ((Collection<String>) value).toArray());
 
         throw new UnsupportedOperationException("No query builder resolved for field '" + field + "'");
 
