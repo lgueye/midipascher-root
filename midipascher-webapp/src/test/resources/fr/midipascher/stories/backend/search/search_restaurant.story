@@ -2,7 +2,7 @@ Search restaurant stories
 
 Meta:
 @refs 15
-@progress wip
+@progress done
 
 Narrative:
 Given I provide a search restaurant request
@@ -75,22 +75,3 @@ Then I should get the following restaurants:
 | name                        | description                | mainOffer                 | address.streetAddress             | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
 | fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk | awesome main offer 23     | 12 rue awesome                    | gdfgdfgdgdkf  | 75004              | FR                  | CHN,JPN     | 552 100 523 |
 | dkgfhlfhi                   | dfkghdkfghdgkudfl          | sfdguhdfgudhudiguidfg     | 24 rue awesome                    | puteaux       | 92800              | FR                  | JPN,SLD     | 552 100 524 |
-
-
-Scenario: search restaurant with wrong request type should fail
-Scenario: search restaurant by name should succeed
-Scenario: search restaurant by description should succeed
-Scenario: search restaurant by phone number should succeed
-Scenario: search restaurant by account should succeed
-Scenario: search restaurant by main offer should succeed
-Scenario: search restaurant by specialties should succeed
-Scenario: search restaurant by street adress should succeed
-Scenario: search restaurant by city should succeed
-Scenario: search restaurant by postal code should succeed
-Scenario: search restaurant by country code should succeed
-Scenario: search restaurant by halal property should succeed
-Scenario: search restaurant by kosher property should succeed
-Scenario: search restaurant by vegetarian property should succeed
-Scenario: search restaurant without size should fallback to defaultSize
-Scenario: search restaurant without from should fallback to defaultFrom
-Scenario: search restaurant without sort should fallback to defaultSort
