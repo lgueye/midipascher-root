@@ -38,14 +38,14 @@
 
 		<!-- LOGGING -->
 		<commons-logging.version>1.1.1</commons-logging.version>
-		<slf4j.version>1.7.0</slf4j.version>
+		<slf4j.version>1.7.2</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
 
 		<!-- COMMONS -->
 		<commons-lang.version>3.1</commons-lang.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
-		<commons-codec.version>1.6</commons-codec.version>
-		<commons-io.version>2.1</commons-io.version>
+		<commons-codec.version>1.7</commons-codec.version>
+		<commons-io.version>2.4</commons-io.version>
 		<guava.version>13.0.1</guava.version>
 
 		<!-- PERSISTENCE -->
@@ -54,6 +54,7 @@
 		<cglib.version>2.2.2</cglib.version>
 		<joda-time.version>2.1</joda-time.version>
 		<joda-time-hibernate.version>1.3</joda-time-hibernate.version>
+        <usertype.core.version>3.0.0.GA</usertype.core.version>
 
 		<!-- SEARCH -->
 		<elasticsearch.version>0.19.9</elasticsearch.version>
@@ -69,23 +70,24 @@
 		<jsr250-api.version>1.0</jsr250-api.version>
 
 		<!-- WEB, REST, MVC -->
-		<jersey.version>1.13</jersey.version>
-		<jackson-mapper-asl.version>1.9.9</jackson-mapper-asl.version>
-		<httpclient.version>4.2.1</httpclient.version>
+		<jersey.version>1.14</jersey.version>
+		<jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
+		<httpclient.version>4.2.2</httpclient.version>
 		<servlet-api.version>3.0-alpha-1</servlet-api.version>
 		<xstream.version>1.4.3</xstream.version>
-		<thymeleaf.version>2.0.12</thymeleaf.version>
+		<thymeleaf.version>2.0.14</thymeleaf.version>
 
 		<!-- TEST -->
 		<junit.version>4.10</junit.version>
-		<mockito.version>1.9.0</mockito.version>
+		<mockito.version>1.9.5</mockito.version>
 		<h2.version>1.3.168</h2.version>
-		<dbunit.version>2.4.8</dbunit.version>
+		<dbunit.version>2.4.9</dbunit.version>
 		<maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
 		<groovy.version>1.8.3</groovy.version>
 		<jbehave.version>3.6.9</jbehave.version>
 		<jbehave-site-resources.version>3.1.1</jbehave-site-resources.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
+        <symmetric-csv.version>3.1.7</symmetric-csv.version>
 
 		<!-- BUILD -->
 		<webapp.module.context>midipascher-webapp</webapp.module.context>
@@ -100,8 +102,8 @@
 		<maven-resources-plugin.version>2.6</maven-resources-plugin.version>
 		<maven-site-plugin.version>3.1</maven-site-plugin.version>
 		<maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
-		<maven-failsafe-plugin.version>2.12.3</maven-failsafe-plugin.version>
-		<maven-surefire-plugin.version>2.12.3</maven-surefire-plugin.version>
+		<maven-failsafe-plugin.version>2.12.4</maven-failsafe-plugin.version>
+		<maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
 		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
 		<maven-source-plugin.version>2.2</maven-source-plugin.version>
 		<hibernate3-maven-plugin.version>3.0</hibernate3-maven-plugin.version>
@@ -234,7 +236,7 @@
 			<dependency>
 				<groupId>org.jadira.usertype</groupId>
 				<artifactId>usertype.core</artifactId>
-				<version>3.0.0.CR3</version>
+				<version>${usertype.core.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>com.h2database</groupId>
@@ -613,7 +615,7 @@
             <dependency>
                 <groupId>org.jumpmind.symmetric</groupId>
                 <artifactId>symmetric-csv</artifactId>
-                <version>2.5.9</version>
+                <version>${symmetric-csv.version}</version>
             </dependency>
             
 			<!-- SECURITY -->
