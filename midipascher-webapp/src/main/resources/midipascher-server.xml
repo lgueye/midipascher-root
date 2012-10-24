@@ -47,5 +47,7 @@
 
     <bean id="jsonMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
 
+    <bean id="geocoder" class="com.google.code.geocoder.Geocoder"/>
+
 </beans>
 

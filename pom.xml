@@ -55,61 +55,62 @@
 		<joda-time.version>2.1</joda-time.version>
 		<joda-time-hibernate.version>1.3</joda-time-hibernate.version>
         <usertype.core.version>3.0.0.GA</usertype.core.version>
+        <geocoder-java.version>0.9</geocoder-java.version>
 
-		<!-- SEARCH -->
-		<elasticsearch.version>0.19.9</elasticsearch.version>
+        <!-- SEARCH -->
+        <elasticsearch.version>0.19.9</elasticsearch.version>
         <spring-elasticsearch.version>0.0.2</spring-elasticsearch.version>
 
         <!-- SERVICE -->
-		<spring.version>3.1.2.RELEASE</spring.version>
-		<validation-api.version>1.0.0.GA</validation-api.version>
-		<hibernate-validator.version>4.3.0.Final</hibernate-validator.version>
+        <spring.version>3.1.2.RELEASE</spring.version>
+        <validation-api.version>1.0.0.GA</validation-api.version>
+        <hibernate-validator.version>4.3.0.Final</hibernate-validator.version>
 
-		<!-- SECURITY -->
-		<spring.security.version>3.1.2.RELEASE</spring.security.version>
-		<jsr250-api.version>1.0</jsr250-api.version>
+        <!-- SECURITY -->
+        <spring.security.version>3.1.2.RELEASE</spring.security.version>
+        <jsr250-api.version>1.0</jsr250-api.version>
 
-		<!-- WEB, REST, MVC -->
-		<jersey.version>1.14</jersey.version>
-		<jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
-		<httpclient.version>4.2.2</httpclient.version>
-		<servlet-api.version>3.0-alpha-1</servlet-api.version>
-		<xstream.version>1.4.3</xstream.version>
-		<thymeleaf.version>2.0.14</thymeleaf.version>
+        <!-- WEB, REST, MVC -->
+        <jersey.version>1.14</jersey.version>
+        <jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
+        <httpclient.version>4.2.2</httpclient.version>
+        <servlet-api.version>3.0-alpha-1</servlet-api.version>
+        <xstream.version>1.4.3</xstream.version>
+        <thymeleaf.version>2.0.14</thymeleaf.version>
 
-		<!-- TEST -->
-		<junit.version>4.10</junit.version>
-		<mockito.version>1.9.5</mockito.version>
-		<h2.version>1.3.168</h2.version>
-		<dbunit.version>2.4.9</dbunit.version>
-		<maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
-		<groovy.version>1.8.3</groovy.version>
-		<jbehave.version>3.6.9</jbehave.version>
-		<jbehave-site-resources.version>3.1.1</jbehave-site-resources.version>
-		<commons-dbcp.version>1.4</commons-dbcp.version>
+        <!-- TEST -->
+        <junit.version>4.10</junit.version>
+        <mockito.version>1.9.5</mockito.version>
+        <h2.version>1.3.168</h2.version>
+        <dbunit.version>2.4.9</dbunit.version>
+        <maven-jetty-plugin.version>6.1.26</maven-jetty-plugin.version>
+        <groovy.version>1.8.3</groovy.version>
+        <jbehave.version>3.6.9</jbehave.version>
+        <jbehave-site-resources.version>3.1.1</jbehave-site-resources.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
         <symmetric-csv.version>3.1.7</symmetric-csv.version>
 
-		<!-- BUILD -->
-		<webapp.module.context>midipascher-webapp</webapp.module.context>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.6</java.version>
-		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-		<maven-install-plugin.version>2.4</maven-install-plugin.version>
-		<maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
-		<maven-war-plugin.version>2.2</maven-war-plugin.version>
-		<maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
-		<maven-resources-plugin.version>2.6</maven-resources-plugin.version>
-		<maven-site-plugin.version>3.1</maven-site-plugin.version>
-		<maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
-		<maven-failsafe-plugin.version>2.12.4</maven-failsafe-plugin.version>
-		<maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
-		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-		<maven-source-plugin.version>2.2</maven-source-plugin.version>
-		<hibernate3-maven-plugin.version>3.0</hibernate3-maven-plugin.version>
-		<cobertura-maven-plugin.version>2.5.1</cobertura-maven-plugin.version>
-		<dbunit-maven-plugin.version>1.0-beta-3</dbunit-maven-plugin.version>
-		<exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
+        <!-- BUILD -->
+        <webapp.module.context>midipascher-webapp</webapp.module.context>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.6</java.version>
+        <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
+        <maven-install-plugin.version>2.4</maven-install-plugin.version>
+        <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
+        <maven-war-plugin.version>2.2</maven-war-plugin.version>
+        <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.1</maven-site-plugin.version>
+        <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
+        <maven-failsafe-plugin.version>2.12.4</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
+        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+        <maven-source-plugin.version>2.2</maven-source-plugin.version>
+        <hibernate3-maven-plugin.version>3.0</hibernate3-maven-plugin.version>
+        <cobertura-maven-plugin.version>2.5.1</cobertura-maven-plugin.version>
+        <dbunit-maven-plugin.version>1.0-beta-3</dbunit-maven-plugin.version>
+        <exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
 
     </properties>
 
@@ -286,8 +287,13 @@
 				<artifactId>joda-time-hibernate</artifactId>
 				<version>${joda-time-hibernate.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>com.google.code.geocoder-java</groupId>
+                <artifactId>geocoder-java</artifactId>
+                <version>${geocoder-java.version}</version>
+            </dependency>
 
-			<!-- SEARCH -->
+            <!-- SEARCH -->
 			<dependency>
 				<groupId>org.elasticsearch</groupId>
 				<artifactId>elasticsearch</artifactId>

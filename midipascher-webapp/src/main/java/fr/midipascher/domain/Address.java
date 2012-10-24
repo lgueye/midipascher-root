@@ -12,6 +12,7 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author louis.gueye@gmail.com
@@ -23,6 +24,8 @@ public class Address extends AbstractObject implements Serializable {
     public static final String COLUMN_NAME_CITY = "address_city";
     public static final String COLUMN_NAME_POSTAL_CODE = "address_postal_code";
     public static final String COLUMN_NAME_COUNTRY_CODE = "address_country_code";
+    public static final String COLUMN_NAME_LATITUDE = "address_latitude";
+    public static final String COLUMN_NAME_LONGITUDE = "address_longitude";
 
     public static final int CONSTRAINT_STREET_ADDRESS_MAX_SIZE = 100;
     public static final int CONSTRAINT_CITY_MAX_SIZE = 50;
@@ -57,6 +60,12 @@ public class Address extends AbstractObject implements Serializable {
     @Size(min = Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, max = Address.CONSTRAINT_COUNTRY_CODE_MAX_SIZE, message = "{address.countryCode.exact.size}", groups = {
             Create.class, Update.class})
     private String countryCode;
+
+    @Column(name = Address.COLUMN_NAME_LATITUDE)
+    private BigDecimal latitude;
+
+    @Column(name = Address.COLUMN_NAME_LONGITUDE)
+    private BigDecimal longitude;
 
     @Override
     public boolean equals(final Object obj) {
@@ -133,4 +142,23 @@ public class Address extends AbstractObject implements Serializable {
         this.streetAddress = streetAddress;
     }
 
+    public BigDecimal getLatitude() {
+      return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+      this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+      return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+      this.longitude = longitude;
+    }
+
+    public String formatAddress() {
+      throw new UnsupportedOperationException("Not yet implemented");
+    }
 }
