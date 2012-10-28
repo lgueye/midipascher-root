@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @author louis.gueye@gmail.com
  */
 @Component(PreDeleteEventListener.BEAN_ID)
-public class PreDeleteEventListener extends AbstractEventListener implements
+public class PreDeleteEventListener implements
         org.hibernate.event.spi.PreDeleteEventListener {
 
     public static final String BEAN_ID = "preDeleteEventListener";
@@ -27,7 +27,6 @@ public class PreDeleteEventListener extends AbstractEventListener implements
      */
     @Override
     public boolean onPreDelete(PreDeleteEvent event) {
-        validate((AbstractEntity) event.getEntity(), ValidationContext.DELETE);
         return false;
     }
 

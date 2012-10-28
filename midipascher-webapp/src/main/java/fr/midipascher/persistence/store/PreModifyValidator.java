@@ -8,6 +8,7 @@ import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.validation.ValidationContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -18,12 +19,15 @@ import java.util.Set;
 /**
  * @author louis.gueye@gmail.com
  */
-public abstract class AbstractEventListener {
+@Component(PreModifyValidator.BEAN_ID)
+public class PreModifyValidator {
+
+    public static final String BEAN_ID = "preModifyValidator";
 
     @Autowired
     private Validator validator;
 
-    protected final <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
+    public <T extends AbstractEntity> void validate(final T type, final ValidationContext context) {
 
         Preconditions.checkArgument(type != null, "Illegal call to validate, object is required");
 
