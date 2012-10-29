@@ -9,6 +9,7 @@ import fr.midipascher.domain.Address;
 import fr.midipascher.domain.exceptions.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ public class Geocoder {
     @Autowired
     private com.google.code.geocoder.Geocoder googleGeocoder;
 
+    @Async
     public void latLong(final Address address) {
       final String formattedAddress = address.formattedAddress();
       GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(formattedAddress).setLanguage("en").getGeocoderRequest();

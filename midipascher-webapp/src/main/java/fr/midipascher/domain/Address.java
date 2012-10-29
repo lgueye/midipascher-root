@@ -5,6 +5,8 @@ package fr.midipascher.domain;
 
 import fr.midipascher.domain.validation.Create;
 import fr.midipascher.domain.validation.Update;
+
+import org.apache.commons.lang3.text.WordUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -13,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.Locale;
 
 /**
  * @author louis.gueye@gmail.com
@@ -67,7 +71,9 @@ public class Address extends AbstractObject implements Serializable {
     @Column(name = Address.COLUMN_NAME_LONGITUDE)
     private BigDecimal longitude;
 
-    @Override
+    private static final String FORMATTED_ADDRESS_PATTERN = "{0}, {1} {2}, {3}";
+
+  @Override
     public boolean equals(final Object obj) {
         if (this == obj)
             return true;
@@ -143,22 +149,28 @@ public class Address extends AbstractObject implements Serializable {
     }
 
     public BigDecimal getLatitude() {
-      return latitude;
+        return latitude;
     }
 
     public void setLatitude(BigDecimal latitude) {
-      this.latitude = latitude;
+        this.latitude = latitude;
     }
 
     public BigDecimal getLongitude() {
-      return longitude;
+        return longitude;
     }
 
     public void setLongitude(BigDecimal longitude) {
-      this.longitude = longitude;
+        this.longitude = longitude;
     }
 
     public String formattedAddress() {
-      throw new UnsupportedOperationException("Not yet implemented");
+      final String format = MessageFormat.format(FORMATTED_ADDRESS_PATTERN,
+                                                 getStreetAddress(),
+                                                 getPostalCode(),
+                                                 getCity(),
+                                                 new Locale("", getCountryCode())
+                                                     .getDisplayCountry());
+      return WordUtils.capitalize(format.toLowerCase());
     }
 }
