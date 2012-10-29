@@ -158,7 +158,7 @@ public class Address extends AbstractObject implements Serializable {
       this.longitude = longitude;
     }
 
-    public String formatAddress() {
+    public String formattedAddress() {
       throw new UnsupportedOperationException("Not yet implemented");
     }
 }

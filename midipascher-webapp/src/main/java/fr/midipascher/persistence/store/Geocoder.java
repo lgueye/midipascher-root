@@ -17,21 +17,24 @@ import java.util.List;
 /**
  * @author louis.gueye@gmail.com
  */
-@Component
+@Component(Geocoder.BEAN_ID)
 public class Geocoder {
+
+    public static final String BEAN_ID = "geocoder";
 
     @Autowired
     private com.google.code.geocoder.Geocoder googleGeocoder;
 
     public void latLong(final Address address) {
-        GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address.formatAddress()).setLanguage("en").getGeocoderRequest();
+      final String formattedAddress = address.formattedAddress();
+      GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(formattedAddress).setLanguage("en").getGeocoderRequest();
         GeocodeResponse geocoderResponse = googleGeocoder.geocode(geocoderRequest);
         List<GeocoderResult> results = geocoderResponse.getResults();
         if (CollectionUtils.isEmpty(results))
-            throw new BusinessException("geocode.no.results", null, "Please provide a precise address, geocoding failed for " + address.formatAddress());
+            throw new BusinessException("geocode.no.results", null, "Please provide a precise address, geocoding failed for " + formattedAddress);
         int countResults = results.size();
         if (countResults > 1)
-            throw new BusinessException("geocode.too.many.results", new Object[]{countResults}, "Please provide a precise address, geocoding found " + countResults + " addresses for " + address.formatAddress());
+            throw new BusinessException("geocode.too.many.results", new Object[]{countResults}, "Please provide a precise address, geocoding found " + countResults + " addresses for " + formattedAddress);
         GeocoderResult result = results.iterator().next();
         LatLng location = result.getGeometry().getLocation();
         BigDecimal lat = location.getLat();

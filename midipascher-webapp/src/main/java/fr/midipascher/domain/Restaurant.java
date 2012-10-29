@@ -27,7 +27,7 @@ import java.util.Set;
 @Entity
 @Table(name = Restaurant.TABLE_NAME, uniqueConstraints = {@UniqueConstraint(columnNames = {Restaurant.COLUMN_NAME_COMPANY_ID})})
 @XmlRootElement
-public class Restaurant extends AbstractEntity implements EventAware {
+public class Restaurant extends AbstractEntity implements EventAware, LocationAware {
 
     public static final String TABLE_NAME = "restaurant";
     public static final String TABLE_NAME_RESTAURANT_FOOD_SPECIALTY = "restaurant_food_specialty";

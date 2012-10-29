@@ -5,6 +5,7 @@ package fr.midipascher.persistence.store;
 
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.EventAware;
+import fr.midipascher.domain.LocationAware;
 import fr.midipascher.domain.validation.ValidationContext;
 import org.hibernate.event.spi.PreUpdateEvent;
 import org.joda.time.DateTime;
@@ -23,6 +24,9 @@ public class PreUpdateEventListener implements
 
     public static final String BEAN_ID = "preUpdateEventListener";
 
+    @Autowired
+    private Geocoder geocoder;
+
     /**
      *
      */
@@ -37,6 +41,9 @@ public class PreUpdateEventListener implements
         preModifyValidator.validate((AbstractEntity) eventEntity, ValidationContext.UPDATE);
         if (eventEntity instanceof EventAware) {
           ((EventAware)eventEntity).setUpdated(new DateTime());
+        }
+        if (eventEntity instanceof LocationAware) {
+            geocoder.latLong(((LocationAware) eventEntity).getAddress());
         }
         return false;
     }
