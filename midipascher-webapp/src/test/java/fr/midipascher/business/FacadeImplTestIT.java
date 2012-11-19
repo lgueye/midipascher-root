@@ -6,6 +6,7 @@ package fr.midipascher.business;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
+import fr.midipascher.domain.*;
 import junit.framework.Assert;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -50,10 +51,6 @@ import javax.sql.DataSource;
 import javax.validation.ConstraintViolationException;
 
 import fr.midipascher.TestConstants;
-import fr.midipascher.domain.Account;
-import fr.midipascher.domain.Authority;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
 import fr.midipascher.domain.business.Facade;
 import fr.midipascher.domain.exceptions.BusinessException;
 import fr.midipascher.persistence.search.SearchIndices;
@@ -364,10 +361,10 @@ public class FacadeImplTestIT {
         assertNotNull(restaurantId);
         Restaurant restaurant = this.facade.readRestaurant(accountId, restaurantId, true);
 
-        String city = "new city";
+        String city = "puteaux";
         String countryCode = "fr";
         String postalCode = "92800";
-        String streetAddress = "new street address";
+        String streetAddress = "5 rue anatole france";
         String companyId = "new company id";
         String description = "new description";
         boolean halal = true;
@@ -728,9 +725,11 @@ public class FacadeImplTestIT {
 
     // Given I index that data
     Long accountId = facade.createAccount(TestFixtures.validAccount());
-    streetAddress = "Rue Jean Jaurès";
+    streetAddress = "10 rue volta";
     restaurant = TestFixtures.validRestaurant();
-    restaurant.getAddress().setStreetAddress(streetAddress);
+      Address address = restaurant.getAddress();
+      address.setStreetAddress(streetAddress);
+    address.setCity("puteaux");
     createRestaurant(accountId, restaurant);
     expectedHitsCount = 1;
 
@@ -743,23 +742,7 @@ public class FacadeImplTestIT {
     assertEquals(expectedHitsCount, actualResponse.size());
 
     // When I search
-    query = "jean";
-    criteria = new Restaurant();
-    criteria.getAddress().setStreetAddress(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
-
-    // When I search
-    query = "jaures";
-    criteria = new Restaurant();
-    criteria.getAddress().setStreetAddress(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
-
-    // When I search
-    query = "jaurès";
+    query = "volta";
     criteria = new Restaurant();
     criteria.getAddress().setStreetAddress(query);
     actualResponse = facade.findRestaurantsByCriteria(criteria);
@@ -779,14 +762,16 @@ public class FacadeImplTestIT {
 
     // Given I index that data
     Long accountId = facade.createAccount(TestFixtures.validAccount());
-    city = "New-York";
+    city = "Neuilly-sur-Marne";
     restaurant = TestFixtures.validRestaurant();
-    restaurant.getAddress().setCity(city);
+      Address address = restaurant.getAddress();
+      address.setCity(city);
+    address.setStreetAddress("12 avenue du général de gaulle");
     createRestaurant(accountId, restaurant);
     expectedHitsCount = 1;
 
     // When I search
-    query = "new-york";
+    query = "neuilly-sur-marne";
     criteria = new Restaurant();
     criteria.getAddress().setCity(query);
     actualResponse = facade.findRestaurantsByCriteria(criteria);
@@ -794,7 +779,7 @@ public class FacadeImplTestIT {
     assertEquals(expectedHitsCount, actualResponse.size());
 
     // When I search
-    query = "new";
+    query = "neuilly";
     criteria = new Restaurant();
     criteria.getAddress().setCity(query);
     actualResponse = facade.findRestaurantsByCriteria(criteria);
@@ -802,7 +787,7 @@ public class FacadeImplTestIT {
     assertEquals(expectedHitsCount, actualResponse.size());
 
     // When I search
-    query = "york";
+    query = "marne";
     criteria = new Restaurant();
     criteria.getAddress().setCity(query);
     actualResponse = facade.findRestaurantsByCriteria(criteria);
@@ -823,7 +808,7 @@ public class FacadeImplTestIT {
 
       // Given I index that data
       Long accountId = facade.createAccount(TestFixtures.validAccount());
-      postalCode = "city 75009";
+      postalCode = "75009";
       restaurant = TestFixtures.validRestaurant();
       restaurant.getAddress().setPostalCode(postalCode);
       createRestaurant(accountId, restaurant);

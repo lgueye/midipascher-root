@@ -8,6 +8,8 @@ import com.google.code.geocoder.model.LatLng;
 import fr.midipascher.domain.Address;
 import fr.midipascher.domain.exceptions.BusinessException;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ public class Geocoder {
 
     @Autowired
     private com.google.code.geocoder.Geocoder googleGeocoder;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Geocoder.class);
 
     @Async
     public void latLong(final Address address) {
@@ -32,11 +35,18 @@ public class Geocoder {
       GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(formattedAddress).setLanguage("en").getGeocoderRequest();
         GeocodeResponse geocoderResponse = googleGeocoder.geocode(geocoderRequest);
         List<GeocoderResult> results = geocoderResponse.getResults();
-        if (CollectionUtils.isEmpty(results))
-            throw new BusinessException("geocode.no.results", null, "Please provide a precise address, geocoding failed for " + formattedAddress);
+        if (CollectionUtils.isEmpty(results)) {
+            String message = "Please provide a precise address, geocoding failed for " + formattedAddress;
+            LOGGER.error(message);
+            throw new BusinessException("geocode.no.results", null, message);
+        }
         int countResults = results.size();
-        if (countResults > 1)
-            throw new BusinessException("geocode.too.many.results", new Object[]{countResults}, "Please provide a precise address, geocoding found " + countResults + " addresses for " + formattedAddress);
+        if (countResults > 1) {
+            String message = "Please provide a precise address, geocoding found " + countResults + " addresses for " + formattedAddress;
+            LOGGER.error(message);
+            throw new BusinessException("geocode.too.many.results", new Object[]{countResults}, message);
+        }
+
         GeocoderResult result = results.iterator().next();
         LatLng location = result.getGeometry().getLocation();
         BigDecimal lat = location.getLat();

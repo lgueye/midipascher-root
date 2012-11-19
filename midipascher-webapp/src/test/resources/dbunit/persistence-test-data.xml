@@ -19,7 +19,7 @@
                 name="Tante Juliette" phone_number="0145789632" company_id="552 100 554"/>
 
     <restaurant restaurant_id="2" address_city="Paris" address_country_code="FR" address_postal_code="75009"
-                address_street_address="12 rue Lafayette"
+                address_street_address="12 rue La Fayette"
                 description="venez découvrir nos compositions uniques de salade originales" halal="0"
                 kosher="0" vegetarian="0" main_offer="Salade quinoa 6,20€" name="Noon" phone_number="0143568532"
                 company_id="552 100 558"/>

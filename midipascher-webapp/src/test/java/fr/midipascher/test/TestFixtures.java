@@ -52,7 +52,6 @@ public abstract class TestFixtures {
 
     /**
      * @param constraintViolationException
-     * @param locale
      * @param expectedMessage
      * @param expectedPath
      */
@@ -209,12 +208,10 @@ public abstract class TestFixtures {
      */
     public static Address validAddress() {
         final Address address = new Address();
-        address.setCity(RandomStringUtils.random(Address.CONSTRAINT_CITY_MAX_SIZE, TestFixtures.STANDARD_CHARSET));
+        address.setCity("paris");
         address.setCountryCode("fr");
-        address.setPostalCode(RandomStringUtils.random(Address.CONSTRAINT_POSTAL_CODE_MAX_SIZE,
-                TestFixtures.STANDARD_CHARSET));
-        address.setStreetAddress(RandomStringUtils.random(Address.CONSTRAINT_STREET_ADDRESS_MAX_SIZE,
-                TestFixtures.STANDARD_CHARSET));
+        address.setPostalCode("75009");
+        address.setStreetAddress("11 rue de Montyon");
         return address;
     }
 
