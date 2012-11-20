@@ -6,6 +6,7 @@ package fr.midipascher.persistence.search;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import fr.midipascher.TestConstants;
+import fr.midipascher.domain.Address;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.persistence.search.JsonByteArrayToRestaurantConverter;
 import fr.midipascher.persistence.search.RestaurantToJsonByteArrayConverter;
@@ -335,20 +336,23 @@ public class SearchRestaurantTestIT {
         String query;
 
         // Given I index that data
-        postalCode = "Paris 75009";
+        postalCode = "75011";
         restaurant = TestFixtures.validRestaurant();
-        restaurant.getAddress().setPostalCode(postalCode);
+        final Address address = restaurant.getAddress();
+        address.setCity("paris");
+        address.setPostalCode(postalCode);
+        address.setStreetAddress("12 rue voltaire");
         indexRestaurant(id, restaurant);
         indexRestaurant(1L, TestFixtures.validRestaurant());
         expectedHitsCount = 1;
 
         // When I search
-        query = "75009";
+        query = "75011";
         actualResponse = findByPostalCode(query);
         // Then I should get 1 hit
         assertHitsCount(expectedHitsCount, actualResponse);
         restaurant = extractRestaurantFromResponse(actualResponse);
-        assertEquals(postalCode, restaurant.getAddress().getPostalCode());
+        assertEquals(postalCode, address.getPostalCode());
 
     }
 
@@ -364,6 +368,10 @@ public class SearchRestaurantTestIT {
         // Given I index that data
         countryCode = "GB";
         restaurant = TestFixtures.validRestaurant();
+        final Address address = restaurant.getAddress();
+        address.setCity("london");
+        address.setPostalCode("W2 1UH");
+        address.setStreetAddress("92 Sussex Gardens");
         restaurant.getAddress().setCountryCode(countryCode);
         indexRestaurant(id, restaurant);
         indexRestaurant(1L, TestFixtures.validRestaurant());
