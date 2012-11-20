@@ -36,15 +36,15 @@ public class Geocoder {
         GeocodeResponse geocoderResponse = googleGeocoder.geocode(geocoderRequest);
         List<GeocoderResult> results = geocoderResponse.getResults();
         if (CollectionUtils.isEmpty(results)) {
-            String message = "Please provide a precise address, geocoding failed for " + formattedAddress;
-            LOGGER.error(message);
-            throw new BusinessException("geocode.no.results", null, message);
+            String message = "The geocoding service found no match for address [{}]";
+            LOGGER.error(message,  formattedAddress);
+            throw new BusinessException("geocode.no.results", new Object[]{formattedAddress}, message);
         }
         int countResults = results.size();
         if (countResults > 1) {
-            String message = "Please provide a precise address, geocoding found " + countResults + " addresses for " + formattedAddress;
-            LOGGER.error(message);
-            throw new BusinessException("geocode.too.many.results", new Object[]{countResults}, message);
+            String message = "The geocoding service found {} matches for addresses [{}]";
+            LOGGER.error(message, countResults, formattedAddress);
+            throw new BusinessException("geocode.too.many.results", new Object[]{countResults, formattedAddress}, message);
         }
 
         GeocoderResult result = results.iterator().next();
