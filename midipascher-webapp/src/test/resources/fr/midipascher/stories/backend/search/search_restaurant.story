@@ -69,9 +69,33 @@ Then I should get the following restaurants:
 | name                        | description                | mainOffer                 | address.streetAddress             | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
 | dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22     | dfgdfgdgdgdfgdfg                  | gdfgdfgdgdkf  | 75003              | FR                  | BLG,CHN     | 552 100 522 |
 
-Scenario: search restaurant by specialties code should succeed
-When I search for restaurants which "specialties" matches "JPN"
+Scenario: search restaurant by geo distance should succeed
+Given my current position is "19 rue ponthieu, 75008, paris"
+When I search for restaurants around me
 Then I should get the following restaurants:
-| name                        | description                | mainOffer                 | address.streetAddress             | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
-| fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk | awesome main offer 23     | 12 rue awesome                    | gdfgdfgdgdkf  | 75004              | FR                  | CHN,JPN     | 552 100 523 |
-| dkgfhlfhi                   | dfkghdkfghdgkudfl          | sfdguhdfgudhudiguidfg     | 24 rue awesome                    | puteaux       | 92800              | FR                  | JPN,SLD     | 552 100 524 |
+| name          | description                            | mainOffer             | address.streetAddress | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
+| Monteko café  | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 45 Rue de Ponthieu    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 600 |
+| Class'croute  | sandwiches · snack                     | menu sandwich à 9,5€  | 12 Rue du Colisée     | paris         | 75008              | FR                  | SDW,SLD     | 552 100 601 |
+| Flam's        | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 45 Rue de Ponthieu    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+| Nooi  | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 16 rue du Colisée | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+| Cappuccino  | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 11 bis rue du colisée    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+| Traiteur elysée gourmet  | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 14 rue du colisée    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+| PDG Rive Droite | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 20 Rue de Ponthieu  | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+| Le pré'lud | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 34 Rue de Ponthieu  | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+| jour | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 34 Rue de Ponthieu  | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+Examples:
+| property    | value   |
+| kosher      | true    |
+| specialties | SDW     |
+
+Scenario: search restaurant by geo distance with additional criteria should succeed
+Given my current position is "19 rue ponthieu, 75008, paris"
+When I search for restaurants around me which "<property>" matches "<value>"
+Then I should get the following restaurants:
+| name          | description                            | mainOffer             | address.streetAddress | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
+| Monteko café  | restaurant cacher · sandwiches · snack | menu sandwich à 11,5€ | 45 Rue de Ponthieu    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 523 |
+Examples:
+| property    | value   |
+| kosher      | true    |
+| specialties | SDW     |
+
