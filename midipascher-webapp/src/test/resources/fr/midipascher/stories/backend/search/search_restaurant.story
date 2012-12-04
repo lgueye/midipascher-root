@@ -68,8 +68,9 @@ Then I should get the following restaurants:
 | name                        | description                | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
 | dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
 
-Scenario: search restaurant by specialties code should succeed
-When I search for restaurants which "specialties" matches "JPN"
+Scenario: search restaurant by geo distance should succeed
+Given my current position is "19 rue ponthieu, 75008, paris"
+When I search for restaurants around me
 Then I should get the following restaurants:
 | name                        | description                | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
 | fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk | awesome main offer 23  | 29 rue Saint-Antoine  | paris        | 75004              | FR                  | CHN,JPN     | 552 100 523 |
