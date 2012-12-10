@@ -4,13 +4,9 @@
 | fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk         | awesome main offer 23  | 29 rue Saint-Antoine  | paris        | 75004              | FR                  | CHN,JPN     | 552 100 523 |
 | dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22             | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
 | awesome name 21             | awesome description 21             | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | SDW,BLG     | 552 100 521 |
-| awesome name 20             | fflflflflflflflflflflfl            | s5dfsd86gdfg786gd6gdg6 | 7 rue du Louvre       | paris        | 75001              | FR                  | SLD,SDW     | 552 100 520 |
-| Monteko café                | restaurant cacher sandwiches snack | menu sandwich à 11,5€  | 45 Rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 600 |
-| Class'croute                | sandwiches snack                   | menu sandwich à 9,5€   | 12 Rue du Colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
-| Flam's                      | restaurant, tartes chaudes         | menu sandwich à 11,5€  | 45 Rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 602 |
-| Nooi                        | sandwiches snack à emporter        | menu sandwich à 11,5€  | 16 rue du Colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 603 |
-| Cappuccino                  | sandwiches, paninis, snack         | menu sandwich à 11,5€  | 11 bis rue du colisée | paris        | 75008              | FR                  | SDW,SLD     | 552 100 604 |
-| Traiteur elysée gourmet     | restaurant asiatique               | menu sandwich à 11,5€  | 14 rue du colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 605 |
-| PDG Rive Droite             | restaurant, sandwiches, salades    | menu sandwich à 11,5€  | 20 Rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 606 |
-| Le pré'lud                  | rotisserie, salades                | menu sandwich à 11,5€  | 14 Rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 607 |
-| Jour                        | salades, sandwiches                | menu sandwich à 11,5€  | 44 Rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 608 |
+| awesome name 20             | fflflflflflflflflflflfl            | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SLD,SDW     | 552 100 520 |
+| Monteko café                | restaurant cacher sandwiches snack | menu sandwich à 11,5€  | 45 rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 600 |
+| Class'croute                | sandwiches snack                   | menu sandwich à 9,5€   | 59 rue Miromesnil     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
+| Flam's                      | restaurant, tartes chaudes         | menu sandwich à 11,5€  | 45 rue du colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 602 |
+| Nooi                        | sandwiches snack à emporter        | menu sandwich à 11,5€  | 6 rue de Surène       | paris        | 75008              | FR                  | SDW,SLD     | 552 100 603 |
+| Jour                        | salades, sandwiches                | menu sandwich à 11,5€  | 40 avenue Kléber      | paris        | 75016              | FR                  | SDW,SLD     | 552 100 608 |
