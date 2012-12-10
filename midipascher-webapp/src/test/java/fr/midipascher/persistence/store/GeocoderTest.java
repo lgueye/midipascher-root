@@ -45,6 +45,8 @@ public class GeocoderTest {
   public void latLongShouldThrowBusinessExceptionWithNullResults() throws Exception {
 
       Address address = mock(Address.class);
+      String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
+      when(address.formattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       List<GeocoderResult> results = null;
@@ -64,6 +66,8 @@ public class GeocoderTest {
   public void latLongShouldThrowBusinessExceptionWithEmptyResults() throws Exception {
 
       Address address = mock(Address.class);
+      String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
+      when(address.formattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       List<GeocoderResult> results = Lists.newArrayList();
@@ -83,6 +87,8 @@ public class GeocoderTest {
   public void latLongShouldThrowBusinessExceptionWithTooManyResults() throws Exception {
 
       Address address = mock(Address.class);
+      String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
+      when(address.formattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       List<GeocoderResult> results = Lists.newArrayList(mock(GeocoderResult.class), mock(GeocoderResult.class));
@@ -99,9 +105,31 @@ public class GeocoderTest {
   }
 
   @Test
+  public void latLongShouldNotGeocodeWithNullAddress() throws Exception {
+    Address address = null;
+    underTest.latLong(address);
+    verifyZeroInteractions(geocoder);
+  }
+  @Test
+  public void latLongShouldNotGeocodeWithNullFormattedAddress() throws Exception {
+    Address address = mock(Address.class);
+    underTest.latLong(address);
+    verifyZeroInteractions(geocoder);
+  }
+  @Test
+  public void latLongShouldNotGeocodeWithEmptyFormattedAddress() throws Exception {
+    Address address = mock(Address.class);
+    when(address.formattedAddress()).thenReturn("");
+    underTest.latLong(address);
+    verifyZeroInteractions(geocoder);
+  }
+  
+  @Test
   public void latLongShouldSucceed() throws Exception {
 
       Address address = mock(Address.class);
+      String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
+      when(address.formattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       final GeocoderResult result = mock(GeocoderResult.class);

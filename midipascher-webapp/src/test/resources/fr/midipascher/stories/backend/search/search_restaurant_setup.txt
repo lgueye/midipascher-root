@@ -6,7 +6,7 @@
 | awesome name 21             | awesome description 21             | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | SDW,BLG     | 552 100 521 |
 | awesome name 20             | fflflflflflflflflflflfl            | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SLD,SDW     | 552 100 520 |
 | Monteko café                | restaurant cacher sandwiches snack | menu sandwich à 11,5€  | 45 rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 600 |
-| Class'croute                | sandwiches snack                   | menu sandwich à 9,5€   | 59 rue Miromesnil     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
+| Class'croute                | sandwiches snack                   | menu sandwich à 9,5€   | 59 rue de Miromesnil  | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
 | Flam's                      | restaurant, tartes chaudes         | menu sandwich à 11,5€  | 45 rue du colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 602 |
 | Nooi                        | sandwiches snack à emporter        | menu sandwich à 11,5€  | 6 rue de Surène       | paris        | 75008              | FR                  | SDW,SLD     | 552 100 603 |
-| Jour                        | salades, sandwiches                | menu sandwich à 11,5€  | 40 avenue Kléber      | paris        | 75016              | FR                  | SDW,SLD     | 552 100 608 |
+| Jour                        | salades, sandwiches                | menu sandwich à 11,5€  | 40 avenue Kléber      | paris        | 75116              | FR                  | SDW,SLD     | 552 100 608 |

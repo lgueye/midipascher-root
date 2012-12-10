@@ -12,6 +12,8 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * @author louis.gueye@gmail.com
  */
@@ -43,7 +45,11 @@ public class PreUpdateEventListener implements
           ((EventAware)eventEntity).setUpdated(new DateTime());
         }
         if (eventEntity instanceof LocationAware) {
+          try {
             geocoder.latLong(((LocationAware) eventEntity).getAddress());
+          } catch (UnsupportedEncodingException e) {
+            // TODO: handle this error
+          }
         }
         return false;
     }
