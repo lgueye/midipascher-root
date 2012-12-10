@@ -1052,7 +1052,7 @@
 				<jbehave.embeddables>**/*Story.java</jbehave.embeddables>
 				<jbehave.skip>false</jbehave.skip>
 				<jbehave.threads>2</jbehave.threads>
-				<jbehave.storyTimeoutInSecs>3</jbehave.storyTimeoutInSecs>
+				<jbehave.storyTimeoutInSecs>10</jbehave.storyTimeoutInSecs>
 				<jbehave.ignoreFailureInStories>false</jbehave.ignoreFailureInStories>
 				<jbehave.meta.filters>+progress wip</jbehave.meta.filters>
 			</properties>

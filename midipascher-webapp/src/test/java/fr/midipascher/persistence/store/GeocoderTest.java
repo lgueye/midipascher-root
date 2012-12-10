@@ -23,11 +23,7 @@ import fr.midipascher.domain.exceptions.BusinessException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * User: lgueye Date: 29/10/12 Time: 12:26
@@ -46,7 +42,7 @@ public class GeocoderTest {
 
       Address address = mock(Address.class);
       String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
-      when(address.formattedAddress()).thenReturn(formattedAddress);
+      when(address.getFormattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       List<GeocoderResult> results = null;
@@ -58,7 +54,8 @@ public class GeocoderTest {
           assertEquals("geocode.no.results", e.getMessageCode());
       }
       verify(address).formattedAddress();
-      verify(geocoder).geocode(Matchers.<GeocoderRequest>any());
+      verify(address).getFormattedAddress();
+      verify(geocoder, times(11)).geocode(Matchers.<GeocoderRequest>any());
       verifyNoMoreInteractions(address, geocoder);
   }
 
@@ -67,7 +64,7 @@ public class GeocoderTest {
 
       Address address = mock(Address.class);
       String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
-      when(address.formattedAddress()).thenReturn(formattedAddress);
+      when(address.getFormattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       List<GeocoderResult> results = Lists.newArrayList();
@@ -79,7 +76,8 @@ public class GeocoderTest {
           assertEquals("geocode.no.results", e.getMessageCode());
       }
       verify(address).formattedAddress();
-      verify(geocoder).geocode(Matchers.<GeocoderRequest>any());
+      verify(address).getFormattedAddress();
+      verify(geocoder, times(11)).geocode(Matchers.<GeocoderRequest>any());
       verifyNoMoreInteractions(address, geocoder);
   }
 
@@ -88,7 +86,7 @@ public class GeocoderTest {
 
       Address address = mock(Address.class);
       String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
-      when(address.formattedAddress()).thenReturn(formattedAddress);
+      when(address.getFormattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       List<GeocoderResult> results = Lists.newArrayList(mock(GeocoderResult.class), mock(GeocoderResult.class));
@@ -100,7 +98,8 @@ public class GeocoderTest {
           assertEquals("geocode.too.many.results", e.getMessageCode());
       }
       verify(address).formattedAddress();
-      verify(geocoder).geocode(Matchers.<GeocoderRequest>any());
+      verify(address).getFormattedAddress();
+      verify(geocoder, times(2)).geocode(Matchers.<GeocoderRequest>any());
       verifyNoMoreInteractions(address, geocoder);
   }
 
@@ -116,10 +115,11 @@ public class GeocoderTest {
     underTest.latLong(address);
     verifyZeroInteractions(geocoder);
   }
+
   @Test
   public void latLongShouldNotGeocodeWithEmptyFormattedAddress() throws Exception {
     Address address = mock(Address.class);
-    when(address.formattedAddress()).thenReturn("");
+    when(address.getFormattedAddress()).thenReturn("");
     underTest.latLong(address);
     verifyZeroInteractions(geocoder);
   }
@@ -129,7 +129,7 @@ public class GeocoderTest {
 
       Address address = mock(Address.class);
       String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
-      when(address.formattedAddress()).thenReturn(formattedAddress);
+      when(address.getFormattedAddress()).thenReturn(formattedAddress);
       GeocodeResponse geocodeResponse = mock(GeocodeResponse.class);
       when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
       final GeocoderResult result = mock(GeocoderResult.class);
@@ -145,7 +145,8 @@ public class GeocoderTest {
       when(location.getLng()).thenReturn(lng);
       underTest.latLong(address);
       verify(address).formattedAddress();
-      verify(geocoder).geocode(Matchers.<GeocoderRequest>any());
+      verify(address).getFormattedAddress();
+      verify(geocoder, times(2)).geocode(Matchers.<GeocoderRequest>any());
       verify(geocodeResponse).getResults();
       verify(result).getGeometry();
       verify(geometry).getLocation();

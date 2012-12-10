@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * @author louis.gueye@gmail.com
@@ -72,8 +73,9 @@ public class Address extends AbstractObject implements Serializable {
     private BigDecimal longitude;
 
     private static final String FORMATTED_ADDRESS_PATTERN = "{0}, {1} {2}, {3}";
+    private String formattedAddress;
 
-  @Override
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj)
             return true;
@@ -164,13 +166,21 @@ public class Address extends AbstractObject implements Serializable {
         this.longitude = longitude;
     }
 
-    public String formattedAddress() {
+    public void formattedAddress() {
       final String format = MessageFormat.format(FORMATTED_ADDRESS_PATTERN,
                                                  getStreetAddress(),
                                                  getPostalCode(),
                                                  getCity(),
                                                  new Locale("", getCountryCode())
                                                      .getDisplayCountry());
-      return WordUtils.capitalize(format.toLowerCase());
+        this.formattedAddress = WordUtils.capitalize(format.toLowerCase());
+    }
+
+    public String getFormattedAddress() {
+        return formattedAddress;
+    }
+
+    public void setFormattedAddress(String formattedAddress) {
+        this.formattedAddress = formattedAddress;
     }
 }

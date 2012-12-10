@@ -8,5 +8,4 @@
 | Monteko café                | restaurant cacher sandwiches snack | menu sandwich à 11,5€  | 45 rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 600 |
 | Class'croute                | sandwiches snack                   | menu sandwich à 9,5€   | 59 rue de Miromesnil  | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
 | Flam's                      | restaurant, tartes chaudes         | menu sandwich à 11,5€  | 45 rue du colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 602 |
-| Nooi                        | sandwiches snack à emporter        | menu sandwich à 11,5€  | 6 rue de Surène       | paris        | 75008              | FR                  | SDW,SLD     | 552 100 603 |
 | Jour                        | salades, sandwiches                | menu sandwich à 11,5€  | 40 avenue Kléber      | paris        | 75116              | FR                  | SDW,SLD     | 552 100 608 |
