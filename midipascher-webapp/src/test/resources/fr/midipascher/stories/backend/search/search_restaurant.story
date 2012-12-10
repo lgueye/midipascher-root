@@ -13,7 +13,7 @@ Scenario: search restaurant by name should succeed
 When I search for restaurants which "name" matches "awesome"
 Then I should get the following restaurants:
 | name                        | description                | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
-| awesome name 20             | fflflflflflflflflflflfl    | s5dfsd86gdfg786gd6gdg6 | 7 rue du Louvre       | paris        | 75001              | FR                  | SDW,SLD     | 552 100 520 |
+| awesome name 20             | fflflflflflflflflflflfl    | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SDW,SLD     | 552 100 520 |
 | awesome name 21             | awesome description 21     | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | BLG,SDW     | 552 100 521 |
 
 Scenario: search restaurant by description should succeed
@@ -55,7 +55,7 @@ Scenario: search restaurant by country code should succeed
 When I search for restaurants which "address.countryCode" matches "FR"
 Then I should get the following restaurants:
 | name                        | description                | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
-| awesome name 20             | fflflflflflflflflflflfl    | s5dfsd86gdfg786gd6gdg6 | 7 rue du Louvre       | paris        | 75001              | FR                  | SDW,SLD     | 552 100 520 |
+| awesome name 20             | fflflflflflflflflflflfl    | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SDW,SLD     | 552 100 520 |
 | awesome name 21             | awesome description 21     | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | BLG,SDW     | 552 100 521 |
 | dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
 | fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk | awesome main offer 23  | 29 rue Saint-Antoine  | paris        | 75004              | FR                  | CHN,JPN     | 552 100 523 |
