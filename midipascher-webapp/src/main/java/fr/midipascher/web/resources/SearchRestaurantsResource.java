@@ -39,7 +39,6 @@ public class SearchRestaurantsResource {
     public Response find(final Restaurant criteria) throws Throwable {
 
         final List<Restaurant> results = facade.findRestaurantsByCriteria(criteria);
-        System.out.println("results = " + results);
 
         final GenericEntity<List<Restaurant>> entity = new GenericEntity<List<Restaurant>>(results) {
         };

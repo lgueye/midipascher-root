@@ -4,11 +4,14 @@
 package fr.midipascher.persistence.store;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Address;
 import fr.midipascher.domain.EventAware;
 import fr.midipascher.domain.LocationAware;
 import fr.midipascher.domain.validation.ValidationContext;
 import org.hibernate.event.spi.PreInsertEvent;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +25,9 @@ public class PreInsertEventListener implements
         org.hibernate.event.spi.PreInsertEventListener {
 
     public static final String BEAN_ID = "preInsertEventListener";
+
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(PreInsertEventListener.class);
 
     @Autowired
     private PreModifyValidator preModifyValidator;
@@ -47,11 +53,14 @@ public class PreInsertEventListener implements
             ((EventAware) eventEntity).setCreated(new DateTime());
         }
         if (eventEntity instanceof LocationAware) {
-          try {
-            geocoder.latLong(((LocationAware) eventEntity).getAddress());
-          } catch (UnsupportedEncodingException e) {
-            // TODO: handle this error
-          }
+            Address address = null;
+            try {
+                address = ((LocationAware) eventEntity).getAddress();
+                address.formattedAddress();
+                geocoder.latLong(address);
+            } catch (UnsupportedEncodingException e) {
+                LOGGER.error("Could not geocode address [{}]", address);
+            }
         }
         return false;
     }

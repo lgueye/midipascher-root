@@ -4,11 +4,14 @@
 package fr.midipascher.persistence.store;
 
 import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Address;
 import fr.midipascher.domain.EventAware;
 import fr.midipascher.domain.LocationAware;
 import fr.midipascher.domain.validation.ValidationContext;
 import org.hibernate.event.spi.PreUpdateEvent;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +23,9 @@ import java.io.UnsupportedEncodingException;
 @Component(PreUpdateEventListener.BEAN_ID)
 public class PreUpdateEventListener implements
         org.hibernate.event.spi.PreUpdateEventListener {
+
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(PreUpdateEventListener.class);
 
     @Autowired
     private PreModifyValidator preModifyValidator;
@@ -42,14 +48,17 @@ public class PreUpdateEventListener implements
         final Object eventEntity = event.getEntity();
         preModifyValidator.validate((AbstractEntity) eventEntity, ValidationContext.UPDATE);
         if (eventEntity instanceof EventAware) {
-          ((EventAware)eventEntity).setUpdated(new DateTime());
+            ((EventAware)eventEntity).setUpdated(new DateTime());
         }
         if (eventEntity instanceof LocationAware) {
-          try {
-            geocoder.latLong(((LocationAware) eventEntity).getAddress());
-          } catch (UnsupportedEncodingException e) {
-            // TODO: handle this error
-          }
+            Address address = null;
+            try {
+              address = ((LocationAware) eventEntity).getAddress();
+              address.formattedAddress();
+              geocoder.latLong(address);
+            } catch (UnsupportedEncodingException e) {
+              LOGGER.error("Could not geocode address [{}]", address);
+            }
         }
         return false;
     }

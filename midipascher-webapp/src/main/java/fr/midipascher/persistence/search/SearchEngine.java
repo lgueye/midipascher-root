@@ -1,9 +1,9 @@
 package fr.midipascher.persistence.search;
 
+import java.util.List;
+
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.Restaurant;
-
-import java.util.List;
 
 /**
  * @author louis.gueye@gmail.com
