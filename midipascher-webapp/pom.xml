@@ -488,7 +488,8 @@
                     </plugin>
                 </plugins>
             </build>
-
+        </profile>
+        <profile>
             <id>acceptance-done</id>
             <build>
                 <resources>

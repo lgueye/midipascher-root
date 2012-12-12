@@ -26,7 +26,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * User: lgueye Date: 29/10/12 Time: 12:26
+ * @author louis.gueye@gmail.com
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GeocoderTest {
@@ -53,7 +53,6 @@ public class GeocoderTest {
       } catch (BusinessException e) {
           assertEquals("geocode.no.results", e.getMessageCode());
       }
-      verify(address).formattedAddress();
       verify(address).getFormattedAddress();
       verify(geocoder, times(11)).geocode(Matchers.<GeocoderRequest>any());
       verifyNoMoreInteractions(address, geocoder);
@@ -75,7 +74,6 @@ public class GeocoderTest {
       } catch (BusinessException e) {
           assertEquals("geocode.no.results", e.getMessageCode());
       }
-      verify(address).formattedAddress();
       verify(address).getFormattedAddress();
       verify(geocoder, times(11)).geocode(Matchers.<GeocoderRequest>any());
       verifyNoMoreInteractions(address, geocoder);
@@ -97,7 +95,6 @@ public class GeocoderTest {
       } catch (BusinessException e) {
           assertEquals("geocode.too.many.results", e.getMessageCode());
       }
-      verify(address).formattedAddress();
       verify(address).getFormattedAddress();
       verify(geocoder, times(2)).geocode(Matchers.<GeocoderRequest>any());
       verifyNoMoreInteractions(address, geocoder);
@@ -144,16 +141,14 @@ public class GeocoderTest {
       BigDecimal lng = mock(BigDecimal.class);
       when(location.getLng()).thenReturn(lng);
       underTest.latLong(address);
-      verify(address).formattedAddress();
       verify(address).getFormattedAddress();
+      verify(address).addCoordinates(lat, lng);
       verify(geocoder, times(2)).geocode(Matchers.<GeocoderRequest>any());
       verify(geocodeResponse).getResults();
       verify(result).getGeometry();
       verify(geometry).getLocation();
       verify(location).getLat();
       verify(location).getLng();
-      verify(address).setLatitude(lat);
-      verify(address).setLongitude(lng);
       verifyNoMoreInteractions(address, geocodeResponse, geocoder, result, geometry, location);
       verifyZeroInteractions(lat, lng);
 
