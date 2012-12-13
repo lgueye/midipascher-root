@@ -56,8 +56,9 @@ public class PreUpdateEventListener implements
               address = ((LocationAware) eventEntity).getAddress();
               address.formattedAddress();
               geocoder.latLong(address);
-            } catch (UnsupportedEncodingException e) {
-              LOGGER.error("Could not geocode address [{}]", address);
+            } catch (Throwable e) {
+              // Insert/Update should never fail due to geocode issue
+              LOGGER.warn("Could not geocode address [{}]", address);
             }
         }
         return false;

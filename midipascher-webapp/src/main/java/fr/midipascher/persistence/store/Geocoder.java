@@ -41,7 +41,7 @@ public class Geocoder {
         if (location != null) {
             BigDecimal lat = location.getLat();
             BigDecimal lng = location.getLng();
-            address.addCoordinates(lat, lng);
+            address.addCoordinates(lat.doubleValue(), lng.doubleValue());
         }
     }
 
@@ -49,6 +49,7 @@ public class Geocoder {
     private LatLng latLong(final String address) throws UnsupportedEncodingException {
 
         if (Strings.isNullOrEmpty(address)) return null;
+        System.out.println(String.format("Trying to geocode address [%s]", address));
         GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(address).setLanguage("en").getGeocoderRequest();
         GeocodeResponse geocoderResponse = googleGeocoder.geocode(geocoderRequest);
         List<GeocoderResult> results = null;
@@ -79,6 +80,8 @@ public class Geocoder {
         }
 
         GeocoderResult result = results.iterator().next();
+        System.out.println(String.format("Successfully geocoded address [%s]", address));
+
         return result.getGeometry().getLocation();
     }
 

@@ -15,6 +15,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+
 import java.util.Locale;
 
 import static org.junit.Assert.fail;
@@ -42,8 +44,10 @@ public abstract class BaseValidations {
             TestFixtures.assertViolationContainsTemplateAndMessage(constraintViolationException, expectedMessage,
                     expectedPath);
         } catch (final Throwable throwable) {
-            fail("Expected " + ConstraintViolationException.class.getName() + ", got " + throwable.getClass().getName());
-            throwable.printStackTrace();
+
+          System.out.println("throwable = " + throwable);
+          throwable.printStackTrace();
+          fail("Expected " + ConstraintViolationException.class.getName() + ", got " + throwable.getClass().getName());
         }
     }
 }

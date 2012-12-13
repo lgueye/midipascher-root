@@ -125,6 +125,7 @@ public class GeocoderTest {
     underTest.latLong(address);
     verifyZeroInteractions(geocoder);
   }
+
   @Test
   public void latLongShouldNotGeocodeWithNullFormattedAddress() throws Exception {
     Address address = mock(Address.class);
@@ -156,20 +157,25 @@ public class GeocoderTest {
       LatLng location = mock(LatLng.class);
       when(geometry.getLocation()).thenReturn(location);
       BigDecimal lat = mock(BigDecimal.class);
+      Double latAsDouble = 9d;
+      when(lat.doubleValue()).thenReturn(latAsDouble);
       when(location.getLat()).thenReturn(lat);
       BigDecimal lng = mock(BigDecimal.class);
+      Double lngAsDouble = 5d;
+      when(lng.doubleValue()).thenReturn(lngAsDouble);
       when(location.getLng()).thenReturn(lng);
       underTest.latLong(address);
       verify(address).getFormattedAddress();
-      verify(address).addCoordinates(lat, lng);
+      verify(address).addCoordinates(latAsDouble, lngAsDouble);
       verify(geocoder, times(2)).geocode(Matchers.<GeocoderRequest>any());
       verify(geocodeResponse).getResults();
       verify(result).getGeometry();
       verify(geometry).getLocation();
       verify(location).getLat();
+      verify(lat).doubleValue();
+      verify(lng).doubleValue();
       verify(location).getLng();
       verifyNoMoreInteractions(address, geocodeResponse, geocoder, result, geometry, location);
-      verifyZeroInteractions(lat, lng);
 
   }
 

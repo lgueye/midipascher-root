@@ -73,7 +73,7 @@ Then I should get the following restaurants:
 | dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
 
 Scenario: search restaurant by geo distance should succeed
-Given my current location is "19 rue ponthieu, 75008, paris"
+Given my current location is "19 rue ponthieu, 75008 paris"
 When I search for restaurants near my location
 Then I should get the following restaurants:
 | name                    | description                        | mainOffer             | address.streetAddress | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
@@ -83,7 +83,7 @@ Then I should get the following restaurants:
 | Jour                    | salades, sandwiches                | menu sandwich à 11,5€ | 40 avenue Kléber      | paris         | 75116              | FR                  | SDW,SLD     | 552 100 608 |
 
 Scenario: search restaurant by geo distance with additional criteria should succeed
-Given my current location is "19 rue ponthieu, 75008, paris"
+Given my current location is "19 rue ponthieu, 75008 paris"
 When I search for restaurants near my location which "<property>" matches "<value>"
 Then I should get the following restaurants:
 | name                    | description                        | mainOffer             | address.streetAddress | address.city  | address.postalCode | address.countryCode | specialties | companyId   |

@@ -16,28 +16,28 @@ public class Coordinates extends AbstractObject implements Serializable {
     public static final String COLUMN_NAME_LONGITUDE = "address_longitude";
 
     @Column(name = Coordinates.COLUMN_NAME_LATITUDE)
-    private BigDecimal lat;
+    private Double lat;
 
     @Column(name = Coordinates.COLUMN_NAME_LONGITUDE)
-    private BigDecimal lng;
+    private Double lng;
 
-    public BigDecimal getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(BigDecimal lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public BigDecimal getLng() {
+    public Double getLng() {
         return lng;
     }
 
-    public void setLng(BigDecimal lng) {
+    public void setLng(Double lng) {
         this.lng = lng;
     }
 
-    @Override
+  @Override
     public boolean equals(Object o) {
         if (this == o) {
           return true;

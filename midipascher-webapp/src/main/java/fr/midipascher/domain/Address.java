@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -34,6 +35,8 @@ public class Address extends AbstractObject implements Serializable {
     public static final int CONSTRAINT_CITY_MAX_SIZE = 50;
     public static final int CONSTRAINT_POSTAL_CODE_MAX_SIZE = 10;
     public static final int CONSTRAINT_COUNTRY_CODE_MAX_SIZE = 2;
+
+    private static final String FORMATTED_ADDRESS_PATTERN = "{0}, {1} {2}, {3}";
 
     /**
      *
@@ -66,7 +69,7 @@ public class Address extends AbstractObject implements Serializable {
 
     private Coordinates coordinates;
 
-    private static final String FORMATTED_ADDRESS_PATTERN = "{0}, {1} {2}, {3}";
+    @Transient
     private String formattedAddress;
 
     public void formattedAddress() {
@@ -143,16 +146,16 @@ public class Address extends AbstractObject implements Serializable {
 
     }
 
-    @Override
-    public int hashCode() {
-      int result = streetAddress.hashCode();
-      result = 31 * result + city.hashCode();
-      result = 31 * result + postalCode.hashCode();
-      result = 31 * result + countryCode.hashCode();
-      return result;
-    }
+  @Override
+  public int hashCode() {
+    int result = streetAddress != null ? streetAddress.hashCode() : 0;
+    result = 31 * result + (city != null ? city.hashCode() : 0);
+    result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
+    result = 31 * result + (countryCode != null ? countryCode.hashCode() : 0);
+    return result;
+  }
 
-    public void addCoordinates(BigDecimal lat, BigDecimal lng) {
+  public void addCoordinates(Double lat, Double lng) {
         setCoordinates(new Coordinates());
         getCoordinates().setLat(lat);
         getCoordinates().setLng(lng);
