@@ -63,7 +63,7 @@ public class Geocoder {
         if (geocoderResponse == null) {
             String message = "Could not contact the geocoder service";
             LOGGER.error(message);
-            throw new BusinessException("geocode.service.unavailable");
+            throw new BusinessException("geocode.service.unavailable", null, message);
         }
 
         if (CollectionUtils.isEmpty(results)) {

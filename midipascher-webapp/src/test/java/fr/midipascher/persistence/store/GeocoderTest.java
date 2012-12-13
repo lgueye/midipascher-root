@@ -38,6 +38,25 @@ public class GeocoderTest {
   private Geocoder underTest;
 
   @Test
+  public void latLongShouldThrowBusinessExceptionWithNullResponse() throws Exception {
+
+      Address address = mock(Address.class);
+      String formattedAddress = "15 rue La Fayette, 75009 Paris, France";
+      when(address.getFormattedAddress()).thenReturn(formattedAddress);
+      GeocodeResponse geocodeResponse = null;
+      when(geocoder.geocode(Matchers.<GeocoderRequest>any())).thenReturn(geocodeResponse);
+      try {
+          underTest.latLong(address);
+          fail("BusinessException expected");
+      } catch (BusinessException e) {
+          assertEquals("geocode.service.unavailable", e.getMessageCode());
+      }
+      verify(address).getFormattedAddress();
+      verify(geocoder, times(11)).geocode(Matchers.<GeocoderRequest>any());
+      verifyNoMoreInteractions(address, geocoder);
+  }
+
+  @Test
   public void latLongShouldThrowBusinessExceptionWithNullResults() throws Exception {
 
       Address address = mock(Address.class);
