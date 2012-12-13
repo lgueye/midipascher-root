@@ -44,10 +44,8 @@ public abstract class BaseValidations {
             TestFixtures.assertViolationContainsTemplateAndMessage(constraintViolationException, expectedMessage,
                     expectedPath);
         } catch (final Throwable throwable) {
-
-          System.out.println("throwable = " + throwable);
-          throwable.printStackTrace();
-          fail("Expected " + ConstraintViolationException.class.getName() + ", got " + throwable.getClass().getName());
+            throwable.printStackTrace();
+            fail("Expected " + ConstraintViolationException.class.getName() + ", got " + throwable.getClass().getName());
         }
     }
 }
