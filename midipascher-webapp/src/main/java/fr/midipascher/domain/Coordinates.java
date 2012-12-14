@@ -1,10 +1,10 @@
 package fr.midipascher.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * @author louis.gueye@gmail.com
@@ -59,4 +59,7 @@ public class Coordinates extends AbstractObject implements Serializable {
       return result;
     }
 
+    public boolean empty() {
+        return lat == null || lng == null;
+    }
 }

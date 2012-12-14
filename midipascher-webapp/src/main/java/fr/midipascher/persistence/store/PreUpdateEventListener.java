@@ -5,6 +5,7 @@ package fr.midipascher.persistence.store;
 
 import fr.midipascher.domain.AbstractEntity;
 import fr.midipascher.domain.Address;
+import fr.midipascher.domain.Coordinates;
 import fr.midipascher.domain.EventAware;
 import fr.midipascher.domain.LocationAware;
 import fr.midipascher.domain.validation.ValidationContext;
@@ -14,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author louis.gueye@gmail.com
@@ -53,9 +52,9 @@ public class PreUpdateEventListener implements
         if (eventEntity instanceof LocationAware) {
             Address address = null;
             try {
-              address = ((LocationAware) eventEntity).getAddress();
-              address.formattedAddress();
-              geocoder.latLong(address);
+                address = ((LocationAware) eventEntity).getAddress();
+                address.formattedAddress();
+                geocoder.latLong(address);
             } catch (Throwable e) {
               // Insert/Update should never fail due to geocode issue
               LOGGER.warn("Could not geocode address [{}]", address);

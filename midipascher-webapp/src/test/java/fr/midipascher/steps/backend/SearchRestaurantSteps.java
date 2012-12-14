@@ -105,24 +105,8 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     @When("I search for restaurants which \"$criterion\" matches \"$value\"")
     public void searchRestaurantByCriteria(@Named("criterion") String criterion, @Named("value") String value) {
-        Restaurant criteria = new Restaurant();
-        if (RestaurantSearchFieldsRegistry.NAME.equalsIgnoreCase(criterion)) criteria.setName(value);
-        else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria.setDescription(value);
-        else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria.setMainOffer(value);
-        else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion))
-            criteria.getAddress().setStreetAddress(value);
-        else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
-        else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion))
-            criteria.getAddress().setPostalCode(value);
-        else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion))
-            criteria.getAddress().setCountryCode(value);
-        else if (RestaurantSearchFieldsRegistry.COMPANY_ID.equalsIgnoreCase(criterion)) criteria.setCompanyId(value);
-        else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
-            Iterable<String> codes = Splitter.on(",").trimResults().split(value);
-            Set<FoodSpecialty> specialties = fromCodes(codes);
-            criteria.setSpecialties(specialties);
-        }
-
+        final Restaurant criteria = new Restaurant();
+        setCriteria(criterion, value, criteria);
         this.exchange.getRequest().setBody(criteria);
         this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
         this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
@@ -131,7 +115,29 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     }
 
-    @Then("I should get the following restaurants: $table")
+  private void setCriteria(String criterion, String value, final Restaurant criteria) {
+    if (RestaurantSearchFieldsRegistry.NAME.equalsIgnoreCase(criterion)) criteria.setName(value);
+    else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria
+        .setDescription(value);
+    else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria
+        .setMainOffer(value);
+    else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion))
+        criteria.getAddress().setStreetAddress(value);
+    else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
+    else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion))
+        criteria.getAddress().setPostalCode(value);
+    else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion))
+        criteria.getAddress().setCountryCode(value);
+    else if (RestaurantSearchFieldsRegistry.COMPANY_ID.equalsIgnoreCase(criterion)) criteria
+        .setCompanyId(value);
+    else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
+        Iterable<String> codes = Splitter.on(",").trimResults().split(value);
+        Set<FoodSpecialty> specialties = fromCodes(codes);
+        criteria.setSpecialties(specialties);
+    }
+  }
+
+  @Then("I should get the following restaurants: $table")
     public void theValuesReturnedAre(ExamplesTable table) {
         List<Restaurant> restaurants = this.exchange.restaurantsFromResponse();
         assertEquals(table.getRowCount(), restaurants.size());
@@ -184,25 +190,15 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
         this.exchange.findEntityByCriteria();
     }
 
-    @When("I search for restaurants near my location which \"<property>\" matches \"<value>\"")
-    public void searchForRestaurantsNearMyLocationAndCriteria(@Named("property") String criterion,
-                                                              @Named("value") String value) {
+    @When("I search for restaurants near my location with additional criteria \"$criteria\"")
+    public void searchForRestaurantsNearMyLocationAndCriteria(@Named("criteria") String inlineCriteria) {
         Restaurant criteria = (Restaurant)this.exchange.getRequest().getBody();
-        if (RestaurantSearchFieldsRegistry.NAME.equalsIgnoreCase(criterion)) criteria.setName(value);
-        else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria.setDescription(value);
-        else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria.setMainOffer(value);
-        else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion))
-            criteria.getAddress().setStreetAddress(value);
-        else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
-        else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion))
-            criteria.getAddress().setPostalCode(value);
-        else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion))
-            criteria.getAddress().setCountryCode(value);
-        else if (RestaurantSearchFieldsRegistry.COMPANY_ID.equalsIgnoreCase(criterion)) criteria.setCompanyId(value);
-        else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
-            Iterable<String> codes = Splitter.on(",").trimResults().split(value);
-            Set<FoodSpecialty> specialties = fromCodes(codes);
-            criteria.setSpecialties(specialties);
+        String[] keyValuePairs = inlineCriteria.split(" ");
+        for (String keyValuePair : keyValuePairs) {
+          final String[] keyValuePairArray = keyValuePair.split("=");
+          String key = keyValuePairArray[0];
+          String value = keyValuePairArray[1];
+          setCriteria(key, value, criteria);
         }
 
         this.exchange.getRequest().setBody(criteria);

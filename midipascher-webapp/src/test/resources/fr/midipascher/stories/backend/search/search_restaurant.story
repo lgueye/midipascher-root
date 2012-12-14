@@ -72,23 +72,15 @@ Then I should get the following restaurants:
 | name                        | description                | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
 | dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
 
-Scenario: search restaurant by geo distance should succeed
-Given my current location is "19 rue ponthieu, 75008 paris"
-When I search for restaurants near my location
-Then I should get the following restaurants:
-| name                    | description                        | mainOffer             | address.streetAddress | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
-| Monteko café            | restaurant cacher sandwiches snack | menu sandwich à 11,5€ | 45 rue de Ponthieu    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 600 |
-| Class'croute            | sandwiches snack                   | menu sandwich à 9,5€  | 59 rue de Miromesnil  | paris         | 75008              | FR                  | SDW,SLD     | 552 100 601 |
-| Flam's                  | restaurant, tartes chaudes         | menu sandwich à 11,5€ | 45 rue du colisée     | paris         | 75008              | FR                  | SDW,SLD     | 552 100 602 |
-| Jour                    | salades, sandwiches                | menu sandwich à 11,5€ | 40 avenue Kléber      | paris         | 75116              | FR                  | SDW,SLD     | 552 100 608 |
-
 Scenario: search restaurant by geo distance with additional criteria should succeed
 Given my current location is "19 rue ponthieu, 75008 paris"
-When I search for restaurants near my location which "<property>" matches "<value>"
+When I search for restaurants near my location with additional criteria "specialties=SDW"
 Then I should get the following restaurants:
-| name                    | description                        | mainOffer             | address.streetAddress | address.city  | address.postalCode | address.countryCode | specialties | companyId   |
-| Monteko café            | restaurant cacher sandwiches snack | menu sandwich à 11,5€ | 45 Rue de Ponthieu    | paris         | 75008              | FR                  | SDW,SLD     | 552 100 600 |
-Examples:
-| property    | value |
-| kosher      | true  |
-| specialties | SDW   |
+| name             | description                        | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
+| Monteko café     | restaurant cacher sandwiches snack | menu sandwich à 11,5€  | 45 Rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 600 |
+| Flam's           | restaurant, tartes chaudes         | menu sandwich à 11,5€  | 45 rue du colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 602 |
+| Class'croute     | sandwiches snack                   | menu sandwich à 9,5€   | 59 rue de Miromesnil  | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
+| awesome name 20  | fflflflflflflflflflflfl            | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SDW,SLD     | 552 100 520 |
+| awesome name 21  | awesome description 21             | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | BLG,SDW     | 552 100 521 |
+| Jour             | salades, sandwiches                | menu sandwich à 11,5€  | 40 avenue Kléber      | paris        | 75116              | FR                  | SDW,SLD     | 552 100 608 |
+| mzaokszdfjkgjdkf | wpdfjfgidgidfh                     | sdfghighdfigudhughgkf  | 10 rue volta          | puteaux      | 92800              | FR                  | SDW,SLD     | 552 100 525 |
