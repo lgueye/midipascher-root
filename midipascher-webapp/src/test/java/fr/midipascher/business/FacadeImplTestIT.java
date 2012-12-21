@@ -715,84 +715,86 @@ public class FacadeImplTestIT {
 
   @Test
   public void findRestaurantByStreetAddressShouldSucceed() throws Throwable {
-    final Long id = 8L;
-    int expectedHitsCount;
-    List<Restaurant> actualResponse;
-    Restaurant restaurant;
-    String streetAddress;
-    String query;
-    Restaurant criteria;
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      String streetAddress;
+      String query;
+      Restaurant criteria;
 
-    // Given I index that data
-    Long accountId = facade.createAccount(TestFixtures.validAccount());
-    streetAddress = "10 rue volta";
-    restaurant = TestFixtures.validRestaurant();
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      streetAddress = "10 rue volta";
+      restaurant = TestFixtures.validRestaurant();
       Address address = restaurant.getAddress();
       address.setStreetAddress(streetAddress);
-    address.setCity("puteaux");
-    createRestaurant(accountId, restaurant);
-    expectedHitsCount = 1;
+      address.setCity("puteaux");
+      address.setPostalCode("92800");
+      createRestaurant(accountId, restaurant);
+      expectedHitsCount = 1;
 
-    // When I search
-    query = "rue";
-    criteria = new Restaurant();
-    criteria.getAddress().setStreetAddress(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
+      // When I search
+      query = "rue";
+      criteria = new Restaurant();
+      criteria.getAddress().setStreetAddress(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
 
-    // When I search
-    query = "volta";
-    criteria = new Restaurant();
-    criteria.getAddress().setStreetAddress(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
+      // When I search
+      query = "volta";
+      criteria = new Restaurant();
+      criteria.getAddress().setStreetAddress(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
   }
 
   @Test
   public void findRestaurantByCityShouldSucceed() throws Throwable {
-    final Long id = 8L;
-    int expectedHitsCount;
-    List<Restaurant> actualResponse;
-    Restaurant restaurant;
-    String city;
-    String query;
-    Restaurant criteria;
+      final Long id = 8L;
+      int expectedHitsCount;
+      List<Restaurant> actualResponse;
+      Restaurant restaurant;
+      String city;
+      String query;
+      Restaurant criteria;
 
-    // Given I index that data
-    Long accountId = facade.createAccount(TestFixtures.validAccount());
-    city = "Neuilly-sur-Marne";
-    restaurant = TestFixtures.validRestaurant();
+      // Given I index that data
+      Long accountId = facade.createAccount(TestFixtures.validAccount());
+      city = "Neuilly-sur-Marne";
+      restaurant = TestFixtures.validRestaurant();
       Address address = restaurant.getAddress();
       address.setCity(city);
-    address.setStreetAddress("12 avenue du général de gaulle");
-    createRestaurant(accountId, restaurant);
-    expectedHitsCount = 1;
+      address.setStreetAddress("12 avenue du général de gaulle");
+      address.setPostalCode("93330");
+      createRestaurant(accountId, restaurant);
+      expectedHitsCount = 1;
 
-    // When I search
-    query = "neuilly-sur-marne";
-    criteria = new Restaurant();
-    criteria.getAddress().setCity(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
+      // When I search
+      query = "neuilly-sur-marne";
+      criteria = new Restaurant();
+      criteria.getAddress().setCity(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
 
-    // When I search
-    query = "neuilly";
-    criteria = new Restaurant();
-    criteria.getAddress().setCity(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
+      // When I search
+      query = "neuilly";
+      criteria = new Restaurant();
+      criteria.getAddress().setCity(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
 
-    // When I search
-    query = "marne";
-    criteria = new Restaurant();
-    criteria.getAddress().setCity(query);
-    actualResponse = facade.findRestaurantsByCriteria(criteria);
-    // Then I should get 1 hit
-    assertEquals(expectedHitsCount, actualResponse.size());
+      // When I search
+      query = "marne";
+      criteria = new Restaurant();
+      criteria.getAddress().setCity(query);
+      actualResponse = facade.findRestaurantsByCriteria(criteria);
+      // Then I should get 1 hit
+      assertEquals(expectedHitsCount, actualResponse.size());
 
   }
 
@@ -831,18 +833,24 @@ public class FacadeImplTestIT {
       List<Restaurant> actualResponse;
       Restaurant restaurant;
       String countryCode;
+      String streetAddress;
+      String postalCode;
+      String city;
       String query;
       Restaurant criteria;
 
       // Given I index that data
       Long accountId = facade.createAccount(TestFixtures.validAccount());
-      countryCode = "GB";
+      streetAddress = "92 Sussex Gardens";
+      city = "London";
+      postalCode = "W2 1UH";
+      countryCode = "UK";
       restaurant = TestFixtures.validRestaurant();
       restaurant.getAddress().setCountryCode(countryCode);
       createRestaurant(accountId, restaurant);
 
       // When I search
-      query = "GB";
+      query = "UK";
       expectedHitsCount = 1;
       criteria = new Restaurant();
       criteria.getAddress().setCountryCode(query);
@@ -851,7 +859,7 @@ public class FacadeImplTestIT {
       assertEquals(expectedHitsCount, actualResponse.size());
 
       // When I search
-      query = "gb";
+      query = "uk";
       expectedHitsCount = 0;
       criteria = new Restaurant();
       criteria.getAddress().setCountryCode(query);

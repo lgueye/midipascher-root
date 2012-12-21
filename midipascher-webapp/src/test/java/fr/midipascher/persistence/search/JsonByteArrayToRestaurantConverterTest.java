@@ -34,11 +34,6 @@ public class JsonByteArrayToRestaurantConverterTest {
     @InjectMocks
     JsonByteArrayToRestaurantConverter underTest = new JsonByteArrayToRestaurantConverter();
 
-    /**
-     * Test method for
-     * {@link org.diveintojee.poc.jbehave.persistence.JsonByteArrayToRestaurantConverter#convert(byte[])}
-     * .
-     */
     @Test
     public final void convertShoulReturnNullWithNullInput() {
 
@@ -67,9 +62,6 @@ public class JsonByteArrayToRestaurantConverterTest {
     }
 
     /**
-     * Test method for
-     * {@link org.diveintojee.poc.jbehave.persistence.JsonByteArrayToRestaurantConverter#convert(byte[])}
-     * .
      *
      * @throws IOException
      * @throws JsonMappingException

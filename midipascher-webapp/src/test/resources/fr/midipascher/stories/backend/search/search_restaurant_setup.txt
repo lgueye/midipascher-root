@@ -1,7 +1,11 @@
-| name                        | description                | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
-| mzaokszdfjkgjdkf            | wpdfjfgidgidfh             | sdfghighdfigudhughgkf  | 10 rue volta          | puteaux      | 92800              | FR                  | SLD,SDW     | 552 100 525 |
-| dkgfhlfhi                   | dfkghdkfghdgkudfl          | sfdguhdfgudhudiguidfg  | 16 rue volta          | puteaux      | 92800              | FR                  | JPN,SLD     | 552 100 524 |
-| fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk | awesome main offer 23  | 29 rue Saint-Antoine  | paris        | 75004              | FR                  | CHN,JPN     | 552 100 523 |
-| dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22     | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
-| awesome name 21             | awesome description 21     | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | SDW,BLG     | 552 100 521 |
-| awesome name 20             | fflflflflflflflflflflfl    | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SLD,SDW     | 552 100 520 |
+| name                        | description                        | mainOffer              | address.streetAddress | address.city | address.postalCode | address.countryCode | specialties | companyId   |
+| mzaokszdfjkgjdkf            | wpdfjfgidgidfh                     | sdfghighdfigudhughgkf  | 10 rue volta          | puteaux      | 92800              | FR                  | SLD,SDW     | 552 100 525 |
+| dkgfhlfhi                   | dfkghdkfghdgkudfl                  | sfdguhdfgudhudiguidfg  | 16 rue volta          | puteaux      | 92800              | FR                  | JPN,SLD     | 552 100 524 |
+| fflfkkgkgkhkhklhjl          | jkdfhkgdkfghdfghdfgudfuhgk         | awesome main offer 23  | 29 rue Saint-Antoine  | paris        | 75004              | FR                  | CHN,JPN     | 552 100 523 |
+| dfglkdfjgdfgjdfiogjdiogjfio | awesome description 22             | awesome main offer 22  | 6 rue Dupetit-Thouars | paris        | 75003              | FR                  | BLG,CHN     | 552 100 522 |
+| awesome name 21             | awesome description 21             | vgmfmdkksksks          | 12 rue de Clery       | paris        | 75002              | FR                  | SDW,BLG     | 552 100 521 |
+| awesome name 20             | fflflflflflflflflflflfl            | s5dfsd86gdfg786gd6gdg6 | 126 rue Réaumur       | paris        | 75002              | FR                  | SLD,SDW     | 552 100 520 |
+| Monteko café                | restaurant cacher sandwiches snack | menu sandwich à 11,5€  | 45 rue de Ponthieu    | paris        | 75008              | FR                  | SDW,SLD     | 552 100 600 |
+| Class'croute                | sandwiches snack                   | menu sandwich à 9,5€   | 59 rue de Miromesnil  | paris        | 75008              | FR                  | SDW,SLD     | 552 100 601 |
+| Flam's                      | restaurant, tartes chaudes         | menu sandwich à 11,5€  | 45 rue du colisée     | paris        | 75008              | FR                  | SDW,SLD     | 552 100 602 |
+| Jour                        | salades, sandwiches                | menu sandwich à 11,5€  | 40 avenue Kléber      | paris        | 75116              | FR                  | SDW,SLD     | 552 100 608 |

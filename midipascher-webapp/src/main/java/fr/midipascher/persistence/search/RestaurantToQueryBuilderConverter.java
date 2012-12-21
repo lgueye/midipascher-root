@@ -4,9 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
-import fr.midipascher.domain.Address;
-import fr.midipascher.domain.FoodSpecialty;
-import fr.midipascher.domain.Restaurant;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -15,9 +13,12 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import fr.midipascher.domain.Address;
+import fr.midipascher.domain.FoodSpecialty;
+import fr.midipascher.domain.Restaurant;
 
 /**
  * @author louis.gueye@gmail.com

@@ -11,8 +11,8 @@
     <account account_id="1" first_name="louis" last_name="gueye" email="foo@bar.com" password="secret" locked="0"/>
     <account account_id="2" first_name="lefou" last_name="lefou" email="lefou@bar.com" password="secret" locked="0"/>
 
-    <restaurant restaurant_id="1" address_city="Paris" address_country_code="FR" address_postal_code="75009"
-                address_street_address="12 rue du Hedler" description="Vous composez votre salade nous la réalisons"
+    <restaurant restaurant_id="1" address_city="Paris" address_country_code="FR" address_postal_code="75008"
+                address_street_address="5 rue du Colisée" description="Vous composez votre salade nous la réalisons"
                 halal="0"
                 kosher="0" vegetarian="0"
                 main_offer="Menu salade : Grande salade 4 ingrédients + Jus frais ou Grande salade 4 ingrédients + dessert maison 8,90€"

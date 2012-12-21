@@ -101,42 +101,6 @@ public class RestaurantPersistenceTestIT extends BasePersistenceTestIT {
   }
 
   /**
-   * Given : one food specialty with active property valued<br/> When : one searches by the above
-   * criterion<br/> Then : system should return restaurant {id = 1} and restaurant {id = 2}<br/>
-   * TODO: move to SearchRestaurantTestIT
-   */
-  @Test
-  public void shouldFindRestaurantByFoodSpecialtyActiveProperty() {
-  }
-
-  /**
-   * Given : one food specialty with code valued<br/> When : one search by the above criterion<br/>
-   * Then : system should return restaurant {id = 1} and restaurant {id = 2}<br/>
-   * TODO: move to SearchRestaurantTestIT
-   */
-  @Test
-  public void shouldFindRestaurantByFoodSpecialtyCodeProperty() {
-  }
-
-  /**
-   * Given : one food specialty with id property valued<br/> When : one search by the above
-   * criterion<br/> Then : system should return restaurant {id = 2}<br/>
-   * TODO: move to SearchRestaurantTestIT
-   */
-  @Test
-  public void shouldFindRestaurantByFoodSpecialtyIdProperty() {
-  }
-
-  /**
-   * Given : one food specialty with label property valued<br/> When : one search by the above
-   * criterion<br/> Then : system should return restaurant {id = 1}<br/>
-   * TODO: move to SearchRestaurantTestIT
-   */
-  @Test
-  public void shouldFindRestaurantByFoodSpecialtyLabelProperty() {
-  }
-
-  /**
    * Given : a valid restaurant<br/> When : one updates that restaurant<br/> Then : system should
    * persist changes<br/>
    */

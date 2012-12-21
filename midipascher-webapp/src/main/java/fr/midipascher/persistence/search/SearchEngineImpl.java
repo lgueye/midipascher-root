@@ -1,17 +1,19 @@
 package fr.midipascher.persistence.search;
 
-import fr.midipascher.domain.AbstractEntity;
-import fr.midipascher.domain.Restaurant;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import fr.midipascher.domain.AbstractEntity;
+import fr.midipascher.domain.Restaurant;
 
 /**
  * @author louis.gueye@gmail.com
@@ -31,16 +33,23 @@ public class SearchEngineImpl implements SearchEngine {
     @Autowired
     private RestaurantToJsonByteArrayConverter restaurantToByteArrayConverter;
 
+    @Autowired
+    private RestaurantToSortBuilderConverter restaurantToSortBuilderConverter;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchEngineImpl.class);
+
     @Override
     public List<Restaurant> findRestaurantsByCriteria(Restaurant criteria) {
         QueryBuilder queryBuilder = restaurantToQueryBuilderConverter.convert(criteria);
-        SearchResponse searchResponse = elasticsearch
-            .prepareSearch(INDEX_NAME)
-            .setTypes(RESTAURANT_TYPE_NAME)
-            .setQuery(queryBuilder)
-            .addSort(SortBuilders.fieldSort("created").order(SortOrder.DESC))
-            .addSort(SortBuilders.fieldSort("updated").order(SortOrder.DESC))
-            .execute().actionGet();
+        List<SortBuilder> sortBuilders = restaurantToSortBuilderConverter.convert(criteria);
+        SearchRequestBuilder searchRequestBuilder = elasticsearch
+                    .prepareSearch(INDEX_NAME)
+                    .setTypes(RESTAURANT_TYPE_NAME)
+                    .setQuery(queryBuilder);
+        for (SortBuilder sortBuilder : sortBuilders) {
+            searchRequestBuilder.addSort(sortBuilder);
+        }
+        SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
         return searchResponseToRestaurantsListConverter.convert(searchResponse);
     }
 

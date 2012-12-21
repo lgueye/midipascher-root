@@ -3,20 +3,22 @@
  */
 package fr.midipascher.domain;
 
-import fr.midipascher.domain.validation.Create;
-import fr.midipascher.domain.validation.Update;
-
 import org.apache.commons.lang3.text.WordUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.Locale;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import fr.midipascher.domain.validation.Create;
+import fr.midipascher.domain.validation.Update;
 
 /**
  * @author louis.gueye@gmail.com
@@ -28,13 +30,13 @@ public class Address extends AbstractObject implements Serializable {
     public static final String COLUMN_NAME_CITY = "address_city";
     public static final String COLUMN_NAME_POSTAL_CODE = "address_postal_code";
     public static final String COLUMN_NAME_COUNTRY_CODE = "address_country_code";
-    public static final String COLUMN_NAME_LATITUDE = "address_latitude";
-    public static final String COLUMN_NAME_LONGITUDE = "address_longitude";
 
     public static final int CONSTRAINT_STREET_ADDRESS_MAX_SIZE = 100;
     public static final int CONSTRAINT_CITY_MAX_SIZE = 50;
     public static final int CONSTRAINT_POSTAL_CODE_MAX_SIZE = 10;
     public static final int CONSTRAINT_COUNTRY_CODE_MAX_SIZE = 2;
+
+    private static final String FORMATTED_ADDRESS_PATTERN = "{0}, {1} {2}, {3}";
 
     /**
      *
@@ -65,44 +67,19 @@ public class Address extends AbstractObject implements Serializable {
             Create.class, Update.class})
     private String countryCode;
 
-    @Column(name = Address.COLUMN_NAME_LATITUDE)
-    private BigDecimal latitude;
+    private Coordinates coordinates;
 
-    @Column(name = Address.COLUMN_NAME_LONGITUDE)
-    private BigDecimal longitude;
+    @Transient
+    private String formattedAddress;
 
-    private static final String FORMATTED_ADDRESS_PATTERN = "{0}, {1} {2}, {3}";
-
-  @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Address other = (Address) obj;
-        if (this.city == null) {
-            if (other.city != null)
-                return false;
-        } else if (!this.city.equals(other.city))
-            return false;
-        if (this.countryCode == null) {
-            if (other.countryCode != null)
-                return false;
-        } else if (!this.countryCode.equals(other.countryCode))
-            return false;
-        if (this.postalCode == null) {
-            if (other.postalCode != null)
-                return false;
-        } else if (!this.postalCode.equals(other.postalCode))
-            return false;
-        if (this.streetAddress == null) {
-            if (other.streetAddress != null)
-                return false;
-        } else if (!this.streetAddress.equals(other.streetAddress))
-            return false;
-        return true;
+    public void formattedAddress() {
+        final String format = MessageFormat.format(FORMATTED_ADDRESS_PATTERN,
+                                                 getStreetAddress(),
+                                                 getPostalCode(),
+                                                 getCity(),
+                                                 new Locale("", getCountryCode())
+                                                     .getDisplayCountry());
+        this.formattedAddress = WordUtils.capitalize(format.toLowerCase());
     }
 
     public String getCity() {
@@ -121,17 +98,6 @@ public class Address extends AbstractObject implements Serializable {
         return this.streetAddress;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (this.city == null ? 0 : this.city.hashCode());
-        result = prime * result + (this.countryCode == null ? 0 : this.countryCode.hashCode());
-        result = prime * result + (this.postalCode == null ? 0 : this.postalCode.hashCode());
-        result = prime * result + (this.streetAddress == null ? 0 : this.streetAddress.hashCode());
-        return result;
-    }
-
     public void setCity(final String city) {
         this.city = city;
     }
@@ -148,29 +114,50 @@ public class Address extends AbstractObject implements Serializable {
         this.streetAddress = streetAddress;
     }
 
-    public BigDecimal getLatitude() {
-        return latitude;
+    public String getFormattedAddress() {
+        return formattedAddress;
     }
 
-    public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude;
+    public void setFormattedAddress(String formattedAddress) {
+        this.formattedAddress = formattedAddress;
     }
 
-    public BigDecimal getLongitude() {
-        return longitude;
+    public Coordinates getCoordinates() {
+      return coordinates;
     }
 
-    public void setLongitude(BigDecimal longitude) {
-        this.longitude = longitude;
+    public void setCoordinates(Coordinates coordinates) {
+      this.coordinates = coordinates;
     }
 
-    public String formattedAddress() {
-      final String format = MessageFormat.format(FORMATTED_ADDRESS_PATTERN,
-                                                 getStreetAddress(),
-                                                 getPostalCode(),
-                                                 getCity(),
-                                                 new Locale("", getCountryCode())
-                                                     .getDisplayCountry());
-      return WordUtils.capitalize(format.toLowerCase());
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!(o instanceof Address)) {
+        return false;
+      }
+
+      Address address = (Address) o;
+
+      return city.equals(address.city) && countryCode.equals(address.countryCode) && postalCode
+          .equals(address.postalCode) && streetAddress.equals(address.streetAddress);
+
+    }
+
+  @Override
+  public int hashCode() {
+    int result = streetAddress != null ? streetAddress.hashCode() : 0;
+    result = 31 * result + (city != null ? city.hashCode() : 0);
+    result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
+    result = 31 * result + (countryCode != null ? countryCode.hashCode() : 0);
+    return result;
+  }
+
+  public void addCoordinates(Double lat, Double lng) {
+        setCoordinates(new Coordinates());
+        getCoordinates().setLat(lat);
+        getCoordinates().setLng(lng);
     }
 }

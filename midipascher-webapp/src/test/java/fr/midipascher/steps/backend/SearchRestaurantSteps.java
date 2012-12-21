@@ -8,37 +8,26 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import org.hamcrest.Matchers;
-import org.jbehave.core.annotations.AfterStory;
-import org.jbehave.core.annotations.BeforeStory;
-import org.jbehave.core.annotations.Named;
-import org.jbehave.core.annotations.Then;
-import org.jbehave.core.annotations.When;
-import org.jbehave.core.model.ExamplesTable;
-import org.jbehave.core.model.OutcomesTable;
-import org.jumpmind.symmetric.csv.CsvReader;
-import org.springframework.core.io.ClassPathResource;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-
 import fr.midipascher.domain.FoodSpecialty;
 import fr.midipascher.domain.Restaurant;
 import fr.midipascher.persistence.search.RestaurantSearchFieldsRegistry;
 import fr.midipascher.web.WebConstants;
 import fr.midipascher.web.resources.FoodSpecialtiesResource;
 import fr.midipascher.web.resources.SearchRestaurantsResource;
+import org.hamcrest.Matchers;
+import org.jbehave.core.annotations.*;
+import org.jbehave.core.model.ExamplesTable;
+import org.jbehave.core.model.OutcomesTable;
+import org.jumpmind.symmetric.csv.CsvReader;
+import org.springframework.core.io.ClassPathResource;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -59,23 +48,24 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     }
 
     @BeforeStory
-    public void beforeStory() throws IOException {
+    public void beforeStory() throws IOException, InterruptedException {
         Exchange exchange = new Exchange();
         exchange.getRequest().setUri(UriBuilder.fromPath(WebConstants.BACKEND_PATH)
-                                         .path(FoodSpecialtiesResource.class).build().toString());
+                .path(FoodSpecialtiesResource.class).build().toString());
         exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
         exchange.readURI();
         allSpecialties = exchange.foodSpcialtiesFromResponse();
         final InputStream searchRestaurantSetupInputStream =
-            new ClassPathResource("fr/midipascher/stories/backend/search/search_restaurant_setup.txt")
-              .getInputStream();
+                new ClassPathResource("fr/midipascher/stories/backend/search/search_restaurant_setup.txt")
+                        .getInputStream();
         CsvReader csvReader = new CsvReader(searchRestaurantSetupInputStream, '|', Charset.forName("UTF-8"));
         csvReader.readHeaders();
         while (csvReader.readRecord()) {
-          Restaurant restaurant = fromRow(csvReader);
-          restaurant.setPhoneNumber("0101010106");
-          final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
-          createdRestaurantUris.add(uri);
+            Restaurant restaurant = fromRow(csvReader);
+            restaurant.setPhoneNumber("0101010106");
+            final URI uri = CreateRestaurantSteps.createRestaurant(exchange, restaurant);
+            Thread.sleep(200);
+            createdRestaurantUris.add(uri);
 
         }
     }
@@ -101,7 +91,7 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     }
 
     private Set<FoodSpecialty> fromCodes(Iterable<String> codes) {
-        Set<FoodSpecialty> specialties =  Sets.newHashSet();
+        Set<FoodSpecialty> specialties = Sets.newHashSet();
         for (final String code : codes) {
             specialties.addAll(Collections2.filter(allSpecialties, new Predicate<FoodSpecialty>() {
                 @Override
@@ -114,22 +104,9 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
     }
 
     @When("I search for restaurants which \"$criterion\" matches \"$value\"")
-    public void searchRestaurantByName(@Named("criterion") String criterion,  @Named("value") String value) {
-        Restaurant criteria = new Restaurant();
-        if (RestaurantSearchFieldsRegistry.NAME.equalsIgnoreCase(criterion)) criteria.setName(value);
-        else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria.setDescription(value);
-        else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria.setMainOffer(value);
-        else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion)) criteria.getAddress().setStreetAddress(value);
-        else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
-        else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setPostalCode(value);
-        else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion)) criteria.getAddress().setCountryCode(value);
-        else if (RestaurantSearchFieldsRegistry.COMPANY_ID.equalsIgnoreCase(criterion)) criteria.setCompanyId(value);
-        else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
-          Iterable<String> codes = Splitter.on(",").trimResults().split(value);
-          Set<FoodSpecialty> specialties = fromCodes(codes);
-          criteria.setSpecialties(specialties);
-        }
-
+    public void searchRestaurantByCriteria(@Named("criterion") String criterion, @Named("value") String value) {
+        final Restaurant criteria = new Restaurant();
+        setCriteria(criterion, value, criteria);
         this.exchange.getRequest().setBody(criteria);
         this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
         this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
@@ -138,7 +115,29 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
 
     }
 
-    @Then("I should get the following restaurants: $table")
+  private void setCriteria(String criterion, String value, final Restaurant criteria) {
+    if (RestaurantSearchFieldsRegistry.NAME.equalsIgnoreCase(criterion)) criteria.setName(value);
+    else if (RestaurantSearchFieldsRegistry.DESCRIPTION.equalsIgnoreCase(criterion)) criteria
+        .setDescription(value);
+    else if (RestaurantSearchFieldsRegistry.MAIN_OFFER.equalsIgnoreCase(criterion)) criteria
+        .setMainOffer(value);
+    else if (RestaurantSearchFieldsRegistry.STREET_ADDRESS.equalsIgnoreCase(criterion))
+        criteria.getAddress().setStreetAddress(value);
+    else if (RestaurantSearchFieldsRegistry.CITY.equalsIgnoreCase(criterion)) criteria.getAddress().setCity(value);
+    else if (RestaurantSearchFieldsRegistry.POSTAL_CODE.equalsIgnoreCase(criterion))
+        criteria.getAddress().setPostalCode(value);
+    else if (RestaurantSearchFieldsRegistry.COUNTRY_CODE.equalsIgnoreCase(criterion))
+        criteria.getAddress().setCountryCode(value);
+    else if (RestaurantSearchFieldsRegistry.COMPANY_ID.equalsIgnoreCase(criterion)) criteria
+        .setCompanyId(value);
+    else if (RestaurantSearchFieldsRegistry.SPECIALTIES.equalsIgnoreCase(criterion)) {
+        Iterable<String> codes = Splitter.on(",").trimResults().split(value);
+        Set<FoodSpecialty> specialties = fromCodes(codes);
+        criteria.setSpecialties(specialties);
+    }
+  }
+
+  @Then("I should get the following restaurants: $table")
     public void theValuesReturnedAre(ExamplesTable table) {
         List<Restaurant> restaurants = this.exchange.restaurantsFromResponse();
         assertEquals(table.getRowCount(), restaurants.size());
@@ -170,19 +169,53 @@ public class SearchRestaurantSteps extends BackendBaseSteps {
                 return input.getCode();
             }
         });
-        final List sortedCodes = Lists.newArrayList(codes);
+        final List<String> sortedCodes = Lists.newArrayList(codes);
         Collections.sort(sortedCodes);
         builder.put(RestaurantSearchFieldsRegistry.SPECIALTIES, Joiner.on(",").join(sortedCodes));
         return builder.build();
     }
 
+    @Given("my current location is \"$location\"")
+    public void setCurrentLocation(@Named("location") String location) {
+        Restaurant criteria = new Restaurant();
+        criteria.getAddress().setFormattedAddress(location);
+        this.exchange.getRequest().setBody(criteria);
+    }
+
+    @When("I search for restaurants near my location")
+    public void searchForRestaurantsNearMyLocation() {
+        this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
+        this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
+        this.exchange.getRequest().setUri(SEARCH_URI);
+        this.exchange.findEntityByCriteria();
+    }
+
+    @When("I search for restaurants near my location with additional criteria \"$criteria\"")
+    public void searchForRestaurantsNearMyLocationAndCriteria(@Named("criteria") String inlineCriteria) {
+        Restaurant criteria = (Restaurant)this.exchange.getRequest().getBody();
+        String[] keyValuePairs = inlineCriteria.split(" ");
+        for (String keyValuePair : keyValuePairs) {
+          final String[] keyValuePairArray = keyValuePair.split("=");
+          String key = keyValuePairArray[0];
+          String value = keyValuePairArray[1];
+          setCriteria(key, value, criteria);
+        }
+
+        this.exchange.getRequest().setBody(criteria);
+        this.exchange.getRequest().setType(MediaType.APPLICATION_XML);
+        this.exchange.getRequest().setRequestedType(MediaType.APPLICATION_XML);
+        this.exchange.getRequest().setUri(SEARCH_URI);
+        this.exchange.findEntityByCriteria();
+    }
+
+
     @AfterStory
     public void afterStory() {
-      Exchange exchange = new Exchange();
-      exchange.setCredentials("louis@rmgr.com", "secret");
-      for (URI createdRestaurantUri : createdRestaurantUris) {
-        exchange.getRequest().setUri(createdRestaurantUri.toString());
-        exchange.deleteEntity();
-      }
+        Exchange exchange = new Exchange();
+        exchange.setCredentials("louis@rmgr.com", "secret");
+        for (URI createdRestaurantUri : createdRestaurantUris) {
+            exchange.getRequest().setUri(createdRestaurantUri.toString());
+            exchange.deleteEntity();
+        }
     }
 }
