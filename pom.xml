@@ -1086,7 +1086,7 @@
 				<jbehave.threads>2</jbehave.threads>
 				<jbehave.storyTimeoutInSecs>5</jbehave.storyTimeoutInSecs>
 				<jbehave.ignoreFailureInStories>false</jbehave.ignoreFailureInStories>
-				<jbehave.meta.filters>+progress done</jbehave.meta.filters>
+				<jbehave.meta.filters>+progress done -search</jbehave.meta.filters>
 			</properties>
 		</profile>
 		<profile>
