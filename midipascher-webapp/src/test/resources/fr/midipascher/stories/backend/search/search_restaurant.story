@@ -2,7 +2,8 @@ Search restaurant stories
 
 Meta:
 @refs 15
-@progress wip
+@progress done
+@search
 
 Narrative:
 Given I provide a search restaurant request

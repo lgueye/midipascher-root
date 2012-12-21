@@ -55,6 +55,7 @@ public class Exchange {
      */
     public void assertNewResource(Class<?> clazz) {
         this.clientResponse = readLocation();
+        Assert.assertNotNull(this.clientResponse);
         Assert.assertNotNull(this.clientResponse.getEntity(clazz));
 
     }

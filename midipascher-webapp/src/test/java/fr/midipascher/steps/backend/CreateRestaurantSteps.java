@@ -180,6 +180,7 @@ public class CreateRestaurantSteps extends BackendBaseSteps {
         final FoodSpecialty foodSpecialty = new FoodSpecialty();
         foodSpecialty.setId(1L);
         restaurant.addSpecialty(foodSpecialty);
+        this.exchange.getRequest().setRequestedType("application/xml");
         this.exchange.getRequest().setBody(restaurant);
         this.exchange.getRequest().setUri(CREATE_URI);
         this.exchange.createEntity();
