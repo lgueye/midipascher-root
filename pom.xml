@@ -11,7 +11,7 @@
 	<url>http://maven.apache.org</url>
 
 	<prerequisites>
-		<maven>3.0</maven>
+		<maven>3.0.3</maven>
 	</prerequisites>
 
 	<repositories>
@@ -62,12 +62,12 @@
         <spring-elasticsearch.version>0.0.2</spring-elasticsearch.version>
 
         <!-- SERVICE -->
-        <spring.version>3.1.2.RELEASE</spring.version>
+        <spring.version>3.2.0.RELEASE</spring.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
         <hibernate-validator.version>4.3.0.Final</hibernate-validator.version>
 
         <!-- SECURITY -->
-        <spring.security.version>3.1.2.RELEASE</spring.security.version>
+        <spring.security.version>3.1.3.RELEASE</spring.security.version>
         <jsr250-api.version>1.0</jsr250-api.version>
 
         <!-- WEB, REST, MVC -->
@@ -88,7 +88,7 @@
         <jbehave.version>3.6.9</jbehave.version>
         <jbehave-site-resources.version>3.1.1</jbehave-site-resources.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
-        <symmetric-csv.version>3.2.0</symmetric-csv.version>
+        <symmetric-csv.version>3.2.2</symmetric-csv.version>
 
         <!-- BUILD -->
         <webapp.module.context>midipascher-webapp</webapp.module.context>
