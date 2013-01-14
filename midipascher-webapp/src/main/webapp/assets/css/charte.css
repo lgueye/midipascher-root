@@ -128,7 +128,7 @@ hr.haut {
     height: 9px;
     border: 0;
     width: 100%;
-    background: url(../images/sprite.png) repeat-x bottom left;
+    background: url(../img/sprite.png) repeat-x bottom left;
     margin: 0;
 }
 
@@ -137,7 +137,7 @@ hr.bas {
     height: 17px;
     border: 0;
     width: 100%;
-    background: url(../images/sprite.png) repeat-x top left;
+    background: url(../img/sprite.png) repeat-x top left;
     margin: 0;
 }
 
@@ -207,7 +207,7 @@ li {
     height: 145px;
     display: block;
     margin-top: -65px;
-    background: transparent url(../images/sprite.png) no-repeat 0 -115px;
+    background: transparent url(../img/sprite.png) no-repeat 0 -115px;
     margin-left: 90px;
 }
 
@@ -224,7 +224,7 @@ li {
     height: 145px;
     display: block;
     margin-top: 80px;
-    background: transparent url(../images/sprite.png) no-repeat -290px -115px;
+    background: transparent url(../img/sprite.png) no-repeat -290px -115px;
     color: transparent;
 }
 
@@ -241,7 +241,7 @@ li {
     height: 145px;
     display: block;
     margin-top: -65px;
-    background: transparent url(../images/sprite.png) no-repeat -150px -120px;
+    background: transparent url(../img/sprite.png) no-repeat -150px -120px;
     margin-left: 90px;
 }
 
@@ -342,7 +342,7 @@ p.icoHelp {
     height: 50px;
     padding: 10px;
     margin: 200px 0 0 580px;
-    background: url(../images/sprite.png) no-repeat -280px -28px;
+    background: url(../img/sprite.png) no-repeat -280px -28px;
     color: transparent;
 }
 
@@ -372,15 +372,15 @@ p.icoHelp {
 }
 
 .one {
-    background: transparent url(../images/sprite.png) no-repeat -78px -26px;
+    background: transparent url(../img/sprite.png) no-repeat -78px -26px;
 }
 
 .two {
-    background: transparent url(../images/sprite.png) no-repeat -144px -26px;
+    background: transparent url(../img/sprite.png) no-repeat -144px -26px;
 }
 
 .three {
-    background: transparent url(../images/sprite.png) no-repeat -212px -26px;
+    background: transparent url(../img/sprite.png) no-repeat -212px -26px;
 }
 
 .stepBox p {
@@ -727,11 +727,11 @@ p.linear {
 }
 
 .favoritesRight a.modify span {
-    background: transparent url(../images/sprite.png) no-repeat -468px -139px;
+    background: transparent url(../img/sprite.png) no-repeat -468px -139px;
 }
 
 .favoritesRight a.delete span {
-    background: transparent url(../images/sprite.png) no-repeat -468px -162px;
+    background: transparent url(../img/sprite.png) no-repeat -468px -162px;
 }
 
 /* fin recherches favorites */
@@ -790,7 +790,7 @@ p.linear {
     float: left;
     width: 15px;
     height: 15px;
-    background: transparent url(../images/sprite.png) no-repeat -468px -184px;
+    background: transparent url(../img/sprite.png) no-repeat -468px -184px;
     margin: 5px;
 }
 
@@ -862,7 +862,7 @@ p.linear {
     float: left;
     width: 15px;
     height: 15px;
-    background: transparent url(../images/sprite.png) no-repeat -468px -184px;
+    background: transparent url(../img/sprite.png) no-repeat -468px -184px;
     margin: 5px;
 }
 
@@ -916,7 +916,7 @@ p.linear {
 }
 
 span.ico {
-    background-image: url(../images/sprite.png);
+    background-image: url(../img/sprite.png);
     background-repeat: no-repeat;
     display: block;
     width: 140px;
@@ -988,7 +988,7 @@ span.ico {
     height: 35px;
     left: -19px;
     top: 0;
-    background: url(../images/sprite.png) no-repeat -377px -43px;
+    background: url(../img/sprite.png) no-repeat -377px -43px;
 }
 
 .ribbonRight:after {
@@ -1007,7 +1007,7 @@ span.ico {
     height: 35px;
     right: -19px;
     top: 0;
-    background: url(../images/sprite.png) no-repeat -403px -43px;
+    background: url(../img/sprite.png) no-repeat -403px -43px;
 }
 
 /* end ribbon */

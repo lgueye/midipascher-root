@@ -20,7 +20,7 @@
     height: 93px;
     display: block;
     float: left;
-    background: url(../images/sprite.png) no-repeat 0 -21px;
+    background: url(../img/sprite.png) no-repeat 0 -21px;
     margin: 145px 0 0 8px;
 }
 
@@ -29,7 +29,7 @@
     height: 93px;
     display: block;
     float: left;
-    background: url(../images/sprite.png) no-repeat -443px -21px;
+    background: url(../img/sprite.png) no-repeat -443px -21px;
     margin: 145px 0 0 0;
 }
 
@@ -38,7 +38,7 @@
     height: 260px;
     margin: 0;
     float: left;
-    background: #F7E9DC url(../images/bandeau.png) no-repeat top left;
+    background: #F7E9DC url(../img/bandeau.png) no-repeat top left;
 }
 
 #mpc_header p {
