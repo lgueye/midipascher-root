@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author louis.gueye@gmail.com
  */
 @Controller
-@RequestMapping("/favorites")
+@RequestMapping("/saved-searches")
 public class FavoritesController {
 
     @RequestMapping(method = RequestMethod.GET)
