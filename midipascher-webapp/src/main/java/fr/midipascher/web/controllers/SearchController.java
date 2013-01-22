@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/search")
 public class SearchController {
 
+    @RequestMapping(method = RequestMethod.GET)
+    public String search() {
+        return "redirect:search";
+    }
+
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String add() {
         return "search";
