@@ -1,0 +1,20 @@
+Index page stories
+
+Meta:
+@refs 18
+@progress wip
+
+Narrative:
+Given I am a customer
+When I navigate to the index page
+It should succeed
+And various page elements should be present
+
+Scenario: various page elements should be present
+Given I navigate to the "index" page
+Then I should be able to click the "authenticate" link
+And I should be able to click the "favorite-searches" link
+And I should be able to input the "street-address"
+And I should be able to input the "postal-code"
+And I should be able to click the "find-by-address" button
+And I should be able to click the "find-by-current-location" button
