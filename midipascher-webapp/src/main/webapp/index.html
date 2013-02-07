@@ -49,11 +49,11 @@
                         <p>Vous recherchez un restaurant à une adresse précise ?</p>
 
                         <form action="#" method="post" name="mpcSearch">
-                            <input type="text" value="Numéro et rue" name="" class="w140 floatLeft"
+                            <input id="street-address" type="text" value="Numéro et rue" name="" class="w140 floatLeft"
                                    placeholder="Numéro et rue"/>
-                            <input type="text" value="Code postal" name="" class="w85 floatLeft"
+                            <input id="postal-code" type="text" value="Code postal" name="" class="w85 floatLeft"
                                    placeholder="Code postal"/>
-                            <button type="submit" class="gradientOrangeLinear btn w60">Ok</button>
+                            <button id="find-by-address" type="submit" class="gradientOrangeLinear btn w60">Ok</button>
                         </form>
                     </li>
                     <li id="separateur">
@@ -67,7 +67,7 @@
                         <p>Vous recherchez un restaurant autour de vous ?</p>
 
                         <form action="#" method="post" name="mpcGeoLoc">
-                            <button type="submit" class="gradientOrangeLinear btn w300">Rechercher ma position
+                            <button id="find-by-current-location" type="submit" class="gradientOrangeLinear btn w300">Rechercher ma position
                                 actuelle
                             </button>
                         </form>
