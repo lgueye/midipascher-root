@@ -89,6 +89,7 @@
         <jbehave-site-resources.version>3.1.1</jbehave-site-resources.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <symmetric-csv.version>3.2.2</symmetric-csv.version>
+        <selenium.version>2.25.0</selenium.version>
 
         <!-- BUILD -->
         <webapp.module.context>midipascher-webapp</webapp.module.context>
@@ -111,7 +112,6 @@
         <cobertura-maven-plugin.version>2.5.1</cobertura-maven-plugin.version>
         <dbunit-maven-plugin.version>1.0-beta-3</dbunit-maven-plugin.version>
         <exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
-
     </properties>
 
 	<dependencyManagement>
@@ -623,7 +623,17 @@
                 <artifactId>symmetric-csv</artifactId>
                 <version>${symmetric-csv.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-api</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-htmlunit-driver</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+
 			<!-- SECURITY -->
 			<dependency>
 				<groupId>javax.annotation</groupId>

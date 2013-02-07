@@ -242,6 +242,14 @@
             <groupId>org.jumpmind.symmetric</groupId>
             <artifactId>symmetric-csv</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-htmlunit-driver</artifactId>
+        </dependency>
 
     </dependencies>
     <build>
