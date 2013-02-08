@@ -8,24 +8,23 @@ import org.openqa.selenium.support.FindBy;
  */
 public class IndexPage {
 
-    @FindBy(css = "a[id='authenticate']")
+    @FindBy(css = "a[id=authenticate]")
     private WebElement authenticateLink;
 
     @FindBy(css = "a[id=favorite-searches]")
     private WebElement favoriteSearchesLink;
 
-    @FindBy(css = "input[type=submit][id=find-by-address]")
+    @FindBy(css = "button[type=submit][id=find-by-address]")
     private WebElement findByAddressButton;
 
-    @FindBy(css = "input[type=submit][id=find-by-current-location]")
+    @FindBy(css = "button[type=submit][id=find-by-current-location]")
     private WebElement findByCurrentLocationButton;
 
     @FindBy(css = "input[type=text][id=street-address]")
     private WebElement streetAddressInput;
 
-    @FindBy(css = "input[type=submit][id=postal-code]")
+    @FindBy(css = "input[type=text][id=postal-code]")
     private WebElement postalCodeInput;
-
 
     public WebElement findLinkById(String linkId) {
         if ("authenticate".equals(linkId)) return authenticateLink;

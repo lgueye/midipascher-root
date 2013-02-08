@@ -1,11 +1,12 @@
 package fr.midipascher.steps.frontend;
 
-import org.jbehave.core.annotations.BeforeScenario;
+import com.gargoylesoftware.htmlunit.Page;
+
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Named;
 import org.jbehave.core.annotations.Then;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -17,42 +18,42 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author louis.gueye@gmail.com
  */
-public class IndexPageSteps {
+public class FrontEndBaseSteps {
 
     private static final String baseEndPoint = ResourceBundle.getBundle("stories-context").getString("baseEndPoint");
     private WebDriver webDriver;
-    IndexPage indexPage;
+    private Object page;
+
+    public FrontEndBaseSteps(HtmlUnitDriver htmlUnitDriver) {
+        this.webDriver = htmlUnitDriver;
+    }
+
+    private <T> void setPage(Class<T> clazz) {
+        this.page = PageFactory.initElements(webDriver, clazz);
+    }
 
     @Given("I navigate to the \"$pageId\" page")
     public void navigateTo(@Named("pageId") String pageId) {
         if ("index".equals(pageId)) {
-            final String url = baseEndPoint + "/";
-            webDriver.get(url);
-            assertEquals(url, webDriver.getCurrentUrl());
-            indexPage = PageFactory.initElements(webDriver, IndexPage.class);
+            webDriver.get(baseEndPoint + "/");
+            assertEquals(baseEndPoint, webDriver.getCurrentUrl());
+            setPage(IndexPage.class);
         }
-
     }
 
     @Then("I should be able to click the \"$linkId\" link")
     public void findLinkById(@Named("linkId") String linkId) {
-        assertTrue(indexPage.findLinkById(linkId).isDisplayed());
+        assertTrue(webDriver.findElement(By.cssSelector("a[id='"+linkId+"']")).isDisplayed());
     }
 
     @Then("I should be able to click the \"$buttonId\" button")
     public void findButtonById(@Named("buttonId") String buttonId) {
-        assertTrue(indexPage.findButtonById(buttonId).isDisplayed());
+        assertTrue(webDriver.findElement(By.cssSelector("input[type='submit'][id='"+buttonId+"']")).isDisplayed());
     }
 
     @Then("I should be able to input the \"$inputId\"")
     public void findInputById(@Named("inputId") String inputId) {
-        assertTrue(indexPage.findInputById(inputId).isDisplayed());
-    }
-
-    @BeforeScenario
-    public void beforeScenario() {
-        if (webDriver != null) webDriver.quit();
-        webDriver = new HtmlUnitDriver();
+        assertTrue(webDriver.findElement(By.cssSelector("input[type='text'][id='"+inputId+"']")).isDisplayed());
     }
 
 }
