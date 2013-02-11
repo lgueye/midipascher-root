@@ -1,58 +1,19 @@
 package fr.midipascher.steps.frontend;
 
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.WebDriver;
 
 /**
  * @author louis.gueye@gmail.com
  */
-public class IndexPage {
+public class IndexPage extends AbstractPage {
 
-    @FindBy(css = "a[id=authenticate]")
-    private WebElement authenticateLink;
-
-    @FindBy(css = "a[id=favorite-searches]")
-    private WebElement favoriteSearchesLink;
-
-    @FindBy(css = "button[type=submit][id=find-by-address]")
-    private WebElement findByAddressButton;
-
-    @FindBy(css = "button[type=submit][id=find-by-current-location]")
-    private WebElement findByCurrentLocationButton;
-
-    @FindBy(css = "input[type=text][id=street-address]")
-    private WebElement streetAddressInput;
-
-    @FindBy(css = "input[type=text][id=postal-code]")
-    private WebElement postalCodeInput;
-
-    @FindBy(css = "a[id=legal]")
-    private WebElement legalLink;
-
-    @FindBy(css = "a[id=confidentiality]")
-    private WebElement confidentialityLink;
-
-    @FindBy(css = "a[id=about]")
-    private WebElement aboutLink;
-
-    public WebElement findLinkById(String linkId) {
-        if ("authenticate".equals(linkId)) return authenticateLink;
-        else if ("favorite-searches".equals(linkId)) return favoriteSearchesLink;
-        else if ("legal".equals(linkId)) return legalLink;
-        else if ("confidentiality".equals(linkId)) return confidentialityLink;
-        else if ("about".equals(linkId)) return aboutLink;
-        throw new IllegalArgumentException("No link with id " + linkId + " found on index page");
+    public IndexPage(WebDriver driver) {
+      super(driver);
     }
 
-    public WebElement findButtonById(String buttonId) {
-        if ("find-by-address".equals(buttonId)) return findByAddressButton;
-        else if ("find-by-current-location".equals(buttonId)) return findByCurrentLocationButton;
-        throw new IllegalArgumentException("No button with id " + buttonId + " found on index page");
+    @Override
+    protected void visitInternal() {
+        getDriver().get(BASE_END_POINT);
     }
 
-    public WebElement findInputById(String inputId) {
-        if ("street-address".equals(inputId)) return streetAddressInput;
-        else if ("postal-code".equals(inputId)) return postalCodeInput;
-        throw new IllegalArgumentException("No button with id " + inputId + " found on index page");
-    }
 }
