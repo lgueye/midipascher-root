@@ -26,9 +26,21 @@ public class IndexPage {
     @FindBy(css = "input[type=text][id=postal-code]")
     private WebElement postalCodeInput;
 
+    @FindBy(css = "a[id=legal]")
+    private WebElement legalLink;
+
+    @FindBy(css = "a[id=confidentiality]")
+    private WebElement confidentialityLink;
+
+    @FindBy(css = "a[id=about]")
+    private WebElement aboutLink;
+
     public WebElement findLinkById(String linkId) {
         if ("authenticate".equals(linkId)) return authenticateLink;
         else if ("favorite-searches".equals(linkId)) return favoriteSearchesLink;
+        else if ("legal".equals(linkId)) return legalLink;
+        else if ("confidentiality".equals(linkId)) return confidentialityLink;
+        else if ("about".equals(linkId)) return aboutLink;
         throw new IllegalArgumentException("No link with id " + linkId + " found on index page");
     }
 

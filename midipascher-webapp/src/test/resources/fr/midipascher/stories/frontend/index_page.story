@@ -18,3 +18,6 @@ And I should be able to input the "street-address"
 And I should be able to input the "postal-code"
 And I should be able to click the "find-by-address" button
 And I should be able to click the "find-by-current-location" button
+And I should be able to click the "legal" link
+And I should be able to click the "confidentiality" link
+And I should be able to click the "about" link
