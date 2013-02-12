@@ -27,3 +27,23 @@ Scenario: clicking on the "authenticate" link should succeed
 Given I navigate to the "index" page
 When I click on the "authenticate" link
 Then my outcome should be the "authenticate" page
+
+Scenario: clicking on the "favorite-searches" link should succeed
+Given I navigate to the "index" page
+When I click on the "favorite-searches" link
+Then my outcome should be the "favorite-searches" page
+
+Scenario: clicking on the "legal" link should succeed
+Given I navigate to the "index" page
+When I click on the "legal" link
+Then my outcome should be the "legal" page
+
+Scenario: clicking on the "confidentiality" link should succeed
+Given I navigate to the "index" page
+When I click on the "confidentiality" link
+Then my outcome should be the "confidentiality" page
+
+Scenario: clicking on the "about" link should succeed
+Given I navigate to the "index" page
+When I click on the "about" link
+Then my outcome should be the "about" page

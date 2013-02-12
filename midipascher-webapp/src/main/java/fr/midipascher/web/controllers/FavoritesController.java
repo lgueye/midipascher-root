@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author louis.gueye@gmail.com
  */
 @Controller
-@RequestMapping("/saved-searches")
+@RequestMapping("/favorite-searches")
 public class FavoritesController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String list() {
-        return "favorites";
+        return "favorite_searches";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
