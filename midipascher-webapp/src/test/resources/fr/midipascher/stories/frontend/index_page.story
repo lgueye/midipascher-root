@@ -23,27 +23,41 @@ And I should be able to click the "legal" link
 And I should be able to click the "confidentiality" link
 And I should be able to click the "about" link
 
-Scenario: clicking on the "authenticate" link should succeed
+Scenario: clicking the "authenticate" link should succeed
 Given I navigate to the "index" page
 When I click on the "authenticate" link
 Then my outcome should be the "authenticate" page
 
-Scenario: clicking on the "favorite-searches" link should succeed
+Scenario: clicking the "favorite-searches" link should succeed
 Given I navigate to the "index" page
 When I click on the "favorite-searches" link
 Then my outcome should be the "favorite-searches" page
 
-Scenario: clicking on the "legal" link should succeed
+Scenario: clicking the "legal" link should succeed
 Given I navigate to the "index" page
 When I click on the "legal" link
 Then my outcome should be the "legal" page
 
-Scenario: clicking on the "confidentiality" link should succeed
+Scenario: clicking the "confidentiality" link should succeed
 Given I navigate to the "index" page
 When I click on the "confidentiality" link
 Then my outcome should be the "confidentiality" page
 
-Scenario: clicking on the "about" link should succeed
+Scenario: clicking the "about" link should succeed
 Given I navigate to the "index" page
 When I click on the "about" link
 Then my outcome should be the "about" page
+
+Scenario: clicking the "find-by-address" button with empty fields should lead to the search page with no result
+Given I navigate to the "index" page
+And I input the "street-address" with ""
+And I input the "postal-code" with ""
+When I click on the "find-by-address" button
+Then my outcome should be the "search" page
+
+Scenario: clicking the "find-by-address" button with empty fields should lead to the search page
+Given I navigate to the "index" page
+And I input the "street-address" with "5 Rue Anatole France"
+And I input the "postal-code" with "92800"
+When I click on the "find-by-address" button
+Then my outcome should be the "search" page
