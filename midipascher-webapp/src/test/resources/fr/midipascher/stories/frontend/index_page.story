@@ -50,10 +50,11 @@ Then my outcome should be the "about" page
 
 Scenario: clicking the "find-by-address" button with empty fields should lead to the search page with no result
 Given I navigate to the "index" page
-And I input the "street-address" with ""
-And I input the "postal-code" with ""
+And I input the "street-address" with "_blank"
+And I input the "postal-code" with "_blank"
 When I click on the "find-by-address" button
-Then my outcome should be the "search" page
+Then my outcome should be the "index" page
+And my outcome should be the "index" page
 
 Scenario: clicking the "find-by-address" button with empty fields should lead to the search page
 Given I navigate to the "index" page

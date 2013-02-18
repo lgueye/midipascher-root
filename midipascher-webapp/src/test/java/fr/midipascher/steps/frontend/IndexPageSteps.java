@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class IndexPageSteps {
 
     private WebDriver webDriver;
-    IndexPage indexPage;
+    private IndexPage indexPage;
 
     @Given("I navigate to the \"$pageId\" page")
     public void navigateTo(@Named("pageId") String pageId) {
@@ -53,6 +53,18 @@ public class IndexPageSteps {
         WebElement link = indexPage.findLinkById(linkId);
         link.click();
     }
+
+    @When("I click on the \"$buttonId\" button")
+    public void clickButton(@Named("buttonId") String buttonId) {
+        WebElement button = indexPage.findButtonById(buttonId);
+        button.click();
+    }
+
+    @Given("I input the \"$inputId\" with \"$value\"")
+    public void fillInput(@Named("inputId") String inputId, @Named("value") String value) {
+        if (!"_blank".equalsIgnoreCase(value)) indexPage.findInputById(inputId).sendKeys(value);
+    }
+
 
     @BeforeScenario
     public void beforeScenario() {
